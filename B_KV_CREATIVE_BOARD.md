@@ -1,164 +1,120 @@
-# B KV Creative Board — Candidate-Based Direction
+# B KV Creative Board — Pre-Render Direction
 
-Purpose: prevent Stage B from collapsing into a safe template. The Visual Director must explore three genuinely different composition skeletons, select one, and only then compile the IMAGE_MODEL prompt.
+Purpose: generate three genuinely different art-direction hypotheses, then choose two finalists for actual visual audition. Text scores are only a prefilter; they do not prove visual quality.
 
-## 1. Mandatory Internal Board
+## 1. Three Textual Candidates
 
-Before B prompt compilation:
+Create exactly three candidates using different composition skeletons.
 
-```text
-CURRENT_STAGE_A_PASS_IMAGE
-→ CURRENT PRODUCT SEMANTICS
-→ 3 CANDIDATE DIRECTIONS
-→ CANDIDATE COMPARISON
-→ 1 WINNER
-→ COMPACT B CONTRACT
-→ IMAGE_MODEL
-```
-
-The three candidates are internal planning only. Never send all three to IMAGE_MODEL.
-
-## 2. Candidate Diversity Requirement
-
-Each candidate must differ in **composition skeleton**, not merely surface material or title treatment.
-
-Valid skeleton families include:
-
-```text
-FOREGROUND_COUNTER
-DEEP_PORTAL
-DIAGONAL_STAGE
-WRAPAROUND_ARCHITECTURE
-ASYMMETRIC_INSTALLATION
-PRODUCT_EMBEDDED_SIGNAGE
-CENTRAL_SHRINE_OR_STAGE
-DEEP_CORRIDOR
-PACKAGING_WORLD
-SHELF_OR_WINDOW_ARCHITECTURE
-FLAVOR_FLOW_FIELD
-NEGATIVE_SPACE_EDITORIAL_STAGE
-```
-
-Examples of INVALID diversity:
-
-```text
-top wood sign
-vs top kraft-paper sign
-vs top glass sign
-```
-
-These are one skeleton with three materials.
-
-## 3. Candidate Card
-
-For each of exactly three candidates, resolve:
+Each card resolves:
 
 ```text
 CANDIDATE_ID
 COMPOSITION_SKELETON
-ONE_MEMORABLE_ACTION
-WHY_IT_BELONGS_TO_THIS_PRODUCT
+ONE_MEMORABLE_PRODUCT_LED_ACTION
 PRODUCT_HERO_STRATEGY
+STAGE_A_SCALE_PRESERVATION
+NEGATIVE_SPACE_STRATEGY
 HEADLINE_ROLE
-ATMOSPHERE_BRIDGE
+ATMOSPHERE_TRANSLATION
 DEPTH_LOGIC
 LIGHTING_LOGIC
+MATERIAL_FAMILY
 COPY_PLACEMENT_LOGIC
+LITERALISM_RISK
+ENVIRONMENT_DOMINANCE_RISK
 ANTI_TEMPLATE_RISK
 ```
 
-No candidate may require product redesign.
+## 2. Skeleton Diversity
 
-## 4. Candidate Selection Score
-
-Score each candidate 0–10 on:
+Valid families include:
 
 ```text
-PRODUCT_DOMINANCE
-CATEGORY_INEVITABILITY
-THUMBNAIL_MEMORY
-COMPOSITIONAL_TENSION
-SPATIAL_INTEGRATION
-BRAND_FIT
-REFINEMENT
-ANTI_TEMPLATE_ORIGINALITY
+FOREGROUND_COUNTER
+DIAGONAL_STAGE
+WRAPAROUND_FRAME
+ASYMMETRIC_INSTALLATION
+PRODUCT_EMBEDDED_SIGNAGE
+PACKAGING_WORLD
+SHELF_OR_WINDOW_ARCHITECTURE
+FLAVOR_FLOW_FIELD
+NEGATIVE_SPACE_EDITORIAL_STAGE
+SUPPORT_PLANE_EXTENSION
+LIGHT_AND_TYPE_FRAME
 ```
 
-Weighted selection:
+High-risk families:
 
 ```text
-PRODUCT_DOMINANCE          20%
-CATEGORY_INEVITABILITY     15%
-THUMBNAIL_MEMORY           15%
-COMPOSITIONAL_TENSION      15%
-SPATIAL_INTEGRATION        15%
-BRAND_FIT                  5%
-REFINEMENT                 10%
-ANTI_TEMPLATE_ORIGINALITY  5%
+DEEP_PORTAL
+DEEP_CORRIDOR
+CENTRAL_SHRINE_OR_STAGE
+GIANT_ARCHITECTURE
 ```
 
-Any candidate that fails product fidelity, product dominance, copy truth or category plausibility is eliminated regardless of score.
+High-risk families may be proposed only when product scale can remain close to Stage A and the architecture clearly supports, rather than surrounds, the product.
 
-## 5. Safe-Template Penalty
+## 3. Invalid Diversity
 
-Apply a strong penalty if the skeleton is equivalent to any known safe fallback such as:
+These are not different concepts:
+- wood sign vs paper sign vs glass sign;
+- same centered product with three title materials;
+- same top-title / center-product / bottom-info skeleton with different props.
+
+## 4. Pre-Render Score
+
+Score 0–10:
 
 ```text
-TOP_TITLE_BLOCK + CENTER_PRODUCT + BOTTOM_INFO
-BIG_SIGNBOARD + CENTER_PRODUCT + SMALL_PLAQUE
-PHOTO + FOOTER
+PRODUCT_HERO_STRENGTH        25%
+CAMPAIGN_REFINEMENT          20%
+CATEGORY_INEVITABILITY       15%
+MEMORABILITY                 15%
+COMPOSITIONAL_TENSION        10%
+TYPOGRAPHY_INTEGRATION       10%
+ANTI_TEMPLATE_ORIGINALITY     5%
 ```
 
-Changing wood to paper, glass, metal, acrylic or stone does not remove the penalty if the skeleton remains the same.
-
-## 6. Upper-Bound Definition
-
-TRUE_UPPER_BOUND does **not** mean more elements.
+Apply penalties:
 
 ```text
-TRUE_UPPER_BOUND =
-PRODUCT_TRUTH
-+ ONE_MEMORABLE_PRODUCT-DERIVED IDEA
-+ CATEGORY-NATIVE WORLD
-+ COMPOSITIONAL_TENSION
-+ REFINED EXECUTION
+PRODUCT_SCALE_SHRINK_RISK >15%       = ELIMINATE
+ENVIRONMENT_DOMINANCE_RISK HIGH      = ELIMINATE
+LITERAL_THEME_SET_RISK HIGH          = -2.0
+SAFE_FALLBACK_SKELETON               = -2.0
+PROP_DEPENDENCE HIGH                 = -1.5
+MONOCHROME_MATERIAL_OVERLOAD         = -1.0
 ```
 
-It may be visually restrained if restraint is the stronger choice for that category.
+## 5. Two Finalists
 
-Do not force:
-- more props;
-- more copy;
-- larger type;
-- thicker 3D type;
-- more decorative layers;
-- more badges.
+Select two candidates that are both strong and visually different.
 
-## 7. Winner Output
+Requirements:
+- same product/copy truth;
+- different skeleton;
+- different negative-space logic;
+- different headline role;
+- different depth/material approach;
+- at least one restrained/editorial finalist unless clearly inappropriate.
 
-Only the winner is allowed into the B Contract:
+Do not choose two architectural concepts simply because architecture is easy to describe.
 
-```text
-SELECTED_COMPOSITION_SKELETON
-SELECTED_ONE_MEMORABLE_ACTION
-SELECTED_PRODUCT_HERO_STRATEGY
-SELECTED_HEADLINE_ROLE
-SELECTED_ATMOSPHERE_BRIDGE
-SELECTED_DEPTH_LOGIC
-SELECTED_LIGHTING_LOGIC
-SELECTED_COPY_PLACEMENT_LOGIC
-```
+## 6. Text Planning Cannot PASS B
 
-Do not mention rejected candidates in the IMAGE_MODEL prompt.
+The board cannot produce a final `B PASS` decision. It only chooses finalists.
 
-## 8. Director Sanity Check
+Final quality is determined only after actual rendered candidates are compared under `B_KV_VISUAL_AUDITION.md`.
 
-Before prompt compilation ask internally:
+## 7. Sanity Questions
 
-1. If all text were removed, would the scene still feel specifically built for this product/category?
-2. If the product were replaced by a very different category, would the whole world need redesign?
-3. At thumbnail size, is there one memorable product-led action?
-4. Is the product still the first visual hero?
-5. Is the selected skeleton genuinely different from the known safe fallback?
+Before rendering finalists:
+1. Does the product remain nearly as visually large/strong as Stage A?
+2. Is the concept translating food semantics rather than illustrating them literally?
+3. Would a contemporary premium food campaign plausibly use this art direction?
+4. Is negative space intentionally designed?
+5. Would replacing the product with another category require major redesign?
+6. Is at least one finalist more refined than theatrical?
 
-Any `NO` blocks B prompt compilation.
+Any failed question requires candidate replacement before rendering.
