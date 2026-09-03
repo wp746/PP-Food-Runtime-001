@@ -1,6 +1,6 @@
-# B Executor
+# B Executor — Quality-First Visual Audition
 
-Purpose: transform the **current job Stage A PASS image** into a category-native, visually directed professional KV while keeping the product first visual hero.
+Purpose: produce a world-class, product-led KV from the **current job Stage A PASS image**. Stage B is not allowed to rely on planning prose or self-scored checklists; it must compare actual candidate renders.
 
 ## Preconditions
 
@@ -9,22 +9,17 @@ CURRENT_JOB_STAGE_A_PASS_IMAGE exists
 A_QC = PASS
 COPY_GATE = PASS or DEFAULT_COPY_AUTHORIZED = TRUE
 CURRENT_CATEGORY_ROUTE = RESOLVED
+VISION_MODEL can inspect generated images
+IMAGE_MODEL can generate at least 2 candidate B images from the same Stage A PASS image
 ```
 
-If any is missing, B is blocked.
+If rendered candidate comparison is unavailable, B may still run in degraded mode only if the user explicitly accepts reduced reproducibility. Do not label degraded mode as upper-bound stable.
 
-## Copy Truth
+## 1. Copy Truth
 
-Build:
+Build `COPY_ALLOWLIST` and `COPY_BLOCKLIST` from current-job truth only. User-provided hard facts must be exact. Default-copy authorization permits safe non-factual campaign copy only.
 
-```text
-COPY_ALLOWLIST
-COPY_BLOCKLIST
-```
-
-User-provided hard facts must be exact. Product name may serve as headline. Missing subtitle or campaign copy may only be auto-generated after explicit default-copy authorization. Never invent business hard facts.
-
-## Category Route
+## 2. Category Route
 
 Select exactly:
 
@@ -33,94 +28,108 @@ Select exactly:
 + optional 1 WEAK_AUXILIARY_PROFILE
 ```
 
-Do not activate all profiles. Brand positioning is secondary to current category/product semantics.
+Do not activate all profiles or inherit previous-job skin.
 
-## Mandatory Visual Direction
+## 3. Mandatory Director Stack
 
-Before contract compilation:
-
-```text
-read B_KV_VISUAL_DIRECTOR.md
-read B_KV_CREATIVE_BOARD.md
-```
-
-The director must:
+Read and execute:
 
 ```text
-read current product semantics
-→ create exactly 3 compositionally distinct candidates
-→ compare candidates
-→ select 1 winner
+B_KV_VISUAL_DIRECTOR.md
+B_KV_CREATIVE_BOARD.md
+B_KV_VISUAL_AUDITION.md
 ```
 
-Do not send rejected candidates to IMAGE_MODEL.
-
-## Candidate Gate
-
-Before B Contract:
+Pipeline:
 
 ```text
-THREE_CANDIDATES_CREATED = TRUE
-CANDIDATE_SKELETONS_DISTINCT = TRUE
-WINNER_SELECTED = TRUE
-SELECTED_COMPOSITION_SKELETON = RESOLVED
-SELECTED_ONE_MEMORABLE_ACTION = RESOLVED
-PRODUCT_HERO_PROTECTION_PLAN = PASS
-CATEGORY_INEVITABILITY_PLAN = PASS
-THUMBNAIL_MEMORY_PLAN = PASS
-ANTI_TEMPLATE_PLAN = PASS
+Stage A PASS
+→ 3 textual art-direction candidates
+→ select 2 visually distinct finalists
+→ render finalist A
+→ render finalist B
+→ VISION_MODEL compares actual images
+→ select winner
+→ optional targeted refinement
+→ final B QC
 ```
 
-A material swap does not count as a different candidate.
+The user does not need to choose between finalists.
 
-## Product Hero Priority
+## 4. Stage A Hero Camera Lock
 
 ```text
-1 PRODUCT / FOOD HERO
-2 HEADLINE
-3 SPATIAL CONCEPT
-4 SUBTITLE / SLOGAN
-5 AUTHORIZED SELLING POINTS
-6 BUSINESS / UTILITY INFO
+PRODUCT_APPARENT_SCALE_SHRINK_FROM_STAGE_A <= 15%
+PRODUCT = FIRST VISUAL READ
+ENVIRONMENT = SUPPORTING
+HEADLINE = SECOND VISUAL READ
 ```
 
-Product remains nearest/clearest/strongest recognition or appetite anchor. Typography may be strong but cannot become hero #1.
+Reject any concept where a tunnel, arch, room, signboard, shelf, wall or scene becomes more visually important than the product.
 
-## Typography
+## 5. Non-Literal Category Translation
 
-Typography must support the selected composition. Do not optimize typography by mechanically adding more depth, more extrusion or more effects.
+Translate food semantics into palette, light, material, rhythm, geometry and type behavior. Do not illustrate the category as a theme park set.
 
-Required outcome:
+Examples:
+- bakery: refined warmth, crust light, restrained wood/stone/paper cues; not automatically old ovens, caves or giant rustic signs;
+- dessert: elegance and soft materiality; not automatically acrylic props everywhere;
+- beverage: freshness/translucency; not automatically jelly text;
+- hot bowl: heat/steam rhythm; not automatically a steam corridor.
+
+## 6. Contemporary Campaign Standard
+
+Prefer controlled materials, designed negative space, product tactile clarity, selective scale contrast, sophisticated lighting and one memorable gesture.
+
+Reject theatrical literalism, prop piles, rustic overload, brown-on-brown monotony, menu-board aesthetics and environment-first compositions.
+
+## 7. Typography
+
+Typography supports the selected visual strategy. It may be dimensional or restrained.
+
+Hard outcome:
 - exact text;
-- category-native behavior;
-- integrated into the selected skeleton;
-- no pasted footer feeling;
-- no title dominance over product.
+- product remains hero #1;
+- type is integrated but not dominant;
+- no footer fallback;
+- no menu/signage feeling unless genuinely appropriate;
+- no product shrinkage to create title space.
 
-## True Upper-Bound
+## 8. Two Rendered Finalists
 
-Default B target:
+Both finalists use the same Stage A PASS image, product truth and copy truth, but differ in composition skeleton, negative-space strategy, headline role, depth logic, material family and lighting behavior.
+
+At least one finalist should be restrained/editorial unless clearly inappropriate.
+
+## 9. Visual Selection
+
+VISION_MODEL compares actual renders using `B_KV_VISUAL_AUDITION.md`.
+
+Winner must outperform the other candidate in:
+- product hero strength;
+- campaign refinement;
+- memorability;
+- category inevitability;
+- typography integration;
+- compositional tension.
+
+A textually clever concept cannot win if the rendered image is weaker.
+
+## 10. Final Refinement
+
+If the winner has a local weakness, run one targeted refinement while preserving:
 
 ```text
-TRUE_UPPER_BOUND =
+WINNING_COMPOSITION
+PRODUCT_POSITION/SCALE
 PRODUCT_TRUTH
-+ ONE_MEMORABLE_PRODUCT-DERIVED_IDEA
-+ CATEGORY-NATIVE_WORLD
-+ COMPOSITIONAL_TENSION
-+ REFINED_EXECUTION
+COPY_TRUTH
 ```
 
-Upper-bound is not a decoration checklist.
+Do not replace the winner with a new concept during refinement.
 
-## Generation
+## 11. Output
 
-1. Complete Visual Director brief.
-2. Complete 3-candidate Creative Board.
-3. Select one winner.
-4. Fill `executors/B_CONTRACT_TEMPLATE.md` with winner only.
-5. Compile fixed 6-block B prompt from `PROMPT_COMPILER.md`.
-6. Use `CURRENT_JOB_STAGE_A_PASS_IMAGE` as the only B product reference.
+Deliver only after `QC_GATE.md` passes hard truth, hero preservation, contemporary-campaign and visual-result gates.
 
-## Output
-
-Deliver only after `QC_GATE.md` passes result-oriented creative and hard-truth gates. A visually safe/forgettable first attempt may fail even when typography and fidelity are correct. Otherwise follow targeted retry.
+A technically correct but themed, scenic, environment-led or merely polite poster is FAIL.
