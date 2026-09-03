@@ -13,111 +13,104 @@ A5 CURRENT CATEGORY BACKGROUND ARCHITECTURE
 A6 HARD NEGATIVES
 ```
 
-A1 must be first and state that the current reference image is the only product truth. The product may not be redesigned, replaced, re-plated, re-cooked, re-packaged, or beautified into another serving.
-
-## B Prompt — exactly 6 blocks
+## B Prompt — exactly 6 blocks per rendered finalist
 
 ```text
-B1 CURRENT STAGE A PRODUCT LOCK
-B2 SELECTED DIRECTOR CONCEPT + CURRENT CATEGORY
-B3 COPY TRUTH + INFORMATION RHYTHM
+B1 CURRENT STAGE A PRODUCT + HERO CAMERA LOCK
+B2 CURRENT CATEGORY SEMANTIC TRANSLATION
+B3 COPY TRUTH + INFORMATION HIERARCHY
 B4 PRODUCT HERO + TYPOGRAPHY ROLE
-B5 CATEGORY-NATIVE WORLD + COMPOSITION SKELETON
+B5 SELECTED COMPOSITION + CONTEMPORARY CAMPAIGN WORLD
 B6 HARD NEGATIVES
 ```
 
-B1 must reference the current job Stage A PASS image, never the raw snapshot or a previous job.
+Each finalist gets its own compact prompt. Do not combine finalist concepts.
 
-## B2 — Winner Only
+## B1 — Product + Hero Camera Lock
 
-Include only selected candidate outputs:
+State:
 
 ```text
-selected composition skeleton
-selected memorable action
-why it belongs to this product
-current category profile
-core ingredient/material semantics
-primary visual mood
-primary color/material logic
-lighting logic
-atmosphere bridge
-forbidden style language
+REFERENCE = CURRENT_JOB_STAGE_A_PASS_IMAGE
+PRODUCT_TRUTH = LOCKED
+PRODUCT_APPARENT_SCALE_SHRINK_FROM_STAGE_A <= 15%
+PRODUCT_FIRST_READ = TRUE
+ENVIRONMENT_MAY_NOT_BECOME_PRIMARY_SUBJECT
 ```
 
-Do not include rejected candidates or all category profiles.
+Do not push the product deep into a room, tunnel, portal, shelf or architecture.
+
+## B2 — Semantic Translation, Not Literal Set Design
+
+Include only current-job signals and their design translation:
+
+```text
+food/material semantics
+palette logic
+lighting logic
+surface/material cues
+rhythm/geometry
+negative-space behavior
+forbidden literalism
+```
+
+Do not say only “bakery world”, “luxury seafood world” or similar vague scene labels. Describe how semantics become visual design cues.
 
 ## B3 — Copy Truth
 
-Include exact user-authorized copy only. Information density follows actual copy truth. Do not force extra selling points, badges or utility fields to make the design look richer.
+Use exact authorized copy. Do not invent hard facts or add filler selling points solely for visual density.
 
 ## B4 — Product Hero + Typography Role
 
-Product is hero #1. Headline is hero #2.
-
-Describe typography according to the selected concept, not a universal 3D checklist. Specify:
-
 ```text
-headline role in composition
-headline material/medium only if concept needs it
-headline relationship to product
-subtitle/slogan relationship
-utility placement logic
-occlusion limits
+PRODUCT = HERO #1
+HEADLINE = HERO #2
 ```
 
-Typography must feel integrated, but it may be restrained if restraint better serves the category.
+Typography behavior follows the finalist concept. It may be dimensional or restrained. It may not force product shrinkage or become menu/signage-first.
 
-## B5 — Category-Native World + Skeleton
+## B5 — Contemporary Campaign World
 
-Specify the winning spatial structure and depth logic:
+Specify:
+- finalist composition skeleton;
+- primary negative-space strategy;
+- one memorable product-led gesture;
+- support-plane/depth relationship;
+- controlled material family;
+- light direction;
+- refined hierarchy.
 
-```text
-composition skeleton
-foreground/midground/background relationship when relevant
-primary spatial axis
-product support architecture
-light direction and material transition
-negative-space strategy
-one memorable action
-```
-
-Do not convert this into a decoration checklist.
+World-class does not mean more scenery. The scene should read as contemporary food advertising, not a themed set.
 
 ## B6 — Hard Negatives
 
 Always include:
 
 ```text
-no raw snapshot as B reference after A PASS
-no previous-job facts or visual skin
+no raw snapshot after Stage A PASS
+no previous-job facts/skin
 no product/package/vessel/plating redesign
 no unsupported hard facts
-no headline dominance over product
+no product shrinkage beyond hero-camera limit
+no environment-first composition
+no giant portal/tunnel/arch dominating product
+no theatrical rustic set unless product-led and justified
+no brown-on-brown material overload
+no menu-board/souvenir-sign aesthetic
 no photo-plus-footer fallback
-no TOP_TITLE_BLOCK + CENTER_PRODUCT + BOTTOM_INFO safe template unless uniquely justified
+no TOP_TITLE_BLOCK + CENTER_PRODUCT + BOTTOM_INFO safe template
 no material-swap pseudo-innovation
-no rejected candidate blending
-no generic all-category 3D title treatment
+no rejected-candidate blending
 ```
 
-## Prompt Budget Rules
-
-Do not send to IMAGE_MODEL:
-- this whole repository;
-- tests;
-- runtime state explanations;
-- all category profiles;
-- previous-job examples;
-- rejected candidates;
-- duplicated synonyms of the same constraint.
+## Prompt Budget
 
 IMAGE_MODEL receives only:
 
 ```text
-CURRENT_REFERENCE_IMAGE
-+ CURRENT_COMPACT_CONTRACT
-+ FIXED_6_BLOCK_PROMPT
+CURRENT_STAGE_A_PASS_IMAGE
++ CURRENT_FINALIST_COMPACT_CONTRACT
++ CURRENT_FINALIST_6_BLOCK_PROMPT
 ```
 
-If prompt compilation introduces contradictory rules or multiple competing concepts, block production and resolve the contract first.
+Never send the whole repository, tests, rejected candidates, all category profiles or duplicated constraints.
