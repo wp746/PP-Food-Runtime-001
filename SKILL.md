@@ -1,7 +1,7 @@
 ---
 name: PP-Food-Runtime-001
 description: Use when a real food, beverage, bakery, or packaged-product image should be processed through the fixed PP Food A/B production workflow and cross-agent reproducibility matters.
-version: 1.0.0
+version: 1.1.0
 ---
 
 # PP-Food-Runtime-001
@@ -24,10 +24,20 @@ Read, in this exact order:
 9. RETRY_POLICY.md
 10. executors/A_EXECUTOR.md
 11. executors/B_EXECUTOR.md
-12. category_profiles/CATEGORY_PROFILES.yaml
 ```
 
+For B only, after current Stage A PASS and category routing, additionally read:
+
+```text
+B_KV_VISUAL_DIRECTOR.md
+category_profiles/CATEGORY_PROFILES.yaml
+executors/B_CONTRACT_TEMPLATE.md
+```
+
+For A, load only its executor/contract and current-job requirements. Do not load B visual-director/category material into A generation context.
+
 Do not load `tests/` during normal production.
+Do not load all category profiles into IMAGE_MODEL.
 
 ## User UX
 
@@ -44,10 +54,13 @@ In production the user only needs natural language plus:
 ```text
 PRESERVE THE PRODUCT.
 UPGRADE THE PHOTOGRAPHY.
-THEN BUILD THE KV.
+THEN DIRECT AND BUILD THE KV.
 ```
 
 A = commercial hero photography only.
-B = current image → A → A QC PASS → B KV.
+
+B = current image → A → A QC PASS → **B KV Visual Director** → compact B contract → B KV → tension/fidelity/typography QC.
+
+Stage B is forbidden from degrading into `commercial photo + pasted footer text`. Product remains hero #1; headline is hero #2.
 
 Never send this whole repository to the image model. Compile only the current-job contract and fixed prompt blocks.
