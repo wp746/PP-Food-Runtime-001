@@ -18,56 +18,54 @@ Wrong aspect ratio            → ASPECT_CORRECTION_RETRY
 ## B Failure Mapping
 
 ```text
-Stage A product drift         → RETURN_TO_A
-Product demoted by headline   → PRODUCT_HERO_RETRY
-Wrong category skin           → CATEGORY_ROUTE_RETRY
-Previous-job skin/entity leak → REBUILD_CURRENT_JOB_CONTRACT
-Missing/vague director brief  → VISUAL_DIRECTOR_REBUILD
-Flat headline/subtitle        → SPATIAL_TYPOGRAPHY_RETRY
-Commercial-photo-plus-footer  → ANTI_FLATNESS_RETRY
-Safe repeated composition     → ANTI_TEMPLATE_RETRY
-Weak shared composition       → SHARED_COMPOSITION_RETRY
-Weak visual tension           → KV_TENSION_RETRY
-Generic title material        → CATEGORY_MATERIALITY_RETRY
-Weak foreground/mid/background→ THREE_DEPTH_STAGE_RETRY
-Generic lighting              → LIGHTING_DRAMA_RETRY
-Decorative-prop dependence    → MATERIAL_DEPTH_RETRY
-Typography error              → TYPOGRAPHY_ACCURACY_RETRY
-Unsupported copy              → COPY_TRUTH_RETRY
-Weak One Big Idea             → ONE_BIG_IDEA_RETRY
-Too dense / too sparse        → INFORMATION_DENSITY_RETRY
-Weak information rhythm       → INFORMATION_RHYTHM_RETRY
+Stage A product drift          → RETURN_TO_A
+Product demoted by headline    → PRODUCT_HERO_RETRY
+Wrong category skin            → CATEGORY_ROUTE_RETRY
+Previous-job contamination     → REBUILD_CURRENT_JOB_CONTRACT
+Missing/vague director brief   → VISUAL_DIRECTOR_REBUILD
+Candidate skeletons too similar→ CREATIVE_BOARD_REBUILD
+Safe-template winner           → WINNER_RESELECT_RETRY
+Photo-plus-footer              → ANTI_FLATNESS_RETRY
+Weak shared composition        → SHARED_COMPOSITION_RETRY
+Weak thumbnail memory          → THUMBNAIL_MEMORY_RETRY
+Low category inevitability     → CATEGORY_INEVITABILITY_RETRY
+Weak visual tension            → KV_TENSION_RETRY
+Generic typography behavior    → TYPOGRAPHY_ROLE_RETRY
+Typography accuracy error      → TYPOGRAPHY_ACCURACY_RETRY
+Unsupported copy               → COPY_TRUTH_RETRY
+Too dense / too sparse         → INFORMATION_DENSITY_RETRY
+Design regression vs same job  → DESIGN_REGRESSION_RETRY
 ```
 
 ## B Retry Instructions
 
-### ANTI_FLATNESS_RETRY
-Preserve product, category, copy truth and accurate text. Replace only flat layout logic: remove footer dependence, choose one spatial action, integrate title into scene architecture, distribute supporting copy through subordinate media, keep product hero #1.
+### CREATIVE_BOARD_REBUILD
+Keep product truth, category and copy. Regenerate exactly three candidates using clearly different composition skeletons. Material/color swaps are not sufficient diversity.
 
-### ANTI_TEMPLATE_RETRY
-Preserve product and category semantics. Reject the previously used safe structure and derive a different spatial action from current ingredient/material evidence. Do not merely move the same signboard to another position.
+### WINNER_RESELECT_RETRY
+Do not alter product truth. Re-score the existing candidates with a strong penalty on safe fallback skeletons. If all candidates are weak, rebuild the board instead of forcing a winner.
+
+### ANTI_FLATNESS_RETRY
+Preserve accurate product and copy. Replace photo+footer logic with the selected concept's actual spatial composition. Do not fix flatness by simply enlarging or extruding the title.
+
+### THUMBNAIL_MEMORY_RETRY
+Strengthen one product-led memorable action. Remove competing secondary ideas. Do not add decorative clutter.
+
+### CATEGORY_INEVITABILITY_RETRY
+Re-derive environment, typography role, materials, lighting and spatial action from current product/category semantics. The result should require major redesign if the food category changes.
 
 ### KV_TENSION_RETRY
-Do not make everything larger. Increase one dominant directional/spatial action through perspective, depth, overlap, scale contrast, light or material transition while protecting product dominance.
+Increase one dominant directional/spatial relationship through composition, perspective, overlap, negative space, architecture or light while protecting product dominance. Do not make every element larger.
 
 ### SHARED_COMPOSITION_RETRY
-Reconnect product and typography through a shared perspective field, support plane, architecture, controlled overlap, atmosphere bridge, geometry echo or light relationship.
+Reconnect product and typography through the selected skeleton: shared support structure, perspective field, controlled overlap, atmosphere bridge, geometry echo or deliberate negative-space relationship.
 
-### CATEGORY_MATERIALITY_RETRY
-Keep copy/hierarchy. Replace generic title material/medium with current-category and current-product-derived material language.
+### TYPOGRAPHY_ROLE_RETRY
+Keep exact text. Reconsider typography's role in the selected concept rather than adding generic 3D effects. It may become more restrained if that improves product-led composition.
 
-### THREE_DEPTH_STAGE_RETRY
-Create explicit foreground, hero midground and background architecture. Add at least two real depth cues beyond product without changing product position/identity.
+### DESIGN_REGRESSION_RETRY
+When a same-job previous attempt is visibly stronger, preserve the stronger aspects and repair only the new failure. A newer rule version is not automatically better.
 
-### LIGHTING_DRAMA_RETRY
-Keep product surface truth. Rebuild lighting so it expresses current food semantics (baked/brothy/cold/creamy/refined/package) rather than generic warm drama.
+Maximum 3 targeted attempts per failure family. Preserve already-passing hard-truth dimensions on every retry.
 
-### MATERIAL_DEPTH_RETRY
-Remove dependence on random decorative props. Build depth using 2–3 main spatial materials/planes, height variation, occlusion, reflectance contrast and shadow architecture.
-
-### ONE_BIG_IDEA_RETRY
-Replace vague mood language with one explicit spatial action. Do not add multiple competing concepts.
-
-Maximum 3 targeted attempts per failure family. Preserve already-passing dimensions on every retry.
-
-If hard fidelity, typography, product-dominance, anti-flatness or anti-template gates still cannot be satisfied, do not pretend PASS.
+If hard fidelity, typography accuracy, product dominance or copy truth still cannot be satisfied, do not pretend PASS.
