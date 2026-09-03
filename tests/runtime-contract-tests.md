@@ -51,54 +51,70 @@ PASS: package silhouette, lid/seal, label structure, brand identity, major visib
 FAIL: packaged product is redesigned or turned into restaurant food styling.
 
 ## T13 B Visual Director is mandatory
-PASS: before B prompt compilation, agent creates a current-job visual-director brief derived from category, ingredients/materials, temperature, texture/mouthfeel, regional cues, brand positioning, atmosphere, and one big idea.
+PASS: before B prompt compilation, agent creates a current-job visual-director brief derived from category, ingredients/materials, temperature, texture/mouthfeel, regional cues, brand positioning and product truth.
 FAIL: agent jumps from Stage A PASS directly to typography/layout.
 
-## T14 One Big Idea is concrete
-PASS: B defines one explicit spatial campaign action.
-FAIL: ONE_BIG_IDEA is only vague adjectives such as premium, cinematic, warm, elegant, energetic.
+## T14 Three candidate concepts before selection
+PASS: Visual Director internally proposes exactly three compositionally distinct candidate concepts before choosing one.
+FAIL: it commits immediately to the first idea or generates three cosmetic variants of the same skeleton.
 
-## T15 Anti-flatness
-PASS: headline has at least 3 of perspective / volume / materiality / spatial attachment, and the copy system occupies multiple spatial layers while remaining subordinate to product.
-FAIL: result is commercial photo + bottom text panel, flat headline strip, or all copy placed on one footer plane.
+## T15 Candidate skeleton diversity
+PASS: three candidates use materially different composition skeletons, e.g. foreground counter vs portal vs wraparound architecture.
+FAIL: top wood sign / top paper sign / top glass sign are treated as three different concepts.
 
-## T16 Ingredient-atmosphere derivation
+## T16 One selected concept only reaches IMAGE_MODEL
+PASS: only the winning candidate is compiled into the B prompt.
+FAIL: all three concepts are sent to IMAGE_MODEL, causing blended or averaged design.
+
+## T17 Upper-bound is not a decoration checklist
+PASS: a restrained but memorable category-native concept may beat a busier 3D design.
+FAIL: system equates upper-bound with more props, more text, larger type or more 3D effects.
+
+## T18 Ingredient-atmosphere derivation
 PASS: visual world can be traced to observable/current-job food semantics: ingredient/material, temperature, texture/mouthfeel, process or category temperament.
 FAIL: background/typography could be swapped onto a different food category with almost no change.
 
-## T17 Product and typography co-compose
-PASS: product and title share a deliberate composition axis, perspective field, stage structure, or depth relationship without title becoming hero #1.
+## T19 Product and typography co-compose
+PASS: product and title share a deliberate composition axis, perspective field, stage structure, overlap or depth relationship without title becoming hero #1.
 FAIL: product occupies one zone and text occupies an unrelated pasted-on zone.
 
-## T18 Information rhythm
-PASS: when sufficient copy exists, headline / subtitle-or-slogan / selling points / business utility form clearly different visual levels and spatial media.
-FAIL: all text has similar scale, alignment, material, plane, and rhythm.
+## T20 Anti-template checks composition skeleton, not surface material
+PASS: material changes alone do not count as a new design.
+FAIL: top wood sign → top kraft-paper banner passes Anti-Template despite identical top-title / center-product / bottom-info skeleton.
 
-## T19 Visual-tension QC blocks polite-but-flat KV
-PASS: B cannot PASS unless Title Spatiality, Visual Tension, Shared Composition Logic and Anti-Flatness gates pass.
-FAIL: accurate typography and correct category alone are treated as sufficient for PASS.
+## T21 Thumbnail memory test
+PASS: at small size the KV has one clear product-led memorable action.
+FAIL: every element is technically correct but the poster reads as polite, balanced and forgettable.
 
-## T20 Category-native typography material
-PASS: typography material and spatial medium are derived from the selected current profile and current product semantics.
+## T22 Category inevitability test
+PASS: the chosen world feels specifically derived from this product/category; changing to another category would require major redesign.
+FAIL: only copy/material labels would need swapping.
+
+## T23 Creative score is weighted, not mechanical
+PASS: QC evaluates product dominance, memorability, category inevitability, composition tension, refinement and typography truth as a whole.
+FAIL: design passes by mechanically accumulating checkboxes such as perspective + depth + materiality.
+
+## T24 Self-justifying QC is forbidden
+PASS: QC states concrete visual evidence for major scores and can FAIL a visually weak first attempt even when text/fidelity are correct.
+FAIL: generator declares all-green PASS because it can name a rule that exists in the image.
+
+## T25 Information density follows copy truth and concept
+PASS: sparse copy remains elegant; rich copy is hierarchically distributed.
+FAIL: system invents extra selling points or forces 4-level text when unsupported.
+
+## T26 Category-native typography material
+PASS: typography material and spatial medium are derived from selected current profile and product semantics.
 FAIL: bakery, dessert, noodles, beverages and packaged retail receive the same generic 3D title treatment.
 
-## T21 Upper-bound is default for every B category
-PASS: every B job enters TRUE_UPPER_BOUND unless user explicitly requests a simpler/lower mode.
-FAIL: upper-bound only activates when user says “上限版/世界级”.
+## T27 Candidate score rejects safe-template fallback
+PASS: a candidate using an overused skeleton receives a strong penalty even if it satisfies material and depth requirements.
+FAIL: safest top-title / center-product / bottom-info layout wins because it is easy to justify.
 
-## T22 Safe signboard template is rejected
-PASS: bakery or other categories do not repeatedly default to `big signboard top + product center + plaque bottom` unless current semantics uniquely justify it.
-FAIL: different foods repeatedly reuse that structure because it passed once.
-
-## T23 Three-depth campaign stage
-PASS: foreground, product midground and background architecture are deliberately designed, with at least two perceptible depth cues beyond product.
-FAIL: depth comes only from shallow blur or decorative props.
-
-## T24 Lighting follows food semantics
+## T28 Lighting follows food semantics
 PASS: light behavior is derived from baked/brothy/cold/creamy/seafood/package properties and preserves source truth.
 FAIL: every category receives the same warm dramatic light regardless of food state.
 
-## T25 Category replacement stress test
+## T29 Category replacement stress test
 PASS: replacing current product with a different food category would require major redesign of material, typography, spatial action and atmosphere.
 FAIL: current KV remains valid after a simple product swap.
 
