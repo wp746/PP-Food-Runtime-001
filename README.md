@@ -23,41 +23,56 @@ When setup passes, the agent returns READY and waits for `启动`.
 
 ## Production UX
 
-After startup:
-
 ```text
 执行A
 ```
-= commercial hero photograph only.
+Commercial hero photograph only.
 
 ```text
 执行B
 ```
-= current image → current A → A QC PASS → category-native KV.
+Current image → current A → A QC PASS → candidate-based KV visual direction → one selected upper-bound KV.
 
 ```text
 按默认文案来
 ```
-= authorize safe non-factual campaign copy only; never authorize invented business facts.
+Authorize safe non-factual campaign copy only; never authorize invented business facts.
 
-## Runtime design
+## V1.3.0 B architecture
+
+Stage B no longer chooses a single first idea and no longer equates upper-bound with more 3D effects or more decoration.
 
 ```text
-CURRENT IMAGE
-→ VISION MODEL
-→ CURRENT JOB CONTRACT
-→ FIXED PROMPT COMPILER
+CURRENT STAGE A PASS
+→ PRODUCT / CATEGORY SEMANTICS
+→ 3 DISTINCT COMPOSITION CANDIDATES
+→ SCORE / COMPARE
+→ SELECT 1 WINNER
+→ COMPACT B CONTRACT
 → IMAGE MODEL
-→ VISION QC
-→ TARGETED RETRY
+→ RESULT-ORIENTED QC
 ```
 
-B adds a mandatory current Stage A bridge before Stage B.
+Only the winning candidate reaches IMAGE_MODEL.
+
+Anti-template checks the **composition skeleton**, not whether the title is wood, kraft paper, glass or metal. Known safe fallback structures such as `TOP_TITLE_BLOCK + CENTER_PRODUCT + BOTTOM_INFO` receive a strong penalty.
+
+Upper-bound means:
+
+```text
+PRODUCT_TRUTH
++ ONE_MEMORABLE_PRODUCT-DERIVED_IDEA
++ CATEGORY-NATIVE_WORLD
++ COMPOSITIONAL_TENSION
++ REFINED_EXECUTION
+```
+
+More props, more copy, larger typography or thicker 3D type do not automatically improve the result.
 
 ## Status
 
-Version: 1.0.0
+Version: 1.3.0
 
-Release state: BUILD COMPLETE / CROSS-AGENT VALIDATION REQUIRED.
+Release state: INTERNAL REFACTOR COMPLETE / FINAL CROSS-AGENT VALIDATION STILL REQUIRED.
 
-Do not mark production-qualified until the runtime contract tests pass on at least two different host agents using the intended vision/image stack.
+The runtime must not be called production-qualified until the intended host/model stack completes a final external validation. That validation should be treated as a release acceptance run, not iterative prompt tuning.
