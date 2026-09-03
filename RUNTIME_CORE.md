@@ -8,7 +8,7 @@ This file is the production P0 source of truth. Other files may explain or speci
 P0-01 CURRENT_JOB_ONLY = TRUE
 P0-02 SOURCE_TRUTH = CURRENT_USER_IMAGE
 P0-03 A = STAGE_A_ONLY
-P0-04 B = CURRENT_A -> A_QC_PASS -> B_KV_VISUAL_DIRECTOR -> CURRENT_B
+P0-04 B = CURRENT_A -> A_QC_PASS -> B_VISUAL_DIRECTOR -> 3_CANDIDATES -> 1_WINNER -> CURRENT_B
 P0-05 VISION_MODEL_REQUIRED_FOR_IMAGE_UNDERSTANDING = TRUE
 P0-06 IMAGE_MODEL_MUST_SUPPORT_REFERENCE_IMAGE_EDIT = TRUE
 P0-07 PRODUCT_FIDELITY_CAN_NEVER_BE_TRADED_FOR_DESIGN = TRUE
@@ -22,15 +22,16 @@ P0-14 RETRY = TARGETED_NOT_RANDOM
 P0-15 OUTPUT_ASPECT_RATIO = EXACT_9_16
 P0-16 FAIL_CLOSED_ON_MISSING_CAPABILITY_OR_REQUIRED_STATE = TRUE
 P0-17 B_VISUAL_DIRECTOR_REQUIRED = TRUE
-P0-18 B_ONE_BIG_IDEA_MUST_BE_CONCRETE_SPATIAL_ACTION = TRUE
-P0-19 B_ANTI_FLATNESS_REQUIRED = TRUE
+P0-18 B_THREE_CANDIDATE_BOARD_REQUIRED = TRUE
+P0-19 B_ONLY_WINNER_REACHES_IMAGE_MODEL = TRUE
 P0-20 B_ATMOSPHERE_MUST_DERIVE_FROM_CURRENT_PRODUCT_SEMANTICS = TRUE
-P0-21 B_PRODUCT_AND_TYPOGRAPHY_MUST_SHARE_COMPOSITION_LOGIC = TRUE
+P0-21 B_PRODUCT_AND_TYPOGRAPHY_MUST_CO_COMPOSE = TRUE
 P0-22 B_DEFAULT_KV_MODE = TRUE_UPPER_BOUND
-P0-23 B_ANTI_TEMPLATE_REQUIRED = TRUE
-P0-24 B_THREE_DEPTH_STAGE_REQUIRED = TRUE
-P0-25 B_LIGHTING_MUST_FOLLOW_PRODUCT_SEMANTICS = TRUE
-P0-26 DIFFERENT_CATEGORY_REQUIRES_MAJOR_KV_REDESIGN = TRUE
+P0-23 B_ANTI_TEMPLATE_CHECKS_SKELETON_NOT_MATERIAL = TRUE
+P0-24 DIFFERENT_CATEGORY_REQUIRES_MAJOR_KV_REDESIGN = TRUE
+P0-25 UPPER_BOUND_IS_NOT_DECORATION_COUNT = TRUE
+P0-26 QC_IS_RESULT_ORIENTED_NOT_CHECKBOX_ACCUMULATION = TRUE
+P0-27 DESIGN_REGRESSION_CANNOT_PASS = TRUE
 ```
 
 ## Fidelity Targets
@@ -51,7 +52,7 @@ REVEAL_EXISTING_PROPERTY = YES
 AMPLIFY_BEYOND_SOURCE = NO
 ```
 
-## Stage B Upper-Bound Invariants
+## Stage B Creative Invariants
 
 Every B job defaults to:
 
@@ -59,43 +60,49 @@ Every B job defaults to:
 KV_MODE = TRUE_UPPER_BOUND
 ```
 
+Upper-bound means:
+
+```text
+PRODUCT_TRUTH
++ ONE_MEMORABLE_PRODUCT-DERIVED_IDEA
++ CATEGORY-NATIVE_WORLD
++ COMPOSITIONAL_TENSION
++ REFINED_EXECUTION
+```
+
+It does **not** mean more type, more 3D, more props, more badges or more copy.
+
 Before B prompt compilation:
 
 ```text
 VISUAL_DIRECTOR_BRIEF = PASS
 ATMOSPHERE_EVIDENCE >= 3
-ONE_BIG_IDEA = CONCRETE_SPATIAL_ACTION
-HEADLINE_SPATIAL_FORM = RESOLVED
-SHARED_COMPOSITION_LOGIC = PASS
+THREE_CANDIDATES_CREATED = TRUE
+CANDIDATE_SKELETONS_DISTINCT = TRUE
+WINNER_SELECTED = TRUE
+SELECTED_ONE_MEMORABLE_ACTION = RESOLVED
 PRODUCT_HERO_PROTECTION_PLAN = PASS
-FOREGROUND_PLAN = PASS
-MIDGROUND_PLAN = PASS
-BACKGROUND_PLAN = PASS
-LIGHTING_DRAMA_PLAN = PASS
-MATERIAL_DEPTH_PLAN = PASS
-ANTI_FLATNESS_PLAN = PASS
-ANTI_TEMPLATE_DIFFERENTIATION = PASS
+CATEGORY_INEVITABILITY_PLAN = PASS
+THUMBNAIL_MEMORY_PLAN = PASS
+ANTI_TEMPLATE_PLAN = PASS
 ```
 
-B is not `Stage A photo + text overlay` and not a repeated safe template.
-
-The current product/category must drive atmosphere, materials, light, typography material and spatial action. Generic premium/cinematic styling is insufficient.
-
-Headline must show at least 3 of:
+Known safe fallback skeletons are penalized:
 
 ```text
-PERSPECTIVE
-VOLUME / DEPTH
-CATEGORY-NATIVE MATERIALITY
-SPATIAL ATTACHMENT TO SCENE
+TOP_TITLE_BLOCK + CENTER_PRODUCT + BOTTOM_INFO
+BIG_SIGNBOARD + CENTER_PRODUCT + SMALL_PLAQUE
+PHOTO + FOOTER
 ```
+
+Changing surface material does not make a new composition.
 
 Product remains hero #1. Headline remains hero #2.
 
 If another food category could replace the current product with minimal redesign:
 
 ```text
-CATEGORY_SPECIFIC_DIFFERENTIATION = FAIL
+CATEGORY_INEVITABILITY = FAIL
 ```
 
 ## Runtime Roles
@@ -104,16 +111,18 @@ VISION_MODEL:
 - read current user image;
 - build current-job facts and product lock;
 - category route;
-- build/verify B visual-director brief;
+- build B director brief;
+- create/compare/select creative candidates;
 - QC A and B outputs.
 
 IMAGE_MODEL:
 - receives actual reference image;
+- receives only the selected compact B contract/prompt;
 - performs reference-image editing / image-to-image;
-- never decides runtime flow.
+- never decides runtime flow or candidate selection.
 
 If the host model cannot see images, it must not guess.
 
 ## Context Budget
 
-Normal production loads only the runtime core plus files explicitly required by the current execution mode. Do not load tests, old conversations, research repositories, all category examples, or previous-job prompts into the current image-generation context.
+Normal production loads only runtime core plus files explicitly required by current execution mode. Do not load tests, old conversations, research repositories, all category examples, rejected creative candidates or previous-job prompts into the current image-generation context.
