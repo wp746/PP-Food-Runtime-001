@@ -1,6 +1,6 @@
 # B Executor
 
-Purpose: transform the **current job Stage A PASS image** into a category-native professional KV while keeping the product first visual hero.
+Purpose: transform the **current job Stage A PASS image** into a category-native, visually directed professional KV while keeping the product first visual hero.
 
 ## Preconditions
 
@@ -37,6 +37,42 @@ Select exactly:
 
 Do not activate all profiles. Brand positioning is secondary to category-native language.
 
+## Mandatory KV Visual Director
+
+Before contract compilation, read and execute:
+
+```text
+B_KV_VISUAL_DIRECTOR.md
+```
+
+Create the current-job director brief from:
+
+```text
+category
+core ingredients / materials
+temperature
+texture / mouthfeel
+process / serving cue
+regional-cultural cue when supported
+brand positioning
+product-derived atmosphere evidence
+```
+
+The brief must resolve:
+
+```text
+VISUAL_DIRECTOR_BRIEF = PASS
+ATMOSPHERE_EVIDENCE >= 3
+ONE_BIG_IDEA = CONCRETE_SPATIAL_ACTION
+HEADLINE_SPATIAL_FORM = RESOLVED
+SHARED_COMPOSITION_LOGIC = RESOLVED
+INFORMATION_RHYTHM_PLAN = RESOLVED
+PRODUCT_HERO_PROTECTION_PLAN = PASS
+ANTI_FLATNESS_PLAN = PASS
+```
+
+If the director brief is missing or vague, B is blocked.
+
 ## Product Hero Priority
 
 ```text
@@ -50,18 +86,48 @@ Do not activate all profiles. Brand positioning is secondary to category-native 
 
 The headline may be strong, dimensional, material, and spatial, but must not become the first hero or cover identity/appetite-critical product areas.
 
-## Spatial Typography
+## Spatial Typography Hard Rule
 
-Headline, subtitle, slogan, and utility information should belong to one coherent current-category spatial system. Avoid a large 3D headline with all other copy pasted flat like presentation text.
+Headline must exhibit at least 3 of:
+
+```text
+PERSPECTIVE
+VOLUME / DEPTH
+CATEGORY-NATIVE MATERIALITY
+SPATIAL ATTACHMENT TO SCENE
+```
+
+Headline, subtitle, slogan, selling points and utility information belong to one coherent current-category spatial system. Avoid a large 3D headline with all other copy pasted flat like presentation text.
+
+The B result must not read as:
+
+```text
+Stage A commercial photo
++ bottom headline card
++ flat footer information
+```
+
+That pattern is `ANTI_FLATNESS_FAIL`.
 
 ## One Big Idea
 
-Use one thumbnail-readable campaign concept. More decorative ideas are not better.
+Use exactly one thumbnail-readable campaign action derived from the current product/category. Examples are action grammar, not templates: bakery sign, counter front, paper emboss, steam corridor, flavor wave, glass installation, packaging plane, brand display structure.
+
+Vague mood words alone are not a valid One Big Idea.
+
+## Shared Composition Logic
+
+Product and typography must share a deliberate composition relationship: perspective field, support plane, stage structure, overlap, atmosphere bridge, geometry echo, or another director-approved current-category relationship.
+
+If product and copy occupy unrelated independent zones, retry B.
 
 ## Generation
 
-Compile only the fixed 6-block B prompt from `PROMPT_COMPILER.md` and use `CURRENT_JOB_STAGE_A_PASS_IMAGE` as the reference.
+1. Complete the Visual Director brief.
+2. Fill `executors/B_CONTRACT_TEMPLATE.md`.
+3. Compile only the fixed 6-block B prompt from `PROMPT_COMPILER.md`.
+4. Use `CURRENT_JOB_STAGE_A_PASS_IMAGE` as the reference.
 
 ## Output
 
-Deliver only after `QC_GATE.md` passes. Otherwise follow targeted retry.
+Deliver only after `QC_GATE.md` passes, including KV tension and anti-flatness gates. Otherwise follow targeted retry.
