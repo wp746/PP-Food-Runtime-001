@@ -1,12 +1,12 @@
 ---
 name: PP-Food-Runtime-001
 description: Use when a real food, beverage, bakery, or packaged-product image should be processed through the fixed PP Food A/B production workflow and cross-agent reproducibility matters.
-version: 1.1.0
+version: 1.2.0
 ---
 
 # PP-Food-Runtime-001
 
-This repository is the **production runtime** for stable cross-agent execution. It is self-contained: production agents must not depend on reading the two research repositories.
+This repository is the **self-contained production runtime** for stable cross-agent execution.
 
 ## Entry
 
@@ -34,33 +34,53 @@ category_profiles/CATEGORY_PROFILES.yaml
 executors/B_CONTRACT_TEMPLATE.md
 ```
 
-For A, load only its executor/contract and current-job requirements. Do not load B visual-director/category material into A generation context.
-
-Do not load `tests/` during normal production.
-Do not load all category profiles into IMAGE_MODEL.
+Do not load B visual-director/category material into A generation context. Do not load `tests/` during normal production. Do not send all category profiles or this repository to IMAGE_MODEL.
 
 ## User UX
 
 After setup passes, reply READY and wait for `启动`.
 
-In production the user only needs natural language plus:
+Production commands:
 
 - `执行A` / `A`
 - `执行B` / `B`
-- `按默认文案来` when they authorize safe non-factual copy generation.
+- `按默认文案来` only when safe non-factual copy generation is authorized.
 
 ## Core invariant
 
 ```text
 PRESERVE THE PRODUCT.
 UPGRADE THE PHOTOGRAPHY.
-THEN DIRECT AND BUILD THE KV.
+THEN DIRECT AND BUILD THE UPPER-BOUND KV.
 ```
 
 A = commercial hero photography only.
 
-B = current image → A → A QC PASS → **B KV Visual Director** → compact B contract → B KV → tension/fidelity/typography QC.
+B = current image → A → A QC PASS → B KV Visual Director → compact B contract → upper-bound category-native KV → full QC.
 
-Stage B is forbidden from degrading into `commercial photo + pasted footer text`. Product remains hero #1; headline is hero #2.
+## B V1.2.0 Standard
 
-Never send this whole repository to the image model. Compile only the current-job contract and fixed prompt blocks.
+Every B job defaults to:
+
+```text
+KV_MODE = TRUE_UPPER_BOUND
+```
+
+The current food/product must drive atmosphere, materials, lighting, typography material, spatial action and information rhythm.
+
+B must include:
+
+```text
+one concrete spatial One Big Idea
+product hero #1 / headline #2
+shared product-type composition logic
+foreground / midground / background campaign stage
+category-native lighting drama
+material depth
+anti-flatness
+anti-template differentiation
+```
+
+A repeated `big signboard above + product centered below + plaque bottom` structure is not an acceptable default. If another food category could replace the product with minimal redesign, B fails category-specific differentiation.
+
+Never trade product fidelity for upper-bound design pressure. Never send this whole repository to the image model; compile only the current-job contract and fixed six-block prompt.
