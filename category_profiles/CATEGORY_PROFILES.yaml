@@ -2,146 +2,122 @@ profiles:
   CN_HOME_STYLE:
     use_for: Chinese home-style hot dishes
     ingredient_atmosphere: [wok_heat, savory_gloss, steam, hearty_table_energy]
-    typography: strong_chinese_display_or_signage
-    title_materials: [aged_wood, warm_metal, stone_relief, restaurant_sign_surface]
-    spatial_actions: [headline_as_material_lintel, headline_as_counter_front, headline_as_wall_relief, headline_as_table_edge_structure]
-    materials: [warm_wood, stone, dark_metal]
-    atmosphere: [wok_heat, steam_depth, warm_light]
-    lighting: [wok_rim, warm_directional_key, steam_separation]
+    typography_bias: strong_chinese_display_or_signage_when_brand_fit
+    material_language: [warm_wood, stone, dark_metal, enamel, restaurant_surface]
+    lighting_language: [wok_rim, warm_directional_key, steam_separation]
+    composition_bias: [dynamic_table_stage, asymmetric_signage_integration, serving_geometry, warm_architecture]
     density: medium_high
     forbid: [dessert_glass_ribbon_skin, coffee_lifestyle_skin, flat_footer_kv, generic_top_signboard_template]
 
   SPICY_HOT:
     use_for: Sichuan/Hunan fresh-spicy dishes
     ingredient_atmosphere: [fresh_chili, pepper_aroma, heat_motion, red_green_flavor_energy]
-    typography: thick_perspective_display
-    title_materials: [lacquer, dark_metal, stone_relief, painted_sign_surface]
-    spatial_actions: [headline_as_flavor_wave, headline_as_steam_corridor, headline_as_light_architecture, headline_as_suspended_installation]
-    materials: [dark_metal, stone, lacquer]
-    atmosphere: [red_green_flavor_cues, heat_motion, steam]
-    lighting: [hard_heat_edge, vapor_backlight, red_green_accent_control]
+    typography_bias: energetic_display_with_directional_force
+    material_language: [lacquer, dark_metal, stone, painted_surface]
+    lighting_language: [hard_heat_edge, vapor_backlight, controlled_red_green_accents]
+    composition_bias: [flavor_flow_field, diagonal_stage, steam_depth, suspended_energy]
     density: medium_high
-    forbid: [minimal_western_serif_skin, bakery_wood_world_default, flat_footer_kv, safe_centered_signboard]
+    forbid: [minimal_western_serif_skin, bakery_wood_world_default, flat_footer_kv]
 
   CLAYPOT_SOUP:
     use_for: claypot, soup, hotpot
     ingredient_atmosphere: [broth_depth, hearth_heat, clay_warmth, steam]
-    typography: grounded_display
-    title_materials: [clay_relief, copper, warm_stone, hearth_surface]
-    spatial_actions: [headline_as_material_lintel, headline_as_serving_geometry_extension, headline_as_steam_corridor, headline_as_hearth_stage]
-    materials: [clay, copper, warm_stone]
-    atmosphere: [hearth_warmth, amber_light, steam_depth]
-    lighting: [hearth_glow, broth_specular, steam_backlight]
+    typography_bias: grounded_display
+    material_language: [clay, copper, warm_stone, hearth_surface]
+    lighting_language: [hearth_glow, broth_specular, steam_backlight]
+    composition_bias: [hearth_stage, vessel_geometry_extension, deep_portal, steam_architecture]
     density: medium
-    forbid: [cold_beverage_translucent_skin, flat_footer_kv, generic_signboard_stack]
+    forbid: [cold_beverage_translucent_skin, flat_footer_kv]
 
   NOODLE_RICE_NOODLE:
     use_for: noodles, rice noodles, staple bowls
     ingredient_atmosphere: [hot_broth, noodle_trajectory, steam, staple_food_power]
-    typography: strong_upward_motion_display
-    title_materials: [warm_metal, stone_relief, enamel_surface, restaurant_material]
-    spatial_actions: [headline_as_steam_corridor, headline_as_material_lintel, headline_as_serving_geometry_extension, headline_as_light_architecture]
-    materials: [wood, stone, enamel_metal]
-    atmosphere: [steam, upward_trajectory, staple_food_power]
-    lighting: [broth_highlight, steam_separation, directional_warm_key]
+    typography_bias: strong_upward_or_directional_display
+    material_language: [wood, stone, enamel_metal, restaurant_surface]
+    lighting_language: [broth_highlight, steam_separation, directional_warm_key]
+    composition_bias: [deep_corridor, rising_motion, bowl_geometry, asymmetric_signage_integration]
     density: medium
     forbid: [luxury_dessert_editorial_skin, flat_footer_kv, static_title_card]
 
   BBQ_NIGHTMARKET:
     use_for: BBQ, fried foods, night market
     ingredient_atmosphere: [char, fire, smoke, crisp_surface, night_energy]
-    typography: signboard_or_lightbox_display
-    title_materials: [lightbox, charred_metal, painted_sign, enamel]
-    spatial_actions: [headline_as_light_architecture, headline_as_suspended_installation, headline_as_fire_stage, headline_as_counter_front]
-    materials: [charcoal, black_metal, neon_surface]
-    atmosphere: [fire, smoke, night_contrast]
-    lighting: [fire_edge, high_contrast_key, smoke_backlight]
+    typography_bias: signboard_or_lightbox_when_contextual
+    material_language: [charcoal, black_metal, painted_surface, enamel, controlled_neon]
+    lighting_language: [fire_edge, high_contrast_key, smoke_backlight]
+    composition_bias: [diagonal_stage, foreground_grill_structure, hanging_installation, night_depth]
     density: medium_high
-    forbid: [soft_morning_bakery_skin, flat_footer_kv, luxury_hotel_banquet_skin]
+    forbid: [soft_morning_bakery_skin, luxury_hotel_banquet_skin, flat_footer_kv]
 
   SEAFOOD_PREMIUM:
     use_for: premium seafood and banquet dining
     ingredient_atmosphere: [freshness, clarity, refined_moisture, restrained_luxury]
-    typography: refined_song_or_modern_sans
-    title_materials: [brushed_metal, jade, glass, polished_stone]
-    spatial_actions: [headline_as_glass_installation, headline_as_refined_lintel, headline_as_wall_relief, headline_as_light_architecture]
-    materials: [jade, metal, glass, blue_gray_stone]
-    atmosphere: [restrained, elegant, polished]
-    lighting: [precise_specular, cool_rim, restrained_key]
+    typography_bias: refined_song_or_modern_sans
+    material_language: [jade, brushed_metal, glass, polished_stone, blue_gray_surface]
+    lighting_language: [precise_specular, cool_rim, restrained_key]
+    composition_bias: [negative_space_editorial_stage, glass_architecture, refined_asymmetry, polished_depth]
     density: low_medium
-    forbid: [rough_nightmarket_signage, flat_footer_kv, oversized_rustic_wood_title]
+    forbid: [rough_nightmarket_signage, oversized_rustic_wood_title, flat_footer_kv]
 
   DESSERT_CAKE:
     use_for: cakes and desserts
     ingredient_atmosphere: [cream_softness, tea_or_floral_delicacy, airy_coldness, refined_sweetness]
-    typography: editorial_serif_or_soft_display
-    title_materials: [cream_relief, glass, acrylic, ribbon, soft_metal]
-    spatial_actions: [headline_as_glass_installation, headline_as_suspended_installation, headline_as_wall_relief, headline_as_acrylic_window]
-    materials: [cream, glass, acrylic, ribbon]
-    atmosphere: [airy, soft_light, fashion_editorial]
-    lighting: [soft_sculpting, elegant_gradient, controlled_sheen]
+    typography_bias: editorial_serif_or_soft_display
+    material_language: [cream, glass, acrylic, ribbon, soft_metal]
+    lighting_language: [soft_sculpting, elegant_gradient, controlled_sheen]
+    composition_bias: [negative_space_editorial_stage, translucent_installation, asymmetric_display, refined_window_architecture]
     density: low_medium
-    forbid: [chinese_restaurant_gold_brush_signboard, flat_footer_kv, heavy_rustic_wood]
+    forbid: [chinese_restaurant_gold_brush_signboard, heavy_rustic_wood, flat_footer_kv]
 
   COFFEE_TEA_BEVERAGE:
     use_for: coffee, tea, fruit drinks, shaved ice, cold beverages
     ingredient_atmosphere: [transparency, condensation, ice, fruit_freshness, tea_or_coffee_aroma]
-    typography: modern_sans_or_clean_grotesk
-    title_materials: [glass, acrylic, translucent_jelly, window_lettering]
-    spatial_actions: [headline_as_glass_installation, headline_as_acrylic_window, headline_as_flavor_wave, headline_as_light_architecture]
-    materials: [glass, acrylic, transparent_jelly]
-    atmosphere: [window_light, lifestyle_negative_space, freshness]
-    lighting: [refractive_edge, condensation_sparkle, clear_window_key]
+    typography_bias: modern_sans_or_clean_grotesk
+    material_language: [glass, acrylic, translucent_jelly, window_surface]
+    lighting_language: [refractive_edge, condensation_sparkle, clear_window_key]
+    composition_bias: [liquid_flow_field, translucent_installation, negative_space_lifestyle_stage, glass_window_architecture]
     density: low_medium
-    forbid: [home_style_four_badges, hot_food_smoke_when_cold, heavy_restaurant_signboard, flat_footer_kv]
+    forbid: [hot_food_smoke_when_cold, heavy_restaurant_signboard, flat_footer_kv]
 
   WESTERN_DINING:
     use_for: steak, pasta, western dining
     ingredient_atmosphere: [refined_sear, plated_precision, restrained_dining_luxury]
-    typography: high_contrast_serif_plus_clean_sans
-    title_materials: [stone_inlay, brushed_metal, menu_surface, refined_glass]
-    spatial_actions: [headline_as_wall_relief, headline_as_material_lintel, headline_as_light_architecture, headline_as_table_edge_structure]
-    materials: [stone, linen, silver]
-    atmosphere: [restrained, refined, editorial]
-    lighting: [controlled_specular, directional_editorial_key, deep_shadow_shape]
+    typography_bias: high_contrast_serif_plus_clean_sans
+    material_language: [stone, linen, silver, brushed_metal, refined_glass]
+    lighting_language: [controlled_specular, directional_editorial_key, deep_shadow_shape]
+    composition_bias: [negative_space_editorial_stage, diagonal_table_axis, refined_architecture, material_inlay]
     density: low_medium
-    forbid: [sichuan_red_gold_brush_skin, flat_footer_kv, loud_nightmarket_graphics]
+    forbid: [sichuan_red_gold_brush_skin, loud_nightmarket_graphics, flat_footer_kv]
 
   JAPANESE_KOREAN:
     use_for: Japanese and Korean dishes
     ingredient_atmosphere: [clean_geometry, fresh_surface, quiet_order, crafted_detail]
-    typography: minimal_sans_or_narrow_grotesk
-    title_materials: [paper, wood_inlay, fabric_noren, stone]
-    spatial_actions: [headline_as_suspended_installation, headline_as_paper_screen, headline_as_wall_relief, headline_as_material_lintel]
-    materials: [wood, paper, stone]
-    atmosphere: [order, geometry, quiet_modernity]
-    lighting: [soft_directional, paper_glow, controlled_negative_space]
+    typography_bias: minimal_sans_or_narrow_grotesk
+    material_language: [wood, paper, stone, fabric]
+    lighting_language: [soft_directional, paper_glow, controlled_negative_space]
+    composition_bias: [grid_architecture, paper_screen_depth, quiet_asymmetry, low-noise_stage]
     density: low_medium
-    forbid: [heavy_chinese_banquet_skin, flat_footer_kv, ornate_western_luxury]
+    forbid: [heavy_chinese_banquet_skin, ornate_western_luxury, flat_footer_kv]
 
   BAKERY_BREAKFAST:
     use_for: bread, bagels, ciabatta, bakery breakfast
     ingredient_atmosphere: [baked_crust, grain, handcraft, morning_light, warm_aroma]
-    typography: warm_serif_or_friendly_sans
-    title_materials: [bakery_wood, kraft_paper_emboss, warm_stone, oven_surface, bread_shop_material]
-    spatial_actions: [headline_as_counter_front, headline_as_material_lintel, headline_as_paper_emboss, headline_as_suspended_installation, headline_as_table_edge_structure]
-    materials: [bakery_wood, kraft_paper, warm_stone]
-    atmosphere: [morning_light, grain_warmth, baked_aroma]
-    lighting: [grazing_crust_highlight, oven_window_glow, morning_directional_key]
+    typography_bias: warm_serif_or_friendly_sans
+    material_language: [bakery_wood, kraft_paper, warm_stone, oven_surface, bread_shop_material]
+    lighting_language: [grazing_crust_highlight, oven_window_glow, morning_directional_key]
+    composition_bias: [foreground_counter, deep_oven_portal, wraparound_shelf_architecture, packaging_craft_world, negative_space_bakery_editorial]
     density: medium
     forbid: [generic_coffee_prop_pack, chinese_home_style_signboard, technology_neon, flat_footer_kv, repeated_giant_top_signboard]
 
   RETAIL_PACKAGED:
     use_for: jars, cans, bottles, bags, gift boxes, packaged snacks
     ingredient_atmosphere: [pack_structure, label_identity, brand_color, product_contents, retail_clarity]
-    typography: brand_native_display
-    title_materials: [brand_display_surface, packaging_plane, shelf_sign, acrylic_brand_structure]
-    spatial_actions: [headline_as_packaging_plane, headline_as_brand_display_structure, headline_as_light_architecture, headline_as_shelf_architecture]
-    materials: [display_plinth, glass, shelf_structure]
-    atmosphere: [packshot_clarity, brand_recognition, conversion_focus]
-    lighting: [label_face_key, contour_rim, display_specular_control]
+    typography_bias: brand_native_display
+    material_language: [display_plinth, glass, shelf_structure, brand_surface, packaging_plane]
+    lighting_language: [label_face_key, contour_rim, display_specular_control]
+    composition_bias: [packaging_world, shelf_architecture, brand_display_stage, asymmetric_retail_installation, negative_space_packshot]
     density: medium_high
-    forbid: [redesign_package, convert_to_restaurant_serving, flat_footer_kv, hide_pack_behind_decor]
+    forbid: [redesign_package, convert_to_restaurant_serving, hide_pack_behind_decor, flat_footer_kv]
 
 routing_rules:
   primary_profile_count: 1
@@ -151,12 +127,12 @@ routing_rules:
   low_confidence_behavior: conservative_food_ad_base
   previous_job_profile_reuse: forbidden_unless_user_explicitly_requests
   visual_director_required_for_B: true
+  creative_board_candidate_count: 3
+  candidate_skeletons_must_be_distinct: true
+  only_winner_reaches_image_model: true
   kv_mode_default: TRUE_UPPER_BOUND
   atmosphere_evidence_minimum: 3
-  one_big_idea_count: 1
-  headline_spatial_properties_minimum_of_4: 3
-  foreground_midground_background_required: true
-  depth_cues_beyond_product_minimum: 2
-  anti_flatness_required: true
-  anti_template_required: true
+  anti_template_checks_composition_skeleton: true
+  material_swap_is_not_new_concept: true
   different_category_requires_major_redesign: true
+  upper_bound_is_not_decoration_count: true
