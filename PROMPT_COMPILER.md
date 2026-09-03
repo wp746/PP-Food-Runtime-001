@@ -13,114 +13,92 @@ A5 CURRENT CATEGORY BACKGROUND ARCHITECTURE
 A6 HARD NEGATIVES
 ```
 
-A1 must be first and must state that the current reference image is the only product truth and the product may not be redesigned, replaced, re-plated, re-cooked, re-packaged, or beautified into another serving.
-
-A5 is derived from the current product/category only. Do not inject all category examples.
+A1 must be first and state that the current reference image is the only product truth. The product may not be redesigned, replaced, re-plated, re-cooked, re-packaged, or beautified into another serving.
 
 ## B Prompt — exactly 6 blocks
 
 ```text
 B1 CURRENT STAGE A PRODUCT LOCK
-B2 UPPER-BOUND VISUAL DIRECTOR + CURRENT CATEGORY PROFILE
+B2 SELECTED DIRECTOR CONCEPT + CURRENT CATEGORY
 B3 COPY TRUTH + INFORMATION RHYTHM
-B4 PRODUCT HERO + SPATIAL TYPOGRAPHY + SHARED COMPOSITION
-B5 ONE BIG IDEA + THREE-DEPTH CATEGORY WORLD + LIGHT/MATERIAL DRAMA
-B6 HARD NEGATIVES + ANTI-FLATNESS + ANTI-TEMPLATE
+B4 PRODUCT HERO + TYPOGRAPHY ROLE
+B5 CATEGORY-NATIVE WORLD + COMPOSITION SKELETON
+B6 HARD NEGATIVES
 ```
 
 B1 must reference the current job Stage A PASS image, never the raw snapshot or a previous job.
 
-### B2 — current-job director outputs only
+## B2 — Winner Only
 
-Include:
+Include only selected candidate outputs:
 
 ```text
+selected composition skeleton
+selected memorable action
+why it belongs to this product
+current category profile
 core ingredient/material semantics
-temperature / texture / process cue
-regional/brand cue when supported
 primary visual mood
-primary color logic
-title material language
+primary color/material logic
+lighting logic
+atmosphere bridge
 forbidden style language
-ATMOSPHERE_EVIDENCE >= 3
-selected primary category profile
-optional weak auxiliary profile
-ANTI_TEMPLATE_DIFFERENTIATION
 ```
 
-Do not inject other category skins.
+Do not include rejected candidates or all category profiles.
 
-### B3 — copy truth + differentiated rhythm
+## B3 — Copy Truth
 
-Include only exact user-authorized hard facts and explicitly authorized safe campaign copy.
+Include exact user-authorized copy only. Information density follows actual copy truth. Do not force extra selling points, badges or utility fields to make the design look richer.
 
-Define hierarchy when content exists:
+## B4 — Product Hero + Typography Role
+
+Product is hero #1. Headline is hero #2.
+
+Describe typography according to the selected concept, not a universal 3D checklist. Specify:
 
 ```text
-L1 PRODUCT HERO
-L2 HEADLINE
-L3 SUBTITLE / SLOGAN
-L4 SELLING POINTS
-L5 BRAND / UTILITY
+headline role in composition
+headline material/medium only if concept needs it
+headline relationship to product
+subtitle/slogan relationship
+utility placement logic
+occlusion limits
 ```
 
-Do not fabricate hard facts to satisfy density.
+Typography must feel integrated, but it may be restrained if restraint better serves the category.
 
-### B4 — upper-bound spatial typography
+## B5 — Category-Native World + Skeleton
+
+Specify the winning spatial structure and depth logic:
 
 ```text
-PRODUCT_PRIORITY = 1
-HEADLINE_PRIORITY = 2
+composition skeleton
+foreground/midground/background relationship when relevant
+primary spatial axis
+product support architecture
+light direction and material transition
+negative-space strategy
+one memorable action
 ```
 
-Headline must express at least 3 of:
+Do not convert this into a decoration checklist.
 
-```text
-PERSPECTIVE
-VOLUME / DEPTH
-CATEGORY-NATIVE MATERIALITY
-SPATIAL ATTACHMENT TO SCENE
-```
-
-B4 must include explicit `SHARED_COMPOSITION_LOGIC` linking product and typography through perspective, support plane, stage structure, controlled overlap, atmosphere, geometry, light or material continuity.
-
-Do not create an unrelated text rectangle above or below the product.
-
-### B5 — concrete action + campaign depth
-
-`ONE_BIG_IDEA` must be a concrete spatial campaign action, not a mood adjective.
-
-B5 must specify:
-
-```text
-FOREGROUND_PLAN
-MIDGROUND_PLAN
-BACKGROUND_PLAN
-LIGHTING_DRAMA_PLAN
-MATERIAL_DEPTH_PLAN
-```
-
-At least two independent depth cues beyond the product are required.
-
-The category world must be visibly derived from current food/product semantics. Premium-looking but category-generic staging is insufficient.
-
-### B6 — hard negatives
+## B6 — Hard Negatives
 
 Always include:
 
 ```text
-no commercial-photo-plus-footer-layout
-no bottom-only headline strip
-no all-copy-on-one-flat-plane
-no unrelated product-zone/text-zone split
-no giant-title-first-read
-no product-as-background-or-wallpaper
-no generic signboard-above-product template unless uniquely justified
-no repeated previous-job composition skin
-no generic 3D title detached from category
-no random prop-pack used as premium substitute
-no unsupported hard facts
+no raw snapshot as B reference after A PASS
+no previous-job facts or visual skin
 no product/package/vessel/plating redesign
+no unsupported hard facts
+no headline dominance over product
+no photo-plus-footer fallback
+no TOP_TITLE_BLOCK + CENTER_PRODUCT + BOTTOM_INFO safe template unless uniquely justified
+no material-swap pseudo-innovation
+no rejected candidate blending
+no generic all-category 3D title treatment
 ```
 
 ## Prompt Budget Rules
@@ -129,8 +107,9 @@ Do not send to IMAGE_MODEL:
 - this whole repository;
 - tests;
 - runtime state explanations;
-- all 12 category profiles;
+- all category profiles;
 - previous-job examples;
+- rejected candidates;
 - duplicated synonyms of the same constraint.
 
 IMAGE_MODEL receives only:
@@ -141,4 +120,4 @@ CURRENT_REFERENCE_IMAGE
 + FIXED_6_BLOCK_PROMPT
 ```
 
-If the agent cannot compile the prompt without contradiction or without a concrete upper-bound director brief, block production and repair the contract first.
+If prompt compilation introduces contradictory rules or multiple competing concepts, block production and resolve the contract first.
