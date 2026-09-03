@@ -1,6 +1,6 @@
-# B Executor
+# B Executor — Upper-Bound Campaign Mode
 
-Purpose: transform the **current job Stage A PASS image** into a category-native, visually directed professional KV while keeping the product first visual hero.
+Purpose: transform the **current job Stage A PASS image** into a category-native, ingredient-atmosphere-driven, upper-bound professional KV while keeping the product first visual hero.
 
 ## Preconditions
 
@@ -13,7 +13,7 @@ CURRENT_CATEGORY_ROUTE = RESOLVED
 
 If any is missing, B is blocked.
 
-## Copy Truth
+## 1. Copy Truth
 
 Build:
 
@@ -22,11 +22,11 @@ COPY_ALLOWLIST
 COPY_BLOCKLIST
 ```
 
-User-provided hard facts must be exact. Product name may serve as headline. Missing subtitle or campaign copy may only be auto-generated after explicit default-copy authorization.
+User-provided hard facts must be exact. Product name may serve as headline. Missing subtitle/campaign copy may only be generated after explicit default-copy authorization.
 
 Never invent business hard facts.
 
-## Category Route
+## 2. Category Route
 
 Select exactly:
 
@@ -37,7 +37,7 @@ Select exactly:
 
 Do not activate all profiles. Brand positioning is secondary to category-native language.
 
-## Mandatory KV Visual Director
+## 3. Mandatory KV Visual Director
 
 Before contract compilation, read and execute:
 
@@ -45,35 +45,38 @@ Before contract compilation, read and execute:
 B_KV_VISUAL_DIRECTOR.md
 ```
 
-Create the current-job director brief from:
-
-```text
-category
-core ingredients / materials
-temperature
-texture / mouthfeel
-process / serving cue
-regional-cultural cue when supported
-brand positioning
-product-derived atmosphere evidence
-```
-
-The brief must resolve:
+The current-job brief must resolve:
 
 ```text
 VISUAL_DIRECTOR_BRIEF = PASS
 ATMOSPHERE_EVIDENCE >= 3
 ONE_BIG_IDEA = CONCRETE_SPATIAL_ACTION
 HEADLINE_SPATIAL_FORM = RESOLVED
-SHARED_COMPOSITION_LOGIC = RESOLVED
+SHARED_COMPOSITION_LOGIC = PASS
 INFORMATION_RHYTHM_PLAN = RESOLVED
 PRODUCT_HERO_PROTECTION_PLAN = PASS
+FOREGROUND_PLAN = PASS
+MIDGROUND_PLAN = PASS
+BACKGROUND_PLAN = PASS
+LIGHTING_DRAMA_PLAN = PASS
+MATERIAL_DEPTH_PLAN = PASS
 ANTI_FLATNESS_PLAN = PASS
+ANTI_TEMPLATE_DIFFERENTIATION = PASS
 ```
 
-If the director brief is missing or vague, B is blocked.
+If any is missing or vague, B is blocked.
 
-## Product Hero Priority
+## 4. Default Output Standard
+
+```text
+KV_MODE = TRUE_UPPER_BOUND
+```
+
+Every category outputs its own upper-bound language by default. The system does not reserve upper-bound treatment for explicit user requests.
+
+Upper-bound means more resolved, more category-specific and more spatial — not simply larger typography, more props or more effects.
+
+## 5. Product Hero Priority
 
 ```text
 1 PRODUCT / FOOD HERO
@@ -84,9 +87,9 @@ If the director brief is missing or vague, B is blocked.
 6 BUSINESS / UTILITY INFO
 ```
 
-The headline may be strong, dimensional, material, and spatial, but must not become the first hero or cover identity/appetite-critical product areas.
+The product must remain the first visual read. The headline may be strong, dimensional and spatial, but may not become visual priority #1 or cover identity/appetite-critical product areas.
 
-## Spatial Typography Hard Rule
+## 6. Spatial Typography Hard Rule
 
 Headline must exhibit at least 3 of:
 
@@ -97,37 +100,91 @@ CATEGORY-NATIVE MATERIALITY
 SPATIAL ATTACHMENT TO SCENE
 ```
 
-Headline, subtitle, slogan, selling points and utility information belong to one coherent current-category spatial system. Avoid a large 3D headline with all other copy pasted flat like presentation text.
+Headline, subtitle, slogan, selling points and utility information belong to one coherent current-category spatial system.
 
-The B result must not read as:
+The output must not read as:
 
 ```text
-Stage A commercial photo
-+ bottom headline card
-+ flat footer information
+Stage A photo + bottom headline card + flat footer
 ```
 
-That pattern is `ANTI_FLATNESS_FAIL`.
+That is `ANTI_FLATNESS_FAIL`.
 
-## One Big Idea
+## 7. Anti-Template Hard Rule
 
-Use exactly one thumbnail-readable campaign action derived from the current product/category. Examples are action grammar, not templates: bakery sign, counter front, paper emboss, steam corridor, flavor wave, glass installation, packaging plane, brand display structure.
+Do not default to:
 
-Vague mood words alone are not a valid One Big Idea.
+```text
+large signboard above
+product centered below
+small brand plaque at bottom
+```
 
-## Shared Composition Logic
+unless current product semantics uniquely justify that structure.
 
-Product and typography must share a deliberate composition relationship: perspective field, support plane, stage structure, overlap, atmosphere bridge, geometry echo, or another director-approved current-category relationship.
+The director must create a product-derived differentiator. If a different category could replace the current product with minimal redesign:
 
-If product and copy occupy unrelated independent zones, retry B.
+```text
+ANTI_TEMPLATE_DIFFERENTIATION = FAIL
+```
 
-## Generation
+## 8. One Big Idea
 
-1. Complete the Visual Director brief.
+Use exactly one thumbnail-readable campaign action derived from the current product/category. It must alter the spatial composition, not merely describe mood.
+
+Examples of action grammar: counter-front structure, material lintel, wall relief, suspended installation, flavor wave, steam corridor, glass installation, acrylic window, packaging plane, light architecture, table-edge structure, serving-geometry extension.
+
+## 9. Three-Depth Stage
+
+B must deliberately establish:
+
+```text
+FOREGROUND = near-camera framing / material edge / controlled overlap
+MIDGROUND = PRODUCT HERO + main light pool + main title relationship
+BACKGROUND = category-native architecture + recession + light/material depth
+```
+
+At least two independent depth cues beyond the product are required.
+
+Props are optional and subordinate. Depth must come mainly from architecture, material planes, perspective, light and occlusion.
+
+## 10. Lighting Drama
+
+Lighting must translate product semantics:
+
+- baked/crisp → grazing warm texture light;
+- brothy/hot → liquid highlights + steam separation;
+- cold/transparent → refractive edge light + condensation clarity;
+- creamy/dessert → soft sculpting + elegant gradients;
+- premium seafood → restrained precise speculars;
+- retail package → contour light + pack-face readability.
+
+Lighting may not change product truth or surface state.
+
+## 11. Information Rhythm
+
+When authorized copy is sufficient, organize differentiated levels instead of one footer stack:
+
+```text
+L1 PRODUCT HERO
+L2 HEADLINE
+L3 SUBTITLE / SLOGAN
+L4 SELLING POINTS
+L5 BRAND / STORE / ADDRESS / PHONE / QR / UTILITY
+```
+
+Sparse factual content remains sparse. Never fabricate hard facts for density.
+
+## 12. Generation
+
+1. Complete current Visual Director brief.
 2. Fill `executors/B_CONTRACT_TEMPLATE.md`.
 3. Compile only the fixed 6-block B prompt from `PROMPT_COMPILER.md`.
-4. Use `CURRENT_JOB_STAGE_A_PASS_IMAGE` as the reference.
+4. Use `CURRENT_JOB_STAGE_A_PASS_IMAGE` as the only B product reference.
+5. Generate.
+6. Run full B QC including upper-bound, anti-flatness and anti-template gates.
+7. Targeted retry only.
 
-## Output
+## 13. Output
 
-Deliver only after `QC_GATE.md` passes, including KV tension and anti-flatness gates. Otherwise follow targeted retry.
+Deliver only after `QC_GATE.md` passes all hard gates. A visually attractive but template-like, flat or weakly differentiated KV is not PASS.
