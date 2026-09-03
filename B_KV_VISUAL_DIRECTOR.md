@@ -1,6 +1,6 @@
-# B KV Visual Director
+# B KV Visual Director — Product-Led Campaign Direction
 
-Purpose: turn the current Stage A PASS image into a category-native campaign world with a memorable product-led idea. The director protects hard truths, explores creative alternatives, and selects one strong composition before prompt compilation.
+Purpose: direct a world-class KV from the current Stage A PASS image without allowing category storytelling or set design to overpower the product.
 
 This file is production-critical for B.
 
@@ -9,20 +9,17 @@ This file is production-critical for B.
 ```text
 CURRENT_JOB_STAGE_A_PASS_IMAGE
 → CURRENT PRODUCT SEMANTICS
-→ B_KV_VISUAL_DIRECTOR
-→ B_KV_CREATIVE_BOARD (3 candidates)
-→ SELECT 1 WINNER
-→ B_CONTRACT
-→ B_PROMPT_COMPILER
-→ IMAGE_MODEL
-→ B_QC
+→ 3 TEXTUAL DIRECTOR CANDIDATES
+→ SELECT 2 VISUALLY DISTINCT FINALISTS
+→ B_KV_VISUAL_AUDITION (2 actual renders)
+→ VISION_MODEL SELECTS WINNER
+→ optional targeted refinement
+→ FINAL B QC
 ```
 
-Skipping the director or candidate board is a B critical failure.
+Text planning alone is not sufficient evidence of upper-bound quality.
 
 ## 2. Hard Bottom-Line Constraints
-
-These are non-negotiable:
 
 ```text
 PRODUCT_FIDELITY = LOCKED
@@ -36,72 +33,81 @@ EXACT_9_16 = TRUE
 
 Creative ambition must never redesign, re-cook, re-plate, re-package, shrink, demote or obscure the product.
 
-## 3. Current Product Reading
+## 3. Stage A Hero Preservation
 
-Use only current-job evidence:
-
-```text
-Stage A PASS image
-user-provided product/dish name
-user-provided brand/store information
-current COPY_ALLOWLIST
-selected current category profile
-reliably visible ingredients/materials
-reliably supported temperature / texture / serving cues
-```
-
-Resolve:
+Stage A is not just product truth; it is the hero-camera baseline.
 
 ```text
-FOOD_CATEGORY
-CORE_INGREDIENT_OR_MATERIAL_SEMANTICS
-TEMPERATURE_ATTRIBUTE
-TEXTURE_MOUTHFEEL_ATTRIBUTE
-PROCESS_OR_SERVING_CUE
-REGIONAL_CULTURAL_CUE = RESOLVED_OR_NA
-BRAND_POSITIONING
-PRIMARY_VISUAL_MOOD
-PRIMARY_COLOR_LOGIC
-CATEGORY_MATERIAL_LANGUAGE
-FORBIDDEN_STYLE_LANGUAGE
-ATMOSPHERE_EVIDENCE >= 3
+PRODUCT_APPARENT_SCALE_SHRINK_FROM_STAGE_A <= 15%
+PRODUCT_REMAINS_PRIMARY_FOCAL_MASS = TRUE
+ENVIRONMENT_PRIORITY < PRODUCT_PRIORITY
 ```
 
-The product/category must drive the world. Generic adjectives such as premium, cinematic, warm or luxury are insufficient by themselves.
+A concept fails if an arch, portal, room, corridor, sign, shelf or scenic architecture becomes more visually important than the food/product.
 
-## 4. Creative Direction Is Candidate-Based
+## 4. Read Product Semantics, Then Translate Them
 
-Read and execute `B_KV_CREATIVE_BOARD.md`.
+Use current-job evidence only:
+- product/dish identity;
+- ingredients/materials;
+- temperature;
+- texture/mouthfeel;
+- supported process/serving cues;
+- regional/cultural cues when reliable;
+- brand positioning;
+- Stage A palette and material truth.
 
-Generate exactly three internally distinct concepts using different composition skeletons. Compare them. Select one winner. Only the winner enters the B Contract and IMAGE_MODEL prompt.
-
-Do not treat material swaps as new concepts.
-
-## 5. One Memorable Action
-
-The selected concept must have one clear, thumbnail-readable, product-led action.
-
-Examples of action grammar may include:
+Translate these signals into:
 
 ```text
-product emerging through a category-native portal
-counter or shelf architecture wrapping around product
-headline embedded into the product support structure
-flavor/steam/liquid field connecting product and type
-asymmetric installation directing eye into product
-packaging world extending the pack identity into the environment
-negative-space editorial stage with one refined spatial anchor
+PALETTE
+LIGHT
+SURFACE
+RHYTHM
+GEOMETRY
+TYPOGRAPHY BEHAVIOR
+NEGATIVE SPACE
 ```
 
-These are design grammars, not reusable templates.
+Do not literalize category semantics into theatrical scenery.
 
-A mood phrase is not an action.
+Examples:
+- bakery cues can become warm cream, amber crust light, refined wood/stone, paper accents and editorial typography — not automatically an old oven tunnel;
+- hot broth can become steam separation, upward rhythm and glossy highlights — not automatically a corridor;
+- fruit/cold cues can become translucency and refractive freshness — not automatically jelly letters everywhere.
 
-## 6. Composition Skeleton Matters More Than Surface Material
+## 5. Candidate-Based Direction
 
-Anti-template evaluation must compare spatial skeleton, not whether the title is made of wood, paper, glass or metal.
+Read `B_KV_CREATIVE_BOARD.md` and create exactly three textual candidates with different composition skeletons.
 
-Known safe fallback skeletons receive a strong penalty:
+Then select the **two strongest and most visually different finalists** for actual rendered audition.
+
+At least one finalist must be restrained/editorial unless the category clearly demands theatrical spatial architecture.
+
+## 6. One Memorable Product-Led Action
+
+The memorable action must strengthen the product, not compete with it.
+
+Good actions:
+- typography wrapping or framing the hero without reducing product scale;
+- refined counter/shelf edge that extends the support plane;
+- asymmetric negative space with one material anchor;
+- ingredient/light motion that directs the eye into product;
+- packaging identity extended into the world;
+- dimensional headline integrated into foreground/midground while product stays nearest and strongest.
+
+High-risk actions:
+- giant portals;
+- giant arches;
+- huge signboards;
+- deep rooms or tunnels;
+- elaborate themed sets.
+
+These require explicit proof that product remains hero #1.
+
+## 7. Composition Skeleton, Not Surface Swap
+
+Known safe fallback skeletons remain penalized:
 
 ```text
 TOP_TITLE_BLOCK + CENTER_PRODUCT + BOTTOM_INFO
@@ -109,106 +115,78 @@ BIG_SIGNBOARD + CENTER_PRODUCT + SMALL_PLAQUE
 PHOTO + FOOTER
 ```
 
-If the same skeleton remains after swapping materials, it is still the same template.
-
-## 7. Product + Typography Co-Composition
-
-Typography must belong to the same directed shot as the product, but typography complexity is not a goal by itself.
-
-Strong relationships include:
-- shared perspective field;
-- shared support architecture;
-- controlled overlap;
-- atmosphere/light bridge;
-- geometry echo;
-- title embedded in a category-native structure;
-- asymmetric negative space deliberately shaped around product.
-
-If product and copy can be separated into independent rectangles with almost no loss, composition integration fails.
+Changing wood to paper/glass/metal is not a new idea.
 
 ## 8. Typography Principle
 
-Do **not** mechanically force perspective + volume + materiality + spatial attachment as a checklist.
+Typography should feel designed into the same campaign image, but complexity is not the goal.
 
-Choose the typography behavior that best supports the winning concept and category. It may be dimensional, embedded, hanging, translucent, embossed, restrained editorial, architectural, or nearly flat when that is the strongest category-native decision.
+Typography may be:
+- dimensional;
+- embedded;
+- hanging;
+- translucent;
+- embossed;
+- architectural;
+- refined editorial;
+- restrained and nearly flat if that is visually stronger.
 
 Hard rules:
-- typography must not become hero #1;
-- it must not look pasted on;
-- it must not default to a footer;
-- it must belong to the selected composition skeleton;
-- user-supplied text must remain exact.
+- product remains first read;
+- headline remains second read;
+- type may not force product shrinkage;
+- type may not read like menu signage;
+- user-supplied text remains exact.
 
-## 9. Information Rhythm
+## 9. Contemporary Campaign Standard
 
-Information density follows copy truth and concept.
+World-class B should feel like contemporary commercial art direction, not a themed restaurant set.
 
-Do not invent extra selling points to make the poster look richer. If copy is sparse, keep the KV elegant and spatially resolved. If copy is rich, distribute it into a clear hierarchy.
+Prefer:
+- controlled material families;
+- controlled palette;
+- clean hierarchy;
+- bold but selective scale contrast;
+- designed negative space;
+- sophisticated lighting;
+- one memorable gesture;
+- product tactile clarity.
 
-Possible hierarchy:
+Reject:
+- rustic-theme overload;
+- medieval/cave/oven-world literalism;
+- prop piles;
+- brown-on-brown monotony;
+- souvenir-sign aesthetics;
+- oversized architecture that makes food secondary.
 
-```text
-PRODUCT HERO
-HEADLINE
-SUBTITLE / SLOGAN
-AUTHORIZED SELLING POINTS
-BRAND / STORE / ADDRESS / PHONE / QR / UTILITY
-```
-
-Not every job must visually activate every level.
-
-## 10. Lighting + Atmosphere
-
-Lighting must reveal current product truth and support the chosen campaign world.
-
-Examples:
-- bakery: crust, grain, warm oven/window light, but avoid turning every bakery into the same brown signboard world;
-- hot bowls: broth depth, steam trajectory and table heat;
-- cold drinks: translucency, condensation, freshness, cool light behavior;
-- desserts: cream softness, glass/acrylic finesse, restrained highlights;
-- seafood: moisture, clarity, refined cool/wet materiality;
-- packaged retail: label readability, pack silhouette, brand-color discipline and retail clarity.
-
-Never re-cook or over-amplify product surface state for drama.
-
-## 11. True Upper-Bound
+## 10. True Upper-Bound
 
 ```text
 TRUE_UPPER_BOUND =
 PRODUCT_TRUTH
-+ ONE_MEMORABLE_PRODUCT-DERIVED_IDEA
-+ CATEGORY-NATIVE_WORLD
-+ COMPOSITIONAL_TENSION
-+ REFINED_EXECUTION
++ PRODUCT_HERO_STRENGTH
++ ONE MEMORABLE PRODUCT-DERIVED IDEA
++ CATEGORY-NATIVE BUT NON-LITERAL WORLD
++ COMPOSITIONAL TENSION
++ CONTEMPORARY CAMPAIGN REFINEMENT
 ```
 
-Upper-bound is not more decoration.
+Upper-bound is not more decoration, more props, bigger type or more scenery.
 
-Do not equate it with:
-- giant title;
-- extra props;
-- more badges;
-- more text;
-- thicker 3D type;
-- more material effects.
+## 11. Director Pass Condition
 
-For refined categories, a restrained solution can score higher than a busy one.
-
-## 12. Director Pass Condition
-
-Before B prompt compilation:
+Before rendered audition:
 
 ```text
-VISUAL_DIRECTOR_BRIEF = PASS
-ATMOSPHERE_EVIDENCE >= 3
-THREE_CANDIDATES_CREATED = TRUE
+THREE_TEXT_CANDIDATES = TRUE
 CANDIDATE_SKELETONS_DISTINCT = TRUE
-WINNER_SELECTED = TRUE
-SELECTED_ONE_MEMORABLE_ACTION = RESOLVED
+TWO_RENDER_FINALISTS_SELECTED = TRUE
+AT_LEAST_ONE_RESTRAINED_EDITORIAL_FINALIST = TRUE_OR_JUSTIFIED_NA
+STAGE_A_HERO_PRESERVATION_PLAN = PASS
+NON_LITERAL_TRANSLATION_PLAN = PASS
 PRODUCT_HERO_PROTECTION_PLAN = PASS
-CATEGORY_INEVITABILITY_PLAN = PASS
-THUMBNAIL_MEMORY_PLAN = PASS
 ANTI_TEMPLATE_PLAN = PASS
 ```
 
-Any missing field blocks B generation.
+Then execute `B_KV_VISUAL_AUDITION.md`.
