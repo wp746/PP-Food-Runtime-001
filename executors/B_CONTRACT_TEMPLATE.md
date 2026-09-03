@@ -1,4 +1,6 @@
-# Compact B Contract — Upper-Bound
+# Compact B Contract
+
+Only the **selected winning creative candidate** may enter this contract.
 
 ```text
 JOB_MODE = B
@@ -17,93 +19,73 @@ CURRENT_CATEGORY
 - food_category:
 - cuisine_family:
 - brand_positioning:
-- visual_mood:
 - primary_profile:
 - weak_auxiliary_profile:
-
-VISUAL_DIRECTOR_BRIEF
 - core ingredient/material semantics:
-- temperature attribute:
-- texture/mouthfeel attribute:
-- process/serving cue:
-- regional/cultural cue:
-- primary visual mood:
-- primary color logic:
-- title material language:
-- forbidden style language:
+- temperature/texture/process cues:
 - atmosphere evidence #1:
 - atmosphere evidence #2:
 - atmosphere evidence #3:
-- ONE_BIG_IDEA concrete spatial action:
-- headline spatial form:
-- shared composition logic:
-- information rhythm plan:
-- product hero protection plan:
-- foreground plan:
-- midground plan:
-- background plan:
-- lighting drama plan:
-- material depth plan:
-- anti-flatness plan:
-- anti-template differentiation:
+
+CREATIVE_BOARD_RESULT
+- three candidates created: TRUE
+- candidate skeletons distinct: TRUE
+- selected composition skeleton:
+- selected memorable action:
+- why this belongs to current product/category:
+- selected product hero strategy:
+- selected headline role:
+- selected atmosphere bridge:
+- selected depth logic:
+- selected lighting logic:
+- selected copy placement logic:
+- anti-template risk:
 
 COPY_TRUTH
 - headline:
 - subtitle:
 - brand/store:
-- slogan/selling_points:
+- authorized slogan/selling_points:
 - hard_business_facts:
 - COPY_ALLOWLIST:
 - COPY_BLOCKLIST:
 
-SPATIAL_TEXT_SYSTEM
-- headline personality/material/medium:
-- headline perspective:
-- headline volume/depth:
-- headline spatial attachment:
-- subtitle subordinate medium:
-- slogan/selling-point medium:
+TYPOGRAPHY_ROLE
+- headline role in winning composition:
+- headline personality/material/medium if needed:
+- headline relationship to product:
+- subtitle/slogan relationship:
 - brand/utility placement:
-- shared perspective/vanishing logic:
+- shared perspective/spatial relationship:
 - occlusion limit:
 
-CAMPAIGN_STAGE
-- foreground element / near-camera entry:
-- midground product light pool:
-- background architecture / recession:
-- depth cue #1:
-- depth cue #2:
-- lighting-to-product-semantic relationship:
-- material-plane relationship:
-
-ONE_BIG_IDEA
-- one thumbnail-readable campaign action:
-- why this action belongs to current product/category:
-- why another food category would require major redesign:
-- category-native background/material/color logic:
-- information density:
+CATEGORY_WORLD
+- primary color/material logic:
+- lighting behavior:
+- foreground/midground/background logic when relevant:
+- negative-space strategy:
+- forbidden style language:
 
 HARD_NEGATIVES
 - no raw snapshot as B reference after A PASS
 - no previous-job image/facts/skin
 - no product/package/vessel/plating redesign
-- no major ingredient add/remove/replace
-- no unsupported business facts
+- no unsupported hard facts
 - no headline dominance over product
-- no commercial-photo-plus-footer layout
-- no bottom-only headline strip
-- no all-copy-on-one-flat-plane
-- no unrelated product-zone/text-zone split
-- no generic signboard-above-product template unless uniquely justified
-- no generic 3D title treatment detached from category
-- no random prop-pack used as premium substitute
-- no cross-category skin contamination
+- no photo-plus-footer fallback
+- no TOP_TITLE_BLOCK + CENTER_PRODUCT + BOTTOM_INFO safe template unless uniquely justified
+- no material-swap pseudo-innovation
+- no rejected candidate blending
+- no generic all-category 3D title treatment
 
 VISUAL_DIRECTOR_BRIEF = PASS
-ATMOSPHERE_EVIDENCE >= 3
-ANTI_FLATNESS_PLAN = PASS
-ANTI_TEMPLATE_DIFFERENTIATION = PASS
-THREE_DEPTH_STAGE = PASS
+THREE_CANDIDATES_CREATED = TRUE
+CANDIDATE_SKELETONS_DISTINCT = TRUE
+WINNER_SELECTED = TRUE
+PRODUCT_HERO_PROTECTION_PLAN = PASS
+CATEGORY_INEVITABILITY_PLAN = PASS
+THUMBNAIL_MEMORY_PLAN = PASS
+ANTI_TEMPLATE_PLAN = PASS
 QC_REQUIRED = TRUE
 TARGETED_RETRY_ONLY = TRUE
 ```
