@@ -1,10 +1,10 @@
-# B KV Visual Director
+# B KV Visual Director — Upper-Bound Edition
 
-Purpose: prevent Stage B from degrading into **commercial photo + pasted text**. Before B prompt compilation, the host must direct one category-native campaign world from the current product truth.
+Purpose: make every Stage B output a **category-native, ingredient-atmosphere-driven, upper-bound campaign KV**, not a commercial photo with decorative text.
 
 This file is production-critical for B.
 
-## 1. Mandatory Position In Pipeline
+## 1. Mandatory Pipeline Position
 
 ```text
 CURRENT_JOB_STAGE_A_PASS_IMAGE
@@ -15,26 +15,26 @@ CURRENT_JOB_STAGE_A_PASS_IMAGE
 → B_QC
 ```
 
-Skipping the visual-director brief is a B critical failure.
+Skipping the director brief is a B critical failure.
 
-## 2. Visual Director Inputs
+## 2. Director Inputs
 
-Use only current-job evidence:
+Use current-job evidence only:
 
 ```text
 Stage A PASS image
 user-provided product / dish name
 user-provided brand / store information
-current COPY_ALLOWLIST
+current COPY_ALLOWLIST / COPY_BLOCKLIST
 current category profile
-reliably visible food / material semantics
+reliably visible ingredient / product / package semantics
 ```
 
-Never import a previous job's visual skin.
+Previous-job visual skin, typography, props, palette, slogans and spatial devices are OFF unless the user explicitly requests continuity.
 
-## 3. Director Brief — Required Fields
+## 3. Required Director Brief
 
-Before B generation, resolve:
+Resolve before B generation:
 
 ```text
 FOOD_CATEGORY
@@ -48,70 +48,125 @@ PRIMARY_VISUAL_MOOD
 PRIMARY_COLOR_LOGIC
 TITLE_MATERIAL_LANGUAGE
 FORBIDDEN_STYLE_LANGUAGE
+ATMOSPHERE_EVIDENCE >= 3
 ONE_BIG_IDEA
 HEADLINE_SPATIAL_FORM
 SHARED_COMPOSITION_LOGIC
 INFORMATION_RHYTHM_PLAN
 PRODUCT_HERO_PROTECTION_PLAN
-ATMOSPHERE_EVIDENCE >= 3
+FOREGROUND_PLAN
+MIDGROUND_PLAN
+BACKGROUND_PLAN
+LIGHTING_DRAMA_PLAN
+MATERIAL_DEPTH_PLAN
+ANTI_TEMPLATE_DIFFERENTIATION
 ```
 
-The director brief is internal; the user does not need to fill a form.
+The brief is internal. The user does not fill a form.
 
 ## 4. Ingredient / Atmosphere Derivation
 
-The visual world must be traceable to at least three current-job signals. Valid evidence includes:
-
-- ingredient identity or packaging material;
-- source color family;
-- hot / cold state;
-- crisp / soft / juicy / creamy / chewy / brothy / refreshing / smoky character;
-- cooking or serving process if supported;
-- cuisine / regional context if supplied or reliable;
-- brand positioning.
+The campaign world must be traceable to the current product.
 
 ```text
-PRODUCT_SEMANTICS → ATMOSPHERE → MATERIALS → LIGHT → TYPOGRAPHY → SPATIAL_ACTION
+PRODUCT SEMANTICS
+→ ATMOSPHERE
+→ MATERIALS
+→ LIGHT
+→ COLOR
+→ TYPOGRAPHY PERSONALITY
+→ SPATIAL ACTION
+→ INFORMATION RHYTHM
 ```
 
-Do not begin from generic adjectives such as `premium`, `cinematic`, `luxury`, `warm`, or `energetic` without product-derived evidence.
+Valid evidence includes ingredient identity, source colors, hot/cold state, crisp/soft/juicy/creamy/chewy/brothy/refreshing/smoky character, cooking/serving process when supported, regional context, packaging material, and brand positioning.
 
-## 5. One Big Idea Is Mandatory
+Do not start from generic adjectives such as `premium`, `cinematic`, `luxury`, `warm`, `modern`, or `energetic` without product-derived evidence.
 
-Every B job chooses exactly one dominant spatial campaign action.
+## 5. Upper-Bound Means Resolved, Not Louder
 
-Examples of action grammar:
+Every B defaults to:
+
+```text
+KV_MODE = TRUE_UPPER_BOUND
+```
+
+Upper-bound means:
+
+- product remains first hero;
+- category-native environment is unmistakable;
+- title material and spatial form are category-native;
+- one memorable spatial action exists at thumbnail size;
+- foreground / midground / background are intentionally designed;
+- light and material depth feel campaign-grade;
+- text hierarchy has rhythm, not a footer stack;
+- the result could not be reused for a different food category without major redesign.
+
+Upper-bound does **not** mean giant type, more badges, more props, stronger saturation, more smoke, or more decorative objects.
+
+## 6. One Big Idea — Mandatory and Specific
+
+Every B chooses exactly one dominant spatial action. Mood labels are invalid.
+
+Valid action grammar includes:
 
 ```text
 headline_as_bakery_sign
 headline_as_counter_front
-headline_as_wood_plaque
-headline_as_paper_emboss
-headline_as_restaurant_sign
-headline_as_architectural_lintel
+headline_as_material_lintel
+headline_as_wall_relief
+headline_as_suspended_installation
 headline_as_flavor_wave
 headline_as_steam_corridor
 headline_as_glass_installation
 headline_as_acrylic_window
 headline_as_packaging_plane
 headline_as_brand_display_structure
+headline_as_light_architecture
+headline_as_table_edge_structure
+headline_as_serving_geometry_extension
 ```
 
-These are methods, not fixed templates. The chosen action must be derived from the current product/category.
+The action must be justified by current category and ingredient semantics.
 
-`ONE_BIG_IDEA = premium bakery atmosphere` is invalid because it describes mood, not an action.
+`ONE_BIG_IDEA = premium bakery atmosphere` is invalid.
 
-## 6. Anti-Flatness Hard Gate
+## 7. Anti-Template Rule
+
+The director must not choose the same safe structure simply because it worked previously.
+
+The following default repetition is forbidden unless uniquely justified by the current product:
+
+```text
+large signboard above product
+product centered below
+small brand plaque at bottom
+```
+
+For each job, ask:
+
+> If another product in another category replaced this product, would this composition still work with minimal changes?
+
+If YES:
+
+```text
+ANTI_TEMPLATE_DIFFERENTIATION = FAIL
+```
+
+Rebuild the spatial action from current ingredient/category evidence.
+
+## 8. Anti-Flatness Hard Gate
 
 The following are B FAIL:
 
 - headline exists only as a bottom horizontal strip;
-- product is above and all typography is isolated in an unrelated footer;
+- product sits above and all typography is isolated in a footer;
 - all text occupies one flat plane;
-- headline is merely embossed text on a rectangular card with no composition integration;
+- headline is merely text on a rectangular card with no scene integration;
 - headline has no meaningful perspective, volume, materiality, or spatial attachment;
 - no explicit spatial campaign action exists;
-- design reads as `Stage A photo + text overlay` at thumbnail size.
+- design reads as `Stage A photo + text overlay` at thumbnail size;
+- title and product can be separated into two independent rectangles with almost no loss.
 
 Headline must exhibit at least **3 of 4**:
 
@@ -122,58 +177,76 @@ CATEGORY-NATIVE MATERIALITY
 SPATIAL ATTACHMENT TO SCENE
 ```
 
-At the same time:
+## 9. Product Hero Protection
 
 ```text
 PRODUCT_PRIORITY = 1
 HEADLINE_PRIORITY = 2
 ```
 
-Anti-flatness never authorizes title dominance.
-
-## 7. Shared Composition Logic
-
-Product and typography must feel directed in one shot.
-
-Use at least one strong relationship:
-
-- shared vanishing / perspective field;
-- headline anchored to product support plane;
-- headline forms a stage, lintel, sign, counter, window, corridor or material plane around the product;
-- product overlaps or lightly occludes the title system;
-- atmosphere, steam, condensation, ingredients, packaging or light connects product and type;
-- title orientation echoes product geometry or movement.
-
-If product and text could be separated into two independent rectangles with almost no loss, `SHARED_COMPOSITION_LOGIC = FAIL`.
-
-## 8. Product Hero Protection
-
-The director must protect product dominance while increasing design pressure.
-
-```text
-PRODUCT = nearest / clearest / strongest appetite or recognition anchor
-HEADLINE = second anchor
-COPY_SYSTEM = supporting hierarchy
-```
+Product must be the nearest, clearest, strongest recognition/appetite anchor. Headline is the second anchor.
 
 Forbidden:
-
 - shrinking product to create title space;
-- pushing product into background/corner;
-- using product as decorative wallpaper;
-- covering identity or appetite-critical areas;
-- letting giant typography become first visual read.
+- pushing product into background or corner;
+- using product as wallpaper;
+- covering identity/appetite-critical areas;
+- giant typography becoming first read;
+- using product merely as a prop for typography.
 
 When tension conflicts with product truth:
 
 ```text
-REDUCE_TYPOGRAPHY_AGGRESSION = TRUE
+REDUCE_DESIGN_AGGRESSION = TRUE
 REDUCE_PRODUCT_DOMINANCE = NEVER
 ```
 
-## 9. Information Rhythm
+## 10. Shared Composition Logic
 
-When sufficient user-authorized copy exists, organize it as differentiated levels rather than one footer stack:
+Product and typography must feel directed in one shot. Use one or more of:
+
+- shared perspective / vanishing field;
+- title anchored to product support plane;
+- title acting as stage, lintel, counter, window, light architecture, corridor or material plane;
+- product lightly overlaps or occludes the title system;
+- steam, condensation, ingredients, packaging, shadows or light connect product and type;
+- title orientation echoes product geometry or food movement.
+
+If product and title could be cut apart and pasted separately with little loss:
+
+```text
+SHARED_COMPOSITION_LOGIC = FAIL
+```
+
+## 11. Three-Depth Campaign Stage
+
+Every upper-bound B must deliberately create:
+
+```text
+FOREGROUND = near-camera framing / material edge / tag / controlled overlap / atmospheric entry
+MIDGROUND = PRODUCT HERO + main light pool + key title relationship
+BACKGROUND = category-native architecture / recession / material depth / light separation
+```
+
+At least two independent depth cues must exist beyond the product: perspective recession, scale falloff, occlusion, defocus, light falloff, material planes, suspended elements, or shadow architecture.
+
+Do not create depth mainly by adding random props.
+
+## 12. Lighting Drama
+
+Lighting must reinforce the food/property semantics, not merely make the scene darker or warmer.
+
+Examples:
+- baked/crisp → grazing highlights, oven/morning directional warmth, crust texture readability;
+- brothy/hot → steam separation, liquid specularity, heat glow without obscuring ingredients;
+- cold/transparent → refractive edge light, condensation sparkle, cool-clear negative space;
+- creamy/dessert → soft sculpting, elegant gradients, controlled sheen;
+- premium seafood → restrained specular precision and cool refined depth;
+- packaged retail → label clarity, contour light, pack-face legibility, shelf/display architecture.
+
+## 13. Information Rhythm
+
+When enough authorized copy exists, organize differentiated levels:
 
 ```text
 L1 PRODUCT HERO
@@ -183,63 +256,75 @@ L4 SELLING POINTS
 L5 BRAND / STORE / ADDRESS / PHONE / QR / UTILITY
 ```
 
-Not every level requires equal visual weight. Sparse copy should remain sparse; do not fabricate facts to fill levels.
+Do not fabricate facts to fill levels. Sparse copy may stay sparse.
 
-Use different spatial media where category-appropriate: tag, seal, shelf label, glass strip, wall plaque, hanging sign, side panel, perspective-aligned micro-card, packaging label extension, etc.
+Default-copy authorization may generate only safe non-factual campaign/sensory copy.
 
-## 10. Category-Native Director Cues
+Use category-appropriate carriers: shelf labels, hanging tags, side panels, glass strips, seals, paper bands, wall relief, packaging extensions, perspective micro-cards, projected light fields, etc.
 
-### Bakery / Breakfast
+## 14. Category-Native Upper-Bound Cues
 
-Signals: baked crust, grain, morning, handcraft, warm aroma.
+### CN_HOME_STYLE
+Signals: wok heat, sauce, homestyle abundance, Chinese dining energy.
+World: warm wood/stone/dark metal, steam depth, bold Chinese display/signage integrated into architectural surfaces.
+Avoid: dessert glass-ribbon minimalism, generic luxury banquet gold without dish evidence.
 
-Prefer: bakery wood, kraft paper, warm stone, oven/window light; title as bakery sign, wood plaque, paper emboss, counter front, packaging tag.
+### SPICY_HOT
+Signals: chili/pepper/aromatic heat, red-green contrast, fast flavor impact.
+World: dark stone/metal/lacquer, dynamic diagonal or heat-wave spatial action, vapor/ingredient motion used selectively.
+Avoid: safe centered signboard, western editorial restraint.
 
-Avoid: generic coffee props, Chinese restaurant gold brush signboard, technology neon.
+### CLAYPOT_SOUP
+Signals: broth, clay/copper vessel, hearth warmth, steam, slow simmer.
+World: hearth-like depth, warm stone/clay/copper surfaces, title as hearth lintel / vessel-edge architecture / steam corridor.
+Avoid: beverage acrylic world or unrelated neon.
 
-### Noodles / Rice Noodles / Hot Bowls
+### NOODLE_RICE_NOODLE
+Signals: bowl geometry, broth, noodle trajectories, staple-food satisfaction, steam.
+World: upward movement, bowl-perspective rhythm, signage/lintel/corridor logic tied to steam or noodle flow.
+Avoid: cake editorial skin or static flat title card.
 
-Signals: hot broth, staple-food energy, upward steam, bowl geometry.
+### BBQ_NIGHTMARKET
+Signals: char, fire, frying, smoke, skewers, night energy.
+World: blackened metal/charcoal/signage/lightbox structures, hard diagonals, fire/smoke depth with controlled contrast.
+Avoid: soft morning bakery or luxury hotel banquet styling.
 
-Prefer: rising movement, steam depth, signage/lintel/corridor logic, strong Chinese display structure when culturally appropriate.
+### SEAFOOD_PREMIUM
+Signals: delicacy, freshness, translucency, refined plating, banquet premium.
+World: blue-gray stone, jade, metal, glass, restrained elegant typography, clean negative space and precise specular light.
+Avoid: rough nightmarket signage, oversized rustic wood title.
 
-Avoid: dessert editorial glass/ribbon skin.
+### DESSERT_CAKE
+Signals: cream, softness, floral/tea notes, cold/airy delicacy, layered texture.
+World: cream relief, glass/acrylic/ribbon architecture, refined editorial type, sculptural negative space.
+Avoid: Chinese restaurant plaque behavior, heavy rustic wood.
 
-### Fresh-Spicy / Sour / Pepper Fish
+### COFFEE_TEA_BEVERAGE
+Signals: liquid transparency, ice, condensation, fruit/tea color, freshness.
+World: glass/acrylic/jelly/light architecture, window-light depth, translucent title forms, refreshing negative space.
+Avoid: hot-food smoke, dense wooden restaurant signage.
 
-Signals: fresh heat, pepper/aromatic herbs, sourness, bright broth, green/yellow/red flavor cues when supported.
+### WESTERN_DINING
+Signals: sear, sauce, refined plating, linen/stone/silver service.
+World: editorial stone/linen/silver, high-contrast serif + clean sans, restrained architectural staging.
+Avoid: Chinese brush-gold signage or nightmarket graphics.
 
-Prefer: fluid heat, clear steam, ingredient-derived color accents, dynamic sign/steam/flavor-wave spatial structure.
+### JAPANESE_KOREAN
+Signals: order, geometry, clean cuts, wood/paper/stone, restrained modernity.
+World: modular geometry, narrow/minimal sans, sliding-plane or paper/wood architecture, calm controlled depth.
+Avoid: heavy banquet spectacle or ornate western luxury.
 
-Avoid: bakery wood-world default or unrelated heavy banquet gold.
+### BAKERY_BREAKFAST
+Signals: baked crust, grain, handcraft, morning light, paper/wood warmth.
+World: bakery wood, kraft paper, warm stone, oven/window light; actions can include counter-front, bread-rack architecture, paper emboss, oven lintel, hanging bakery mark, shelf-edge perspective.
+Avoid: repeating the same giant top signboard on every bread product; generic coffee props; Chinese restaurant signboard.
 
-### Dessert / Cake
+### RETAIL_PACKAGED
+Signals: pack silhouette, label, brand color, contents, retail conversion.
+World: brand display architecture, plinth/shelf/window/light structure, packaging-plane extensions; pack remains dominant hero.
+Avoid: restaurant serving conversion, package redesign, decorative food world that hides the pack.
 
-Signals: cream, softness, tea/floral notes, cold/airy delicacy.
-
-Prefer: glass, acrylic, ribbon, cream relief, refined editorial typography, airy depth.
-
-Avoid: heavy restaurant signboard behavior.
-
-### Cold Beverage / Fruit Ice
-
-Signals: transparency, condensation, ice, juice, freshness.
-
-Prefer: translucent glass/acrylic/jelly media, window light, refreshing negative space, liquid/fruit geometry.
-
-Avoid: hot-food steam or heavy wood restaurant language.
-
-### Retail Packaged
-
-Signals: pack silhouette, label, brand colors, contents, retail conversion.
-
-Prefer: brand display architecture, plinth/shelf/window structures, packaging-plane extensions; pack remains hero.
-
-Avoid: restaurant serving conversion or package redesign.
-
-Other categories follow the selected current profile using the same derivation logic.
-
-## 11. Director Pass Condition
+## 15. Director Pass Condition
 
 Before B prompt compilation:
 
@@ -248,9 +333,15 @@ VISUAL_DIRECTOR_BRIEF = PASS
 ATMOSPHERE_EVIDENCE >= 3
 ONE_BIG_IDEA = CONCRETE_SPATIAL_ACTION
 HEADLINE_SPATIAL_FORM = RESOLVED
-SHARED_COMPOSITION_LOGIC = RESOLVED
+SHARED_COMPOSITION_LOGIC = PASS
 PRODUCT_HERO_PROTECTION_PLAN = PASS
+FOREGROUND_PLAN = PASS
+MIDGROUND_PLAN = PASS
+BACKGROUND_PLAN = PASS
+LIGHTING_DRAMA_PLAN = PASS
+MATERIAL_DEPTH_PLAN = PASS
 ANTI_FLATNESS_PLAN = PASS
+ANTI_TEMPLATE_DIFFERENTIATION = PASS
 ```
 
 Any missing field blocks B generation.
