@@ -21,20 +21,23 @@ A5 is derived from the current product/category only. Do not inject all category
 
 ```text
 B1 CURRENT STAGE A PRODUCT LOCK
-B2 VISUAL DIRECTOR + CURRENT CATEGORY PROFILE
+B2 UPPER-BOUND VISUAL DIRECTOR + CURRENT CATEGORY PROFILE
 B3 COPY TRUTH + INFORMATION RHYTHM
-B4 PRODUCT HERO + SPATIAL TYPOGRAPHY
-B5 ONE BIG IDEA + CATEGORY-NATIVE WORLD
-B6 HARD NEGATIVES + ANTI-FLATNESS
+B4 PRODUCT HERO + SPATIAL TYPOGRAPHY + SHARED COMPOSITION
+B5 ONE BIG IDEA + THREE-DEPTH CATEGORY WORLD + LIGHT/MATERIAL DRAMA
+B6 HARD NEGATIVES + ANTI-FLATNESS + ANTI-TEMPLATE
 ```
 
 B1 must reference the current job Stage A PASS image, never the raw snapshot or a previous job.
 
-### B2 must contain only current-job director outputs
+### B2 — current-job director outputs only
+
+Include:
 
 ```text
 core ingredient/material semantics
 temperature / texture / process cue
+regional/brand cue when supported
 primary visual mood
 primary color logic
 title material language
@@ -42,36 +45,66 @@ forbidden style language
 ATMOSPHERE_EVIDENCE >= 3
 selected primary category profile
 optional weak auxiliary profile
+ANTI_TEMPLATE_DIFFERENTIATION
 ```
 
 Do not inject other category skins.
 
-### B3 must preserve copy truth
+### B3 — copy truth + differentiated rhythm
 
-Include exact user-authorized copy only. Define distinct hierarchy for headline, subtitle/slogan, selling points, and utility fields when available. Sparse facts stay sparse.
+Include only exact user-authorized hard facts and explicitly authorized safe campaign copy.
 
-### B4 hard spatial rule
+Define hierarchy when content exists:
 
-Product remains hero #1; headline hero #2.
+```text
+L1 PRODUCT HERO
+L2 HEADLINE
+L3 SUBTITLE / SLOGAN
+L4 SELLING POINTS
+L5 BRAND / UTILITY
+```
+
+Do not fabricate hard facts to satisfy density.
+
+### B4 — upper-bound spatial typography
+
+```text
+PRODUCT_PRIORITY = 1
+HEADLINE_PRIORITY = 2
+```
 
 Headline must express at least 3 of:
 
 ```text
-perspective
-volume/depth
-category-native materiality
-spatial attachment to scene
+PERSPECTIVE
+VOLUME / DEPTH
+CATEGORY-NATIVE MATERIALITY
+SPATIAL ATTACHMENT TO SCENE
 ```
 
-B4 must specify `SHARED_COMPOSITION_LOGIC`: product and typography share a perspective field, support plane, stage structure, controlled overlap, atmosphere bridge, geometry echo, or another explicit director-approved relationship.
+B4 must include explicit `SHARED_COMPOSITION_LOGIC` linking product and typography through perspective, support plane, stage structure, controlled overlap, atmosphere, geometry, light or material continuity.
 
-Do not create an unrelated text rectangle beneath the product.
+Do not create an unrelated text rectangle above or below the product.
 
-### B5 requires a concrete action
+### B5 — concrete action + campaign depth
 
-`ONE_BIG_IDEA` must be a spatial campaign action, not a mood adjective. Describe how the title/world behaves in space and why it belongs to this product/category.
+`ONE_BIG_IDEA` must be a concrete spatial campaign action, not a mood adjective.
 
-### B6 anti-flatness negatives
+B5 must specify:
+
+```text
+FOREGROUND_PLAN
+MIDGROUND_PLAN
+BACKGROUND_PLAN
+LIGHTING_DRAMA_PLAN
+MATERIAL_DEPTH_PLAN
+```
+
+At least two independent depth cues beyond the product are required.
+
+The category world must be visibly derived from current food/product semantics. Premium-looking but category-generic staging is insufficient.
+
+### B6 — hard negatives
 
 Always include:
 
@@ -80,9 +113,12 @@ no commercial-photo-plus-footer-layout
 no bottom-only headline strip
 no all-copy-on-one-flat-plane
 no unrelated product-zone/text-zone split
-no generic 3D title treatment detached from category
-no title dominance over product
-no previous-job skin
+no giant-title-first-read
+no product-as-background-or-wallpaper
+no generic signboard-above-product template unless uniquely justified
+no repeated previous-job composition skin
+no generic 3D title detached from category
+no random prop-pack used as premium substitute
 no unsupported hard facts
 no product/package/vessel/plating redesign
 ```
@@ -105,4 +141,4 @@ CURRENT_REFERENCE_IMAGE
 + FIXED_6_BLOCK_PROMPT
 ```
 
-If the agent cannot compile the prompt without introducing contradictory rules, block production and resolve the contract first.
+If the agent cannot compile the prompt without contradiction or without a concrete upper-bound director brief, block production and repair the contract first.
