@@ -1,4 +1,4 @@
-# Compact B Contract
+# Compact B Contract — Upper-Bound
 
 ```text
 JOB_MODE = B
@@ -39,7 +39,13 @@ VISUAL_DIRECTOR_BRIEF
 - shared composition logic:
 - information rhythm plan:
 - product hero protection plan:
+- foreground plan:
+- midground plan:
+- background plan:
+- lighting drama plan:
+- material depth plan:
 - anti-flatness plan:
+- anti-template differentiation:
 
 COPY_TRUTH
 - headline:
@@ -61,9 +67,19 @@ SPATIAL_TEXT_SYSTEM
 - shared perspective/vanishing logic:
 - occlusion limit:
 
+CAMPAIGN_STAGE
+- foreground element / near-camera entry:
+- midground product light pool:
+- background architecture / recession:
+- depth cue #1:
+- depth cue #2:
+- lighting-to-product-semantic relationship:
+- material-plane relationship:
+
 ONE_BIG_IDEA
 - one thumbnail-readable campaign action:
 - why this action belongs to current product/category:
+- why another food category would require major redesign:
 - category-native background/material/color logic:
 - information density:
 
@@ -78,12 +94,16 @@ HARD_NEGATIVES
 - no bottom-only headline strip
 - no all-copy-on-one-flat-plane
 - no unrelated product-zone/text-zone split
+- no generic signboard-above-product template unless uniquely justified
 - no generic 3D title treatment detached from category
+- no random prop-pack used as premium substitute
 - no cross-category skin contamination
 
 VISUAL_DIRECTOR_BRIEF = PASS
 ATMOSPHERE_EVIDENCE >= 3
 ANTI_FLATNESS_PLAN = PASS
+ANTI_TEMPLATE_DIFFERENTIATION = PASS
+THREE_DEPTH_STAGE = PASS
 QC_REQUIRED = TRUE
 TARGETED_RETRY_ONLY = TRUE
 ```
