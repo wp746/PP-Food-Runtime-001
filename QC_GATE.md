@@ -1,6 +1,6 @@
 # QC Gate
 
-VISION_MODEL performs post-generation QC. Do not accept an output because it is merely attractive.
+VISION_MODEL performs post-generation QC. Do not accept an output because it is merely attractive, and do not accept it merely because individual checklist items can be named.
 
 ## A QC
 
@@ -19,9 +19,7 @@ Appetite >=85
 Critical Failure = NONE
 ```
 
-Critical A failures include product replacement, ingredient drift, packaging drift, vessel drift, re-cooking/surface-state drift, unsupported additions, generic template background, impossible temperature effects, or non-9:16 delivery.
-
-## B QC — Upper-Bound Default
+## B Hard Gates
 
 ```text
 Stage B Reference = CURRENT_JOB_STAGE_A_PASS_IMAGE
@@ -29,72 +27,120 @@ Food / Product Fidelity >=95
 Vessel / Packaging Fidelity >=98
 Typography Accuracy =100%
 Product Dominance = PASS
-Category Visual Language >=90
-Typography-Category Match >=13/15
-Spatial Language Match >=13/15
-Full Text-System Spatiality >=9/10
-KV Design Quality >=90
+Unsupported Hard Facts = 0
 Previous-Skin Contamination = FALSE
-Upper-Bound Readiness >=92
-
-VISUAL_DIRECTOR_BRIEF = PASS
-ATMOSPHERE_EVIDENCE >=3
-ONE_BIG_IDEA = CONCRETE_SPATIAL_ACTION
-Title Spatiality >=90
-Visual Tension >=90
-Shared Composition Logic >=90
-Three-Depth Stage >=90
-Lighting Drama >=88
-Material Depth >=88
-Category-Specific Differentiation >=90
-Information Rhythm >=85 when sufficient copy exists
-Anti-Flatness = PASS
-Anti-Template = PASS
+Aspect Ratio = EXACT 9:16
 ```
 
-Product remains first visual hero. Headline is second.
+Any hard-gate failure is immediate FAIL.
 
-## B Critical Failures
+## B Creative Evaluation — Result Oriented
 
-Any of these immediately blocks PASS:
+Do not score B by counting effects such as perspective, extrusion or materiality. Judge the final image.
 
-- Stage A photo plus a bottom text panel is the dominant layout logic;
-- headline is a flat/shallow strip detached from product world;
-- product and typography occupy unrelated independent zones;
-- all copy sits on one footer plane;
-- title lacks at least 3 of perspective / volume / category-native materiality / spatial attachment;
-- no concrete One Big Idea can be identified at thumbnail scale;
-- design defaults to `large signboard above + product centered below + small plaque bottom` without product-specific justification;
-- a different food category could replace the product with minimal redesign;
-- depth is faked mainly by random props instead of spatial planes, perspective, occlusion and light;
-- typography is accurate but KV still reads as polite, generic or template-flat;
-- title becomes first hero and product is demoted;
-- upper-bound pressure changes product, packaging, surface state or plating truth.
+Score 0–100:
 
-## B Evaluation Dimensions
+```text
+PRODUCT_LED_MEMORABILITY
+CATEGORY_INEVITABILITY
+COMPOSITIONAL_TENSION
+SPATIAL_INTEGRATION
+CAMPAIGN_REFINEMENT
+TYPOGRAPHY_FIT
+INFORMATION_RHYTHM
+ANTI_TEMPLATE_ORIGINALITY
+```
 
-### Title Spatiality
-Headline behaves as a real scene element: lintel, counter structure, relief, suspended installation, glass/acrylic plane, flavor wave, packaging extension, light architecture, serving-geometry extension, or another category-native action.
+Required:
 
-### Visual Tension
-One memorable directional/spatial action is visible at thumbnail size. Balanced-but-flat stacking is insufficient.
+```text
+PRODUCT_LED_MEMORABILITY >=90
+CATEGORY_INEVITABILITY >=90
+COMPOSITIONAL_TENSION >=88
+SPATIAL_INTEGRATION >=88
+CAMPAIGN_REFINEMENT >=90
+TYPOGRAPHY_FIT >=88
+ANTI_TEMPLATE_ORIGINALITY >=88
+UPPER_BOUND_READINESS >=90
+```
 
-### Shared Composition Logic
-Product, title, atmosphere, support planes and perspective belong to one directed composition.
+Information Rhythm is scored only when enough authorized copy exists. Sparse copy is not penalized for remaining sparse.
 
-### Three-Depth Stage
-Foreground, midground and background are deliberately designed. At least two depth cues exist beyond the product.
+## Thumbnail Memory Test
 
-### Lighting Drama
-Lighting reinforces current food semantics and material state without changing product truth.
+View mentally at small size. PASS only if:
+- product is still first read;
+- one memorable spatial/compositional action remains clear;
+- poster is not merely balanced and polite;
+- concept is recognizable without reading every line of copy.
 
-### Material Depth
-Primary materials form spatial planes/structures, not merely decorative props.
+If the image is technically correct but forgettable, FAIL.
 
-### Category-Specific Differentiation
-The KV should require major redesign if the product were replaced by a different category. Generic premium styling is insufficient.
+## Category Inevitability Test
 
-### Information Rhythm
-When enough authorized copy exists, headline, subtitle/slogan, selling points and utility fields form differentiated levels. Sparse copy is not penalized for staying sparse.
+Ask:
 
-Any hard-gate failure routes to `RETRY_POLICY.md`; do not call it PASS.
+> If the product were replaced by a very different food category, would the environment, typography behavior, materials, lighting and composition require major redesign?
+
+If no, FAIL.
+
+## Skeleton Anti-Template Test
+
+Evaluate composition skeleton, not surface material.
+
+Known fallback skeletons:
+
+```text
+TOP_TITLE_BLOCK + CENTER_PRODUCT + BOTTOM_INFO
+BIG_SIGNBOARD + CENTER_PRODUCT + SMALL_PLAQUE
+PHOTO + FOOTER
+```
+
+Wood → paper → glass → metal is still the same skeleton if the spatial arrangement is unchanged.
+
+A known fallback may pass only when the current product semantics uniquely justify it and the final composition still demonstrates strong originality.
+
+## Self-Justification Guard
+
+QC may not use statements like:
+
+```text
+there is perspective, therefore PASS
+there is a material title, therefore PASS
+there are three depth layers, therefore PASS
+```
+
+For each major creative score, QC must cite a concrete visible result:
+- what the eye reads first;
+- where the memorable action occurs;
+- how product and typography co-compose;
+- why the world belongs specifically to this product;
+- why the skeleton is not a safe fallback.
+
+If the evaluator cannot state convincing visible evidence, lower the score or FAIL.
+
+## Comparative Sanity Check
+
+When the same current job has a previous B attempt available, compare only to detect regression:
+- product dominance;
+- memorability;
+- category fit;
+- composition tension;
+- refinement.
+
+A newer version must not PASS merely because it satisfies more formal rules. If it is visibly weaker than a previous passing attempt on the same job, mark `DESIGN_REGRESSION = TRUE` and retry.
+
+## Upper-Bound Definition
+
+```text
+UPPER_BOUND =
+PRODUCT_TRUTH
++ ONE_MEMORABLE_PRODUCT-DERIVED_IDEA
++ CATEGORY-NATIVE_WORLD
++ COMPOSITIONAL_TENSION
++ REFINED_EXECUTION
+```
+
+More elements do not automatically increase the score.
+
+Any failure routes to `RETRY_POLICY.md`; do not call it PASS.
