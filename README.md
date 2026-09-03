@@ -4,9 +4,7 @@ Self-contained production runtime for stable A/B food-image generation across di
 
 ## Why this repo exists
 
-The research skills `PP-food-001` and `PP-food-KV-001` contain broad methodology, references, tests and historical evolution. This repository is the **production release layer**: fewer files, one authority chain, fixed A/B executors, fixed prompt compiler, compact contracts, current-job isolation and category isolation.
-
-Normal production must not depend on reading the research repositories.
+This repository is the production release layer for the PP Food workflow. Normal production must not depend on reading the two research repositories.
 
 ## Install / startup
 
@@ -17,7 +15,9 @@ Configure:
 - IMAGE_MODEL with reference-image editing
 - API base/connection
 - credential in secure storage
-- image pass-through, including Stage A → Stage B
+- Stage A → Stage B image pass-through
+- ability to render at least 2 B candidates from the same Stage A image
+- ability for VISION_MODEL to compare multiple generated B images
 
 When setup passes, the agent returns READY and waits for `启动`.
 
@@ -31,48 +31,53 @@ Commercial hero photograph only.
 ```text
 执行B
 ```
-Current image → current A → A QC PASS → candidate-based KV visual direction → one selected upper-bound KV.
+Quality-first B:
+
+```text
+current image
+→ Stage A
+→ A QC PASS
+→ 3 textual art-direction candidates
+→ 2 visually distinct finalists
+→ render both finalists
+→ VISION_MODEL compares actual images
+→ select winner
+→ optional targeted refinement
+→ final B QC
+```
+
+The user does not need to choose between finalists.
 
 ```text
 按默认文案来
 ```
-Authorize safe non-factual campaign copy only; never authorize invented business facts.
+Authorizes safe non-factual campaign copy only; never invented business facts.
 
-## V1.3.0 B architecture
+## V1.4.0 B architecture
 
-Stage B no longer chooses a single first idea and no longer equates upper-bound with more 3D effects or more decoration.
+V1.4.0 addresses three failures seen in cross-agent testing:
 
-```text
-CURRENT STAGE A PASS
-→ PRODUCT / CATEGORY SEMANTICS
-→ 3 DISTINCT COMPOSITION CANDIDATES
-→ SCORE / COMPARE
-→ SELECT 1 WINNER
-→ COMPACT B CONTRACT
-→ IMAGE MODEL
-→ RESULT-ORIENTED QC
-```
-
-Only the winning candidate reaches IMAGE_MODEL.
-
-Anti-template checks the **composition skeleton**, not whether the title is wood, kraft paper, glass or metal. Known safe fallback structures such as `TOP_TITLE_BLOCK + CENTER_PRODUCT + BOTTOM_INFO` receive a strong penalty.
+1. **Text-only concept selection was not enough.** A concept could sound sophisticated but render poorly.
+2. **Scenic concepts could demote the product.** Stage A now establishes a hero-camera baseline; B may not shrink apparent product scale by more than 15%.
+3. **Category semantics were being literalized.** Bakery became oven tunnels/sign worlds, etc. V1.4 translates semantics into palette, light, material, rhythm, geometry, negative space and typography behavior instead of default themed scenery.
 
 Upper-bound means:
 
 ```text
 PRODUCT_TRUTH
-+ ONE_MEMORABLE_PRODUCT-DERIVED_IDEA
-+ CATEGORY-NATIVE_WORLD
-+ COMPOSITIONAL_TENSION
-+ REFINED_EXECUTION
++ PRODUCT_HERO_STRENGTH
++ ONE MEMORABLE PRODUCT-DERIVED IDEA
++ CATEGORY-NATIVE BUT NON-LITERAL WORLD
++ COMPOSITIONAL TENSION
++ CONTEMPORARY CAMPAIGN REFINEMENT
 ```
 
-More props, more copy, larger typography or thicker 3D type do not automatically improve the result.
+It does not mean more scenery, more props, larger typography, thicker 3D type or more text.
 
 ## Status
 
-Version: 1.3.0
+Version: 1.4.0
 
-Release state: INTERNAL REFACTOR COMPLETE / FINAL CROSS-AGENT VALIDATION STILL REQUIRED.
+Release state: QUALITY-FIRST ARCHITECTURE COMPLETE / FINAL EXTERNAL ACCEPTANCE STILL REQUIRED.
 
-The runtime must not be called production-qualified until the intended host/model stack completes a final external validation. That validation should be treated as a release acceptance run, not iterative prompt tuning.
+If the host cannot render and visually compare at least two B candidates, B must be marked `DEGRADED` and may not claim stable upper-bound reproduction.
