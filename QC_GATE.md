@@ -1,6 +1,6 @@
 # QC Gate
 
-VISION_MODEL performs post-generation QC. Do not accept an output because it is merely attractive, and do not accept it merely because individual checklist items can be named.
+VISION_MODEL performs QC from actual generated images. Planning language is not evidence.
 
 ## A QC
 
@@ -19,76 +19,103 @@ Appetite >=85
 Critical Failure = NONE
 ```
 
-## B Hard Gates
+## B Hard Truth Gates
 
 ```text
 Stage B Reference = CURRENT_JOB_STAGE_A_PASS_IMAGE
 Food / Product Fidelity >=95
 Vessel / Packaging Fidelity >=98
 Typography Accuracy =100%
-Product Dominance = PASS
 Unsupported Hard Facts = 0
 Previous-Skin Contamination = FALSE
 Aspect Ratio = EXACT 9:16
 ```
 
-Any hard-gate failure is immediate FAIL.
+## B Hero Preservation Gates
 
-## B Creative Evaluation — Result Oriented
-
-Do not score B by counting effects such as perspective, extrusion or materiality. Judge the final image.
-
-Score 0–100:
+Compare final B against Stage A visually:
 
 ```text
+PRODUCT_APPARENT_SCALE_SHRINK_FROM_STAGE_A <=15%
+PRODUCT_FIRST_READ = TRUE
+ENVIRONMENT_FIRST_READ = FALSE
+HEADLINE_FIRST_READ = FALSE
+PRODUCT_IDENTITY/APPETITE_AREA_OCCLUSION = LOW
+```
+
+If architecture, tunnel, arch, room, signboard, shelf or props become the main subject, FAIL.
+
+## B Visual Audition Gate
+
+Upper-bound stable mode requires:
+
+```text
+TWO_RENDERED_CANDIDATES = TRUE
+CANDIDATES_VISUALLY_DISTINCT = TRUE
+VISION_MODEL_COMPARED_ACTUAL_IMAGES = TRUE
+WINNER_SELECTED_FROM_VISUAL_EVIDENCE = TRUE
+```
+
+Text-board scoring alone may not produce PASS.
+
+## B Contemporary Campaign Evaluation
+
+Score actual final image 0–100:
+
+```text
+PRODUCT_HERO_STRENGTH
+CAMPAIGN_REFINEMENT
 PRODUCT_LED_MEMORABILITY
 CATEGORY_INEVITABILITY
+TYPOGRAPHY_INTEGRATION
 COMPOSITIONAL_TENSION
-SPATIAL_INTEGRATION
-CAMPAIGN_REFINEMENT
-TYPOGRAPHY_FIT
-INFORMATION_RHYTHM
+NEGATIVE_SPACE_QUALITY
+MATERIAL_RESTRAINT
 ANTI_TEMPLATE_ORIGINALITY
 ```
 
 Required:
 
 ```text
+PRODUCT_HERO_STRENGTH >=92
+CAMPAIGN_REFINEMENT >=92
 PRODUCT_LED_MEMORABILITY >=90
 CATEGORY_INEVITABILITY >=90
+TYPOGRAPHY_INTEGRATION >=88
 COMPOSITIONAL_TENSION >=88
-SPATIAL_INTEGRATION >=88
-CAMPAIGN_REFINEMENT >=90
-TYPOGRAPHY_FIT >=88
+NEGATIVE_SPACE_QUALITY >=88
+MATERIAL_RESTRAINT >=88
 ANTI_TEMPLATE_ORIGINALITY >=88
-UPPER_BOUND_READINESS >=90
+UPPER_BOUND_READINESS >=92
 ```
 
-Information Rhythm is scored only when enough authorized copy exists. Sparse copy is not penalized for remaining sparse.
+## Literalism / Theme-Set Rejection
+
+Immediate FAIL when the final KV reads primarily as:
+- old oven tunnel / cave / medieval bakery set;
+- themed restaurant interior;
+- souvenir sign or menu board;
+- prop-heavy scenic diorama;
+- literal category illustration rather than contemporary campaign art direction;
+- brown-on-brown rustic environment that weakens product hierarchy.
+
+Category cues should be translated into light, palette, surface, rhythm, geometry and type behavior rather than literal scenery.
 
 ## Thumbnail Memory Test
 
-View mentally at small size. PASS only if:
-- product is still first read;
-- one memorable spatial/compositional action remains clear;
-- poster is not merely balanced and polite;
-- concept is recognizable without reading every line of copy.
-
-If the image is technically correct but forgettable, FAIL.
+At small size:
+- product must be the first read;
+- one product-led gesture must remain memorable;
+- design must not depend on reading all copy;
+- environment may not become the remembered subject instead of the product.
 
 ## Category Inevitability Test
 
-Ask:
+Replacing the current product with a very different category must require major redesign of palette, material, light, type behavior and composition.
 
-> If the product were replaced by a very different food category, would the environment, typography behavior, materials, lighting and composition require major redesign?
+## Anti-Template Test
 
-If no, FAIL.
-
-## Skeleton Anti-Template Test
-
-Evaluate composition skeleton, not surface material.
-
-Known fallback skeletons:
+Known fallback skeletons are penalized:
 
 ```text
 TOP_TITLE_BLOCK + CENTER_PRODUCT + BOTTOM_INFO
@@ -96,51 +123,16 @@ BIG_SIGNBOARD + CENTER_PRODUCT + SMALL_PLAQUE
 PHOTO + FOOTER
 ```
 
-Wood → paper → glass → metal is still the same skeleton if the spatial arrangement is unchanged.
-
-A known fallback may pass only when the current product semantics uniquely justify it and the final composition still demonstrates strong originality.
+Material changes do not create originality.
 
 ## Self-Justification Guard
 
-QC may not use statements like:
+Do not PASS because a checklist item can be named. For every major score, cite a visible image-level fact. If convincing visible evidence is unavailable, lower the score or FAIL.
 
-```text
-there is perspective, therefore PASS
-there is a material title, therefore PASS
-there are three depth layers, therefore PASS
-```
+## Comparative Selection Rule
 
-For each major creative score, QC must cite a concrete visible result:
-- what the eye reads first;
-- where the memorable action occurs;
-- how product and typography co-compose;
-- why the world belongs specifically to this product;
-- why the skeleton is not a safe fallback.
+When two rendered finalists exist, choose the one with stronger product hero strength and campaign refinement first. A more dramatic environment does not win merely because it is more novel.
 
-If the evaluator cannot state convincing visible evidence, lower the score or FAIL.
+## Design Regression
 
-## Comparative Sanity Check
-
-When the same current job has a previous B attempt available, compare only to detect regression:
-- product dominance;
-- memorability;
-- category fit;
-- composition tension;
-- refinement.
-
-A newer version must not PASS merely because it satisfies more formal rules. If it is visibly weaker than a previous passing attempt on the same job, mark `DESIGN_REGRESSION = TRUE` and retry.
-
-## Upper-Bound Definition
-
-```text
-UPPER_BOUND =
-PRODUCT_TRUTH
-+ ONE_MEMORABLE_PRODUCT-DERIVED_IDEA
-+ CATEGORY-NATIVE_WORLD
-+ COMPOSITIONAL_TENSION
-+ REFINED_EXECUTION
-```
-
-More elements do not automatically increase the score.
-
-Any failure routes to `RETRY_POLICY.md`; do not call it PASS.
+When a previous attempt for the same job exists, a visibly weaker new result cannot PASS because it follows newer rules. Mark `DESIGN_REGRESSION = TRUE` and retain or refine the stronger direction.
