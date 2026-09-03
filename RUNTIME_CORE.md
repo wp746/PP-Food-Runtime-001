@@ -26,6 +26,11 @@ P0-18 B_ONE_BIG_IDEA_MUST_BE_CONCRETE_SPATIAL_ACTION = TRUE
 P0-19 B_ANTI_FLATNESS_REQUIRED = TRUE
 P0-20 B_ATMOSPHERE_MUST_DERIVE_FROM_CURRENT_PRODUCT_SEMANTICS = TRUE
 P0-21 B_PRODUCT_AND_TYPOGRAPHY_MUST_SHARE_COMPOSITION_LOGIC = TRUE
+P0-22 B_DEFAULT_KV_MODE = TRUE_UPPER_BOUND
+P0-23 B_ANTI_TEMPLATE_REQUIRED = TRUE
+P0-24 B_THREE_DEPTH_STAGE_REQUIRED = TRUE
+P0-25 B_LIGHTING_MUST_FOLLOW_PRODUCT_SEMANTICS = TRUE
+P0-26 DIFFERENT_CATEGORY_REQUIRES_MAJOR_KV_REDESIGN = TRUE
 ```
 
 ## Fidelity Targets
@@ -46,7 +51,13 @@ REVEAL_EXISTING_PROPERTY = YES
 AMPLIFY_BEYOND_SOURCE = NO
 ```
 
-## Stage B Visual-Director Invariants
+## Stage B Upper-Bound Invariants
+
+Every B job defaults to:
+
+```text
+KV_MODE = TRUE_UPPER_BOUND
+```
 
 Before B prompt compilation:
 
@@ -55,14 +66,20 @@ VISUAL_DIRECTOR_BRIEF = PASS
 ATMOSPHERE_EVIDENCE >= 3
 ONE_BIG_IDEA = CONCRETE_SPATIAL_ACTION
 HEADLINE_SPATIAL_FORM = RESOLVED
-SHARED_COMPOSITION_LOGIC = RESOLVED
+SHARED_COMPOSITION_LOGIC = PASS
 PRODUCT_HERO_PROTECTION_PLAN = PASS
+FOREGROUND_PLAN = PASS
+MIDGROUND_PLAN = PASS
+BACKGROUND_PLAN = PASS
+LIGHTING_DRAMA_PLAN = PASS
+MATERIAL_DEPTH_PLAN = PASS
 ANTI_FLATNESS_PLAN = PASS
+ANTI_TEMPLATE_DIFFERENTIATION = PASS
 ```
 
-B is not `Stage A photo + text overlay`.
+B is not `Stage A photo + text overlay` and not a repeated safe template.
 
-The current product/category must drive atmosphere, materials, light, typography material and spatial action. A vague mood such as premium/cinematic/warm is not sufficient evidence.
+The current product/category must drive atmosphere, materials, light, typography material and spatial action. Generic premium/cinematic styling is insufficient.
 
 Headline must show at least 3 of:
 
@@ -73,7 +90,13 @@ CATEGORY-NATIVE MATERIALITY
 SPATIAL ATTACHMENT TO SCENE
 ```
 
-This requirement never overrides product dominance.
+Product remains hero #1. Headline remains hero #2.
+
+If another food category could replace the current product with minimal redesign:
+
+```text
+CATEGORY_SPECIFIC_DIFFERENTIATION = FAIL
+```
 
 ## Runtime Roles
 
