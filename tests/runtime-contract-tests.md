@@ -55,7 +55,7 @@ PASS: before B prompt compilation, agent creates a current-job visual-director b
 FAIL: agent jumps from Stage A PASS directly to typography/layout.
 
 ## T14 One Big Idea is concrete
-PASS: B defines one explicit spatial campaign action such as headline_as_bakery_sign, headline_as_counter_front, headline_as_flavor_wave, headline_as_glass_installation, or another category-native action.
+PASS: B defines one explicit spatial campaign action.
 FAIL: ONE_BIG_IDEA is only vague adjectives such as premium, cinematic, warm, elegant, energetic.
 
 ## T15 Anti-flatness
@@ -81,5 +81,25 @@ FAIL: accurate typography and correct category alone are treated as sufficient f
 ## T20 Category-native typography material
 PASS: typography material and spatial medium are derived from the selected current profile and current product semantics.
 FAIL: bakery, dessert, noodles, beverages and packaged retail receive the same generic 3D title treatment.
+
+## T21 Upper-bound is default for every B category
+PASS: every B job enters TRUE_UPPER_BOUND unless user explicitly requests a simpler/lower mode.
+FAIL: upper-bound only activates when user says “上限版/世界级”.
+
+## T22 Safe signboard template is rejected
+PASS: bakery or other categories do not repeatedly default to `big signboard top + product center + plaque bottom` unless current semantics uniquely justify it.
+FAIL: different foods repeatedly reuse that structure because it passed once.
+
+## T23 Three-depth campaign stage
+PASS: foreground, product midground and background architecture are deliberately designed, with at least two perceptible depth cues beyond product.
+FAIL: depth comes only from shallow blur or decorative props.
+
+## T24 Lighting follows food semantics
+PASS: light behavior is derived from baked/brothy/cold/creamy/seafood/package properties and preserves source truth.
+FAIL: every category receives the same warm dramatic light regardless of food state.
+
+## T25 Category replacement stress test
+PASS: replacing current product with a different food category would require major redesign of material, typography, spatial action and atmosphere.
+FAIL: current KV remains valid after a simple product swap.
 
 Release candidate should pass all tests in at least two different host agents before being marked production-qualified.
