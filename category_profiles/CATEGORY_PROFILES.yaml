@@ -1,0 +1,104 @@
+profiles:
+  CN_HOME_STYLE:
+    use_for: Chinese home-style hot dishes
+    typography: strong Chinese display / brush / signage
+    materials: [warm_wood, stone, dark_metal]
+    atmosphere: [wok_heat, steam_depth, warm_light]
+    density: medium_high
+    forbid: [dessert_glass_ribbon_skin, coffee_lifestyle_skin]
+
+  SPICY_HOT:
+    use_for: Sichuan/Hunan fresh-spicy dishes
+    typography: thick_perspective_display
+    materials: [dark_metal, stone, lacquer]
+    atmosphere: [red_green_flavor_cues, heat_motion, steam]
+    density: medium_high
+    forbid: [minimal_western_serif_skin]
+
+  CLAYPOT_SOUP:
+    use_for: claypot, soup, hotpot
+    typography: grounded_display
+    materials: [clay, copper, warm_stone]
+    atmosphere: [hearth_warmth, amber_light, steam_depth]
+    density: medium
+    forbid: [cold_beverage_translucent_skin]
+
+  NOODLE_RICE_NOODLE:
+    use_for: noodles, rice noodles, staple bowls
+    typography: strong_upward_motion_display
+    materials: [wood, stone, enamel_metal]
+    atmosphere: [steam, upward_trajectory, staple_food_power]
+    density: medium
+    forbid: [luxury_dessert_editorial_skin]
+
+  BBQ_NIGHTMARKET:
+    use_for: BBQ, fried foods, night market
+    typography: signboard_or_lightbox_display
+    materials: [charcoal, black_metal, neon_surface]
+    atmosphere: [fire, smoke, night_contrast]
+    density: medium_high
+    forbid: [soft_morning_bakery_skin]
+
+  SEAFOOD_PREMIUM:
+    use_for: premium seafood and banquet dining
+    typography: refined_song_or_modern_sans
+    materials: [jade, metal, glass, blue_gray_stone]
+    atmosphere: [restrained, elegant, polished]
+    density: low_medium
+    forbid: [rough_nightmarket_signage]
+
+  DESSERT_CAKE:
+    use_for: cakes and desserts
+    typography: editorial_serif_or_soft_display
+    materials: [cream, glass, acrylic, ribbon]
+    atmosphere: [airy, soft_light, fashion_editorial]
+    density: low_medium
+    forbid: [chinese_restaurant_gold_brush_signboard]
+
+  COFFEE_TEA_BEVERAGE:
+    use_for: coffee, tea, fruit drinks, shaved ice, cold beverages
+    typography: modern_sans_or_clean_grotesk
+    materials: [glass, acrylic, transparent_jelly]
+    atmosphere: [window_light, lifestyle_negative_space, freshness]
+    density: low_medium
+    forbid: [home_style_four_badges, hot_food_smoke_when_cold]
+
+  WESTERN_DINING:
+    use_for: steak, pasta, western dining
+    typography: high_contrast_serif_plus_clean_sans
+    materials: [stone, linen, silver]
+    atmosphere: [restrained, refined, editorial]
+    density: low_medium
+    forbid: [sichuan_red_gold_brush_skin]
+
+  JAPANESE_KOREAN:
+    use_for: Japanese and Korean dishes
+    typography: minimal_sans_or_narrow_grotesk
+    materials: [wood, paper, stone]
+    atmosphere: [order, geometry, quiet_modernity]
+    density: low_medium
+    forbid: [heavy_chinese_banquet_skin]
+
+  BAKERY_BREAKFAST:
+    use_for: bread, bagels, ciabatta, bakery breakfast
+    typography: warm_serif_or_friendly_sans
+    materials: [bakery_wood, paper, warm_stone]
+    atmosphere: [morning_light, grain_warmth, baked_aroma]
+    density: medium
+    forbid: [generic_coffee_prop_pack, chinese_home_style_signboard]
+
+  RETAIL_PACKAGED:
+    use_for: jars, cans, bottles, bags, gift boxes, packaged snacks
+    typography: brand_native_display
+    materials: [display_plinth, glass, shelf_structure]
+    atmosphere: [packshot_clarity, brand_recognition, conversion_focus]
+    density: medium_high
+    forbid: [redesign_package, convert_to_restaurant_serving]
+
+routing_rules:
+  primary_profile_count: 1
+  weak_auxiliary_profile_count_max: 1
+  category_weight: 0.70
+  brand_positioning_weight: 0.30
+  low_confidence_behavior: conservative_food_ad_base
+  previous_job_profile_reuse: forbidden_unless_user_explicitly_requests
