@@ -1,0 +1,2 @@
+"""Strict vision observation layer."""
+
