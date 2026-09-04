@@ -65,6 +65,7 @@ def test_pairwise_provider_candidate_alias_maps_to_business_id(tmp_path):
         for call in engine.runner.evaluator.provider.calls
         if call["response_model"] is RawPairwiseComparison
     )
-    assert '"image_1": "SOURCE_CONTROL_ONLY"' in pairwise_call["instruction"]
-    assert '"image_3": "primary"' in pairwise_call["instruction"]
-    assert '"image_4": "challenger"' in pairwise_call["instruction"]
+    assert '"image_1": "STAGE_A_CONTROL_ONLY"' in pairwise_call["instruction"]
+    assert '"image_2": "primary"' in pairwise_call["instruction"]
+    assert '"image_3": "challenger"' in pairwise_call["instruction"]
+    assert len(pairwise_call["images"]) == 3
