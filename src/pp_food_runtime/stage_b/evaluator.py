@@ -20,6 +20,7 @@ from pp_food_runtime.models.visual import CategoryVisualTranslation, GoldenPrinc
 from pp_food_runtime.providers.base import VisionProvider
 
 from .copy_firewall import CopyAllowlist
+from .production_gate import ProductionGateResult, decide_production_gate
 
 
 FLOORS = {
@@ -94,6 +95,20 @@ CATEGORY_CLICHE_DEPENDENCE, GENERIC_PREMIUM_SKIN, TEMPLATE_REUSE, PHOTO_PLUS_TEX
 INFORMATION_STARVATION, INFORMATION_OVERLOAD, HERO_WEAK, HEADLINE_WEAK, TYPOGRAPHY_DISCONNECTED,
 BIG_IDEA_WEAK, COMPOSITION_FLAT, CATEGORY_WEAK, COMMERCIAL_FINISH_WEAK, GOLDEN_DISTANCE,
 REFERENCE_BINDING_FAILURE. Return strict JSON only. Never infer PASS from the prompt's claims.
+""".strip()
+
+
+PRODUCTION_EVALUATOR_INSTRUCTION = """
+Act as an independent production delivery gate for one food campaign KV. You receive exactly three images in order:
+current source, current-job Stage A PASS, current B candidate. Judge visible pixels only.
+
+Hard delivery checks: image mechanically valid, candidate bound to the Stage A product, product identity/count/
+geometry/topology/package/vessel/physical relationships preserved, visible copy limited to authorized copy, and
+food/product remains the unmistakable first visual hero. Mark COMMERCIAL_FINISH_WEAK only for a clearly broken or
+unshippable render, not merely conservative taste. Soft style disagreements such as CATEGORY_CLICHE_DEPENDENCE,
+PHOTO_PLUS_TEXT, GOLDEN_DISTANCE, or a lower-than-Golden aesthetic score are advisory and must not by themselves
+block production delivery. Return the same strict RawEvaluation JSON schema. Golden-vector values may be used as
+observations but are not production PASS thresholds. Never identify an unrelated product/category from another job.
 """.strip()
 
 
@@ -197,6 +212,47 @@ class BEvaluator:
             critical_failures=list(dict.fromkeys(failures)),
             materially_weaker_core_dimensions=raw.materially_weaker_core_dimensions,
             evidence=raw.evidence,
+            confidence=raw.confidence,
+        )
+
+    def evaluate_production(self, context: EvaluationContext) -> ProductionGateResult:
+        payload = {
+            "candidate_id": context.candidate_id,
+            "product_truth": context.truth.model_dump(mode="json"),
+            "authorized_exact_copy": context.copy_allowlist.exact_copy_lines(),
+            "primary_category": context.translation.primary_category,
+        }
+        instruction = (
+            f"{PRODUCTION_EVALUATOR_INSTRUCTION}\nEvaluation context:\n"
+            f"{json.dumps(payload, ensure_ascii=False, sort_keys=True)}"
+        )
+        raw = self.provider.analyze(
+            [context.source, context.stage_a, context.candidate], instruction, RawEvaluation
+        )
+        first_read = raw.first_read_order[0].strip().lower() if raw.first_read_order else ""
+        product_first = any(token in first_read for token in ("product", "food", "package", "产品", "食物", "食品"))
+        raw_codes = list(raw.critical_failures)
+        if not context.candidate.reference_binding_verified:
+            raw_codes.append(FailureCode.REFERENCE_BINDING_FAILURE.value)
+        if FailureCode.SCENE_DOMINATES_PRODUCT.value in raw_codes:
+            product_first = False
+        commercially_broken = (
+            FailureCode.COMMERCIAL_FINISH_WEAK.value in raw_codes
+            or FailureCode.MECHANICAL_FAILURE.value in raw_codes
+        )
+        evidence = [
+            f"{item.dimension}: {item.what_is_visible} @ {item.where_visible} — {item.why_it_helps_or_hurts}"
+            for item in raw.evidence
+        ]
+        return decide_production_gate(
+            mechanical_pass=self._mechanical_pass(context.candidate) and raw.mechanical_pass,
+            reference_binding_verified=context.candidate.reference_binding_verified,
+            product_truth_pass=raw.product_truth_pass,
+            copy_truth_pass=raw.copy_truth_pass,
+            product_first_hero=product_first,
+            commercially_broken=commercially_broken,
+            raw_failure_codes=raw_codes,
+            evidence=evidence,
             confidence=raw.confidence,
         )
 
