@@ -42,19 +42,31 @@ class ArtifactStore:
         self.root = Path(root)
 
     def job_dir(self, job_id: str) -> Path:
+        if not job_id or Path(job_id).is_absolute() or ".." in Path(job_id).parts:
+            raise ValueError("invalid job id")
         path = self.root / job_id
         path.mkdir(parents=True, exist_ok=True)
         return path
 
+    def target(self, job_id: str, relative: str) -> Path:
+        if not relative or Path(relative).is_absolute() or ".." in Path(relative).parts:
+            raise ValueError("invalid artifact path")
+        root = self.job_dir(job_id).resolve()
+        target = (root / relative).resolve()
+        if not target.is_relative_to(root):
+            raise ValueError("artifact path escapes job directory")
+        target.parent.mkdir(parents=True, exist_ok=True)
+        return target
+
     def create_job(self, job: JobContract) -> Path:
         path = self.job_dir(job.job_id)
-        self.write_json(job.job_id, "job", job)
+        self.write_json(job.job_id, "contracts/job", job)
         return path
 
     def write_json(self, job_id: str, name: str, payload: BaseModel | dict) -> Path:
         data = payload.model_dump(mode="json") if isinstance(payload, BaseModel) else payload
         _assert_no_secret_fields(data)
-        destination = self.job_dir(job_id) / f"{name}.json"
+        destination = self.target(job_id, f"{name}.json")
         with tempfile.NamedTemporaryFile(
             mode="w",
             encoding="utf-8",
@@ -74,12 +86,12 @@ class ArtifactStore:
             raise FileNotFoundError(source)
         target_dir = self.job_dir(job_id)
         suffix = source.suffix.lower() or ".img"
-        candidate = target_dir / f"{label}{suffix}"
+        candidate = self.target(job_id, f"{label}{suffix}")
         counter = 2
         while candidate.exists():
-            candidate = target_dir / f"{label}-{counter}{suffix}"
+            candidate = self.target(job_id, f"{label}-{counter}{suffix}")
             counter += 1
-        fd, temp_name = tempfile.mkstemp(dir=target_dir, prefix=f".{label}.", suffix=suffix)
+        fd, temp_name = tempfile.mkstemp(dir=candidate.parent, prefix=f".{candidate.name}.", suffix=suffix)
         os.close(fd)
         temp_path = Path(temp_name)
         try:

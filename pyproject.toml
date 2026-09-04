@@ -26,6 +26,6 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 addopts = "-ra"
+pythonpath = ["."]
 markers = ["integration: opt-in provider or end-to-end integration tests"]
 testpaths = ["tests"]
-
