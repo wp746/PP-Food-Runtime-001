@@ -12,6 +12,20 @@ def test_initial_manifests_have_two_s_tier_and_no_bakery_canonical(tmp_path):
     assert all(m.primary_category != "BAKERY" for m in manifests)
 
 
+def test_street_food_human_accepted_canonical_is_loadable_without_private_asset(tmp_path):
+    repo = GoldenRepository(Path("goldens/manifests"), tmp_path)
+    manifests = {item.golden_id: item for item in repo.load_all()}
+
+    canonical = manifests["C01_STREET_FOOD"]
+    assert canonical.tier.value == "CANONICAL"
+    assert canonical.human_accepted is True
+    assert canonical.calibration_role == "HUMAN_ACCEPTED_CATEGORY_CANONICAL"
+    assert canonical.sha256 == "LOCAL_BIND_REQUIRED"
+    assert canonical.local_asset_path is None
+    assert "strong product-first hero" in canonical.transferable_principles
+    assert "exact old brand/copy/layout" in canonical.prohibited_transfer
+
+
 def test_bind_local_asset_rejects_wrong_hash(tmp_path):
     repo = GoldenRepository(Path("goldens/manifests"), tmp_path)
     bad = tmp_path / "bad.png"
