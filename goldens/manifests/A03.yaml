@@ -1,0 +1,12 @@
+golden_id: A03
+tier: CANONICAL
+name: 茉莉抹茶冰淇淋蛋糕奢华海报
+primary_category: PREMIUM_CAKE_DESSERT
+pack_or_food: FOOD
+sensory_tags: [floral, creamy, tea]
+visual_problems: [product_hero, luxury_finish, depth]
+asset_filename: A03.png
+sha256: LOCAL_BIND_REQUIRED
+transferable_principles: [product-derived luxury, dimensional campaign composition]
+prohibited_transfer: [old brand, old copy, exact palette, exact props, exact layout]
+

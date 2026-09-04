@@ -1,0 +1,15 @@
+golden_id: S01
+tier: S_TIER
+name: 椰椰西瓜冰夏日广告海报
+primary_category: COLD_DRINK_FRUIT_DESSERT
+pack_or_food: FOOD
+sensory_tags: [cool, fruit, juicy, summer]
+visual_problems: [product_hero, headline_pressure, depth]
+asset_filename: S01.png
+sha256: "22fd444fb390c2f7a3fdc83da193b13d3ab858cfa48ec5a0213a99a5e43c5837"
+transferable_principles:
+  - strong product and strong headline dual-core hierarchy
+  - sensory-to-material typography translation
+  - multi-depth co-composition with campaign pressure
+prohibited_transfer: [old brand, old copy, exact palette, exact props, exact layout]
+

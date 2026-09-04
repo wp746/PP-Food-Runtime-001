@@ -1,0 +1,12 @@
+golden_id: A01
+tier: CANONICAL
+name: 安康酸辣米线招牌海报
+primary_category: HOT_NOODLE_DISH
+pack_or_food: FOOD
+sensory_tags: [hot, spicy, sour]
+visual_problems: [food_hero, appetite, depth]
+asset_filename: A01.png
+sha256: LOCAL_BIND_REQUIRED
+transferable_principles: [appetite-led food hero, layered steam and ingredient energy]
+prohibited_transfer: [old brand, old copy, exact palette, exact props, exact layout]
+
