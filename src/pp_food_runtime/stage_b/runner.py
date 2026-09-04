@@ -72,6 +72,8 @@ class StageBRunner:
         self.retry_planner = RetryPlanner()
 
     def run(self, job: JobContract) -> JobResult:
+        job_started = time.perf_counter()
+        timings: dict[str, float] = {}
         states = [JobState.B_REQUESTED, JobState.B_ENTRY_VALIDATION]
         if job.source_image is None:
             raise ValueError("Stage B requires source image")
@@ -86,8 +88,13 @@ class StageBRunner:
             self.store.copy_image(job.job_id, "input/stage-a", job.stage_a_pass.path)
 
         states.append(JobState.STAGE_A_REQUIRED)
+        started = time.perf_counter()
         truth = self.product_analyzer.analyze(source, job.user_facts)
+        timings["product_analysis_seconds"] = self._elapsed(started)
+
+        started = time.perf_counter()
         stage_a = self.stage_a_runner.run(job, source, truth)
+        timings["stage_a_total_seconds"] = self._elapsed(started)
         states.extend([JobState.STAGE_A_PASS, JobState.PRODUCT_LOCK_BRIDGE_READY])
 
         copy = self.copy_firewall.build(job.user_facts)
@@ -96,10 +103,13 @@ class StageBRunner:
         self.store.write_json(job.job_id, "contracts/stage_a_bridge", stage_a)
         self.store.write_json(job.job_id, "contracts/copy_allowlist", copy)
 
+        started = time.perf_counter()
         translation = self.translator.translate(truth, job.user_facts)
+        timings["category_translation_seconds"] = self._elapsed(started)
         states.append(JobState.CATEGORY_VISUAL_TRANSLATION)
         self.store.write_json(job.job_id, "contracts/visual_translation", translation)
 
+        started = time.perf_counter()
         goldens = self.golden_repository.retriever().retrieve(
             {
                 "primary_category": translation.primary_category,
@@ -109,8 +119,12 @@ class StageBRunner:
             },
             limit=3,
         )
+        timings["golden_retrieval_seconds"] = self._elapsed(started)
         if job.golden_case:
-            goldens = sorted(goldens, key=lambda pack: (pack.golden_id != job.golden_case, pack.golden_id))
+            goldens = sorted(
+                goldens,
+                key=lambda pack: (pack.golden_id != job.golden_case, pack.golden_id),
+            )
         states.append(JobState.GOLDEN_RETRIEVAL)
         self.store.write_json(
             job.job_id,
@@ -120,14 +134,24 @@ class StageBRunner:
         for golden in goldens:
             if golden.local_asset_path:
                 self.store.copy_image(
-                    job.job_id, f"input/golden-{golden.golden_id}", Path(golden.local_asset_path)
+                    job.job_id,
+                    f"input/golden-{golden.golden_id}",
+                    Path(golden.local_asset_path),
                 )
 
-        director_candidates = self.art_director.create_candidates(truth, translation, copy, goldens)
+        started = time.perf_counter()
+        director_candidates = self.art_director.create_candidates(
+            truth, translation, copy, goldens
+        )
         primary, challenger = self.art_director.select_finalists(director_candidates)
+        timings["art_direction_seconds"] = self._elapsed(started)
         states.extend([JobState.ART_DIRECTION, JobState.ART_DIRECTION_VALIDATION])
         for direction in director_candidates:
-            self.store.write_json(job.job_id, f"contracts/direction-board-{direction.concept_id}", direction)
+            self.store.write_json(
+                job.job_id,
+                f"contracts/direction-board-{direction.concept_id}",
+                direction,
+            )
 
         directions = {"primary": primary, "challenger": challenger}
         selected_ids = (
@@ -136,8 +160,13 @@ class StageBRunner:
             else ["primary", "challenger"]
         )
         for candidate_id in selected_ids:
-            self.store.write_json(job.job_id, f"contracts/direction-{candidate_id}", directions[candidate_id])
+            self.store.write_json(
+                job.job_id,
+                f"contracts/direction-{candidate_id}",
+                directions[candidate_id],
+            )
 
+        started = time.perf_counter()
         prompt_contracts = {
             candidate_id: ValidatedBPromptContract(
                 truth=truth,
@@ -145,7 +174,9 @@ class StageBRunner:
                 translation=translation,
                 direction=directions[candidate_id],
                 exact_copy=copy.exact_copy_lines(),
-                golden_principles=[principle for golden in goldens for principle in golden.principles],
+                golden_principles=[
+                    principle for golden in goldens for principle in golden.principles
+                ],
                 hard_negatives=[
                     "do not invent unsupported hard facts",
                     "do not change current product identity",
@@ -156,9 +187,12 @@ class StageBRunner:
             for candidate_id in selected_ids
         }
         compiled = {
-            candidate_id: compile_stage_b(contract, self.image_provider.capability_profile)
+            candidate_id: compile_stage_b(
+                contract, self.image_provider.capability_profile
+            )
             for candidate_id, contract in prompt_contracts.items()
         }
+        timings["prompt_compile_seconds"] = self._elapsed(started)
         states.append(JobState.PROMPT_CONTRACT_READY)
         for candidate_id, prompt in compiled.items():
             self.store.write_json(job.job_id, f"prompts/{candidate_id}", prompt)
@@ -174,6 +208,8 @@ class StageBRunner:
                 translation=translation,
                 goldens=goldens,
                 compiled=compiled,
+                timings=timings,
+                job_started=job_started,
             )
         return self._run_validation(
             job=job,
@@ -185,22 +221,48 @@ class StageBRunner:
             translation=translation,
             goldens=goldens,
             compiled=compiled,
+            timings=timings,
+            job_started=job_started,
         )
 
     def _run_production_fast(
-        self, *, job, states, source, stage_a, truth, copy, translation, goldens, compiled
+        self,
+        *,
+        job,
+        states,
+        source,
+        stage_a,
+        truth,
+        copy,
+        translation,
+        goldens,
+        compiled,
+        timings,
+        job_started,
     ) -> JobResult:
         candidates: dict[str, ImageRef] = {}
         prompt_hashes = {"primary": compiled["primary"].sha256}
+
+        started = time.perf_counter()
         candidates["primary"] = self._render_candidate(
             job, "primary", compiled["primary"], stage_a.image
         )
+        timings["b_generation_primary_seconds"] = self._elapsed(started)
         states.append(JobState.FINALIST_RENDER)
 
         primary_context = self._context(
-            "primary", source, stage_a.image, candidates["primary"], truth, copy, translation, goldens
+            "primary",
+            source,
+            stage_a.image,
+            candidates["primary"],
+            truth,
+            copy,
+            translation,
+            goldens,
         )
+        started = time.perf_counter()
         gate = self.evaluator.evaluate_production(primary_context)
+        timings["production_gate_primary_seconds"] = self._elapsed(started)
         self.store.write_json(job.job_id, "eval/production-primary", gate)
         states.append(JobState.FINALIST_VISUAL_EVAL)
         retry_history: list[RetryPlan | ProductionGateResult] = []
@@ -217,20 +279,36 @@ class StageBRunner:
             compiled["retry-1"] = retry_prompt
             prompt_hashes["retry-1"] = retry_prompt.sha256
             self.store.write_json(job.job_id, "prompts/retry-1", retry_prompt)
+
+            started = time.perf_counter()
             candidates["retry-1"] = self._render_candidate(
                 job, "retry-1", retry_prompt, stage_a.image
             )
+            timings["b_generation_retry_1_seconds"] = self._elapsed(started)
             retry_context = self._context(
-                "retry-1", source, stage_a.image, candidates["retry-1"], truth, copy, translation, goldens
+                "retry-1",
+                source,
+                stage_a.image,
+                candidates["retry-1"],
+                truth,
+                copy,
+                translation,
+                goldens,
             )
+            started = time.perf_counter()
             final_gate = self.evaluator.evaluate_production(retry_context)
-            self.store.write_json(job.job_id, "eval/production-retry-1", final_gate)
+            timings["production_gate_retry_1_seconds"] = self._elapsed(started)
+            self.store.write_json(
+                job.job_id, "eval/production-retry-1", final_gate
+            )
             if final_gate.decision is FinalDecision.PASS:
                 winner_id = "retry-1"
 
         if winner_id:
             states.extend([JobState.FINAL_QC, JobState.B_PASS])
-            final_image = self.store.copy_image(job.job_id, "final/winner", candidates[winner_id].path)
+            final_image = self.store.copy_image(
+                job.job_id, "final/winner", candidates[winner_id].path
+            )
             final_state = JobState.B_PASS
             final_decision = FinalDecision.PASS
         else:
@@ -250,7 +328,9 @@ class StageBRunner:
             "creative_retry_count": len(retry_history),
         }
         self.store.write_json(job.job_id, "final/decision", decision_payload)
-        artifact_dir = self._write_manifest(job, states)
+        timings["runtime_total_seconds"] = self._elapsed(job_started)
+        self.store.write_json(job.job_id, "final/timing", timings)
+        artifact_dir = self._write_manifest(job, states, stage_a.image, timings)
         return JobResult(
             job_id=job.job_id,
             final_state=final_state,
@@ -268,28 +348,63 @@ class StageBRunner:
         )
 
     def _run_validation(
-        self, *, job, states, source, stage_a, truth, copy, translation, goldens, compiled
+        self,
+        *,
+        job,
+        states,
+        source,
+        stage_a,
+        truth,
+        copy,
+        translation,
+        goldens,
+        compiled,
+        timings,
+        job_started,
     ) -> JobResult:
         candidates: dict[str, ImageRef] = {}
         for candidate_id in ("primary", "challenger"):
+            started = time.perf_counter()
             candidates[candidate_id] = self._render_candidate(
                 job, candidate_id, compiled[candidate_id], stage_a.image
             )
+            timings[f"b_generation_{candidate_id}_seconds"] = self._elapsed(started)
         states.append(JobState.FINALIST_RENDER)
 
         evaluations: dict[str, EvaluationResult] = {}
         evaluation_contexts: dict[str, EvaluationContext] = {}
         for candidate_id, candidate in candidates.items():
             evaluation_contexts[candidate_id] = self._context(
-                candidate_id, source, stage_a.image, candidate, truth, copy, translation, goldens
+                candidate_id,
+                source,
+                stage_a.image,
+                candidate,
+                truth,
+                copy,
+                translation,
+                goldens,
             )
-            evaluations[candidate_id] = self.evaluator.evaluate(evaluation_contexts[candidate_id])
+            started = time.perf_counter()
+            evaluations[candidate_id] = self.evaluator.evaluate(
+                evaluation_contexts[candidate_id]
+            )
+            timings[f"validation_eval_{candidate_id}_seconds"] = self._elapsed(
+                started
+            )
 
-        pairwise_comparison = self.evaluator.compare(list(evaluation_contexts.values()))
+        started = time.perf_counter()
+        pairwise_comparison = self.evaluator.compare(
+            list(evaluation_contexts.values())
+        )
+        timings["pairwise_seconds"] = self._elapsed(started)
         self.store.write_json(job.job_id, "eval/pairwise", pairwise_comparison)
         states.extend([JobState.FINALIST_VISUAL_EVAL, JobState.WINNER_SELECTION])
         remaining = sorted(
-            (candidate_id for candidate_id in evaluations if candidate_id != pairwise_comparison.winner_id),
+            (
+                candidate_id
+                for candidate_id in evaluations
+                if candidate_id != pairwise_comparison.winner_id
+            ),
             key=lambda item: evaluations[item].golden_vector.weighted_score,
             reverse=True,
         )
@@ -303,25 +418,33 @@ class StageBRunner:
             self.store.write_json(job.job_id, f"eval/{candidate_id}", evaluation)
 
         pairwise_qualified = (
-            pairwise_comparison.visually_distinct and pairwise_comparison.confidence >= 0.65
+            pairwise_comparison.visually_distinct
+            and pairwise_comparison.confidence >= 0.65
         )
         qualified = [
             candidate_id
             for candidate_id in ranking
-            if pairwise_qualified and evaluations[candidate_id].final_decision is FinalDecision.PASS
+            if pairwise_qualified
+            and evaluations[candidate_id].final_decision is FinalDecision.PASS
         ]
         retry_history: list[RetryPlan | ProductionGateResult] = []
         winner_id = qualified[0] if qualified else None
         final_image = None
         if winner_id:
             states.extend([JobState.FINAL_QC, JobState.B_PASS])
-            final_image = self.store.copy_image(job.job_id, "final/winner", candidates[winner_id].path)
+            final_image = self.store.copy_image(
+                job.job_id, "final/winner", candidates[winner_id].path
+            )
             final_state = JobState.B_PASS
             final_decision = FinalDecision.PASS
         else:
-            retry_history.append(self.retry_planner.plan(evaluations[pairwise_winner], cycle=1))
+            retry_history.append(
+                self.retry_planner.plan(evaluations[pairwise_winner], cycle=1)
+            )
             self.store.write_json(job.job_id, "retry/cycle-1", retry_history[0])
-            states.extend([JobState.TARGETED_REFINEMENT, JobState.NEEDS_HUMAN_REVIEW])
+            states.extend(
+                [JobState.TARGETED_REFINEMENT, JobState.NEEDS_HUMAN_REVIEW]
+            )
             final_state = JobState.NEEDS_HUMAN_REVIEW
             final_decision = FinalDecision.NO_QUALIFIED_WINNER
 
@@ -336,7 +459,8 @@ class StageBRunner:
                 "pairwise_visually_distinct": pairwise_comparison.visually_distinct,
                 "pairwise_confidence": pairwise_comparison.confidence,
                 "scores": {
-                    key: value.golden_vector.weighted_score for key, value in evaluations.items()
+                    key: value.golden_vector.weighted_score
+                    for key, value in evaluations.items()
                 },
                 "failure_codes": {
                     key: [code.value for code in value.critical_failures]
@@ -344,7 +468,9 @@ class StageBRunner:
                 },
             },
         )
-        artifact_dir = self._write_manifest(job, states)
+        timings["runtime_total_seconds"] = self._elapsed(job_started)
+        self.store.write_json(job.job_id, "final/timing", timings)
+        artifact_dir = self._write_manifest(job, states, stage_a.image, timings)
         return JobResult(
             job_id=job.job_id,
             final_state=final_state,
@@ -362,7 +488,11 @@ class StageBRunner:
         )
 
     def _render_candidate(
-        self, job: JobContract, candidate_id: str, prompt: CompiledPrompt, stage_a: ImageRef
+        self,
+        job: JobContract,
+        candidate_id: str,
+        prompt: CompiledPrompt,
+        stage_a: ImageRef,
     ) -> ImageRef:
         output_path = self.store.target(job.job_id, f"{candidate_id}/image.png")
         started_at = self._utc_timestamp()
@@ -386,13 +516,15 @@ class StageBRunner:
                     "request_id": None,
                     "started_at": started_at,
                     "ended_at": self._utc_timestamp(),
-                    "latency_seconds": round(time.perf_counter() - started, 3),
+                    "latency_seconds": self._elapsed(started),
                     "output_sha256": None,
                 },
             )
             raise
         if not candidate.reference_binding_verified:
-            raise RuntimeError(f"{candidate_id} was not bound to current Stage A reference")
+            raise RuntimeError(
+                f"{candidate_id} was not bound to current Stage A reference"
+            )
         self.store.write_json(
             job.job_id,
             f"{candidate_id}/generation",
@@ -407,14 +539,23 @@ class StageBRunner:
                 "request_id": candidate.provider_request_id,
                 "started_at": started_at,
                 "ended_at": self._utc_timestamp(),
-                "latency_seconds": round(time.perf_counter() - started, 3),
+                "latency_seconds": self._elapsed(started),
                 "output_sha256": candidate.sha256,
             },
         )
         return candidate
 
     @staticmethod
-    def _context(candidate_id, source, stage_a, candidate, truth, copy, translation, goldens):
+    def _context(
+        candidate_id,
+        source,
+        stage_a,
+        candidate,
+        truth,
+        copy,
+        translation,
+        goldens,
+    ):
         return EvaluationContext(
             candidate_id=candidate_id,
             source=source,
@@ -427,22 +568,33 @@ class StageBRunner:
         )
 
     @staticmethod
-    def _production_retry_prompt(prompt: CompiledPrompt, gate: ProductionGateResult) -> CompiledPrompt:
+    def _production_retry_prompt(
+        prompt: CompiledPrompt, gate: ProductionGateResult
+    ) -> CompiledPrompt:
         text = (
             prompt.text.rstrip()
             + "\n\n## PRODUCTION TARGETED REPAIR\n"
             + gate.repair_instruction.strip()
             + "\nThis is the only creative retry. Do not redesign passing dimensions.\n"
         )
-        return CompiledPrompt(text=text, sha256=hashlib.sha256(text.encode("utf-8")).hexdigest())
+        return CompiledPrompt(
+            text=text,
+            sha256=hashlib.sha256(text.encode("utf-8")).hexdigest(),
+        )
 
-    def _write_manifest(self, job: JobContract, states: list[JobState]) -> Path:
+    def _write_manifest(
+        self,
+        job: JobContract,
+        states: list[JobState],
+        stage_a: ImageRef,
+        timings: dict[str, float],
+    ) -> Path:
         artifact_dir = self.store.job_dir(job.job_id).resolve()
         artifacts = sorted(
             {
                 str(path.relative_to(artifact_dir)): sha256_file(path)
                 for path in artifact_dir.rglob("*")
-                if path.is_file()
+                if path.is_file() and path.name != "manifest.json"
             }.items()
         )
         self.store.write_json(
@@ -452,8 +604,13 @@ class StageBRunner:
                 "job_id": job.job_id,
                 "runtime_version": self.settings.runtime_version,
                 "runtime_mode": self.settings.runtime_mode.value,
+                "source_sha256": job.source_image.sha256 if job.source_image else None,
+                "stage_a_sha256": stage_a.sha256,
+                "timing": timings,
                 "state_history": [state.value for state in states],
-                "artifacts": [{"path": path, "sha256": digest} for path, digest in artifacts],
+                "artifacts": [
+                    {"path": path, "sha256": digest} for path, digest in artifacts
+                ],
             },
         )
         return artifact_dir
@@ -461,10 +618,14 @@ class StageBRunner:
     def _runtime_evidence(self) -> dict[str, object]:
         summary = self.settings.safe_provider_summary()
         profiles = {
-            "vision": self.product_analyzer.provider.capability_profile.model_dump(mode="json"),
+            "vision": self.product_analyzer.provider.capability_profile.model_dump(
+                mode="json"
+            ),
             "image": self.image_provider.capability_profile.model_dump(mode="json"),
         }
-        encoded = json.dumps(profiles, ensure_ascii=False, sort_keys=True).encode("utf-8")
+        encoded = json.dumps(
+            profiles, ensure_ascii=False, sort_keys=True
+        ).encode("utf-8")
         return {
             **summary,
             "provider_profiles": profiles,
@@ -472,5 +633,11 @@ class StageBRunner:
         }
 
     @staticmethod
+    def _elapsed(started: float) -> float:
+        return round(max(0.0, time.perf_counter() - started), 3)
+
+    @staticmethod
     def _utc_timestamp() -> str:
-        return datetime.now(timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")
+        return datetime.now(timezone.utc).isoformat(timespec="milliseconds").replace(
+            "+00:00", "Z"
+        )
