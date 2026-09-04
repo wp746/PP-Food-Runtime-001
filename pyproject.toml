@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pp-food-runtime"
-version = "0.1.0"
-description = "Local-first PP Food validation engine"
+version = "1.0.0rc1"
+description = "PP Food production and validation runtime for reference-locked food image generation"
 requires-python = ">=3.11"
 dependencies = [
   "pydantic>=2.8",

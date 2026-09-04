@@ -1,83 +1,92 @@
 # PP-Food-Runtime-001
 
-Self-contained production runtime for stable A/B food-image generation across different host agents.
+**Release candidate:** `1.0.0-rc.1`
 
-## Why this repo exists
+Self-contained runtime for stable reference-locked food commercial photography (A) and campaign KV generation (B) across hosts. The production runtime does not need to read the research mother repositories at execution time.
 
-This repository is the production release layer for the PP Food workflow. Normal production must not depend on reading the two research repositories.
-
-## Install / startup
-
-Read `SKILL.md`, then follow the exact runtime entry order.
-
-Configure:
-- VISION_MODEL
-- IMAGE_MODEL with reference-image editing
-- API base/connection
-- credential in secure storage
-- Stage A → Stage B image pass-through
-- ability to render at least 2 B candidates from the same Stage A image
-- ability for VISION_MODEL to compare multiple generated B images
-
-When setup passes, the agent returns READY and waits for `启动`.
-
-## Production UX
+## Non-negotiable truth hierarchy
 
 ```text
-执行A
+CURRENT USER SOURCE
+→ CURRENT-JOB PRODUCT TRUTH
+→ CURRENT-JOB STAGE A PASS
+→ CURRENT-JOB COPY ALLOWLIST
+→ CATEGORY TRANSLATION
+→ GOLDEN PRINCIPLES (principles only, never skin)
 ```
-Commercial hero photograph only.
+
+Product identity, geometry/count, visible surface state, package/vessel, topology and major physical relationships are binding. Stage B always edits from the current-job Stage A PASS image.
+
+## User workflow
+
+### `A` / `执行A`
+
+Produces commercial hero photography only. No KV copy or poster treatment.
+
+### `B` / `执行B`
+
+Runs current-job Stage A first, requires Stage A PASS, then enters the B copy/category/art-direction pipeline.
+
+`按默认文案来` authorizes only safe non-factual campaign copy. It never authorizes invented phone numbers, addresses, prices, opening hours, awards, certifications, origins, ingredients, medical/health claims or other hard facts.
+
+## Runtime execution modes
+
+A/B is the user workflow. `VALIDATION` / `PRODUCTION_FAST` is the internal Stage-B execution policy.
+
+### PRODUCTION_FAST
+
+Default deployment mode for mini-program delivery:
 
 ```text
-执行B
-```
-Quality-first B:
-
-```text
-current image
+Source
+→ Product Truth
 → Stage A
-→ A QC PASS
-→ 3 textual art-direction candidates
-→ 2 visually distinct finalists
-→ render both finalists
-→ VISION_MODEL compares actual images
-→ select winner
-→ optional targeted refinement
-→ final B QC
+→ A hard QC
+→ B Primary (one initial render)
+→ independent Production Hard Gate
+→ PASS
 ```
 
-The user does not need to choose between finalists.
+If and only if a delivery-blocking visual failure is detected, the runtime may perform **one** targeted creative retry. Provider or evaluator failures consume **zero** creative retries.
+
+Production Hard Gate blocks mechanical/reference-binding/product-truth/copy-truth failures, loss of product-first hierarchy, scene dominance, and clearly broken commercial finish. Golden-relative softness alone does not trigger regeneration.
+
+### VALIDATION
+
+Quality investigation / Golden calibration mode:
 
 ```text
-按默认文案来
+Source
+→ Product Truth
+→ Stage A PASS
+→ Primary + Challenger
+→ independent per-candidate Golden evaluation
+→ pairwise visual audition: Stage A control + Primary + Challenger
+→ winner selection / review
 ```
-Authorizes safe non-factual campaign copy only; never invented business facts.
 
-## V1.4.0 B architecture
+Validation uses full Golden-vector floors and anti-template checks. It is intentionally more expensive than Production Fast.
 
-V1.4.0 addresses three failures seen in cross-agent testing:
+## Operational failure rule
 
-1. **Text-only concept selection was not enough.** A concept could sound sophisticated but render poorly.
-2. **Scenic concepts could demote the product.** Stage A now establishes a hero-camera baseline; B may not shrink apparent product scale by more than 15%.
-3. **Category semantics were being literalized.** Bakery became oven tunnels/sign worlds, etc. V1.4 translates semantics into palette, light, material, rhythm, geometry, negative space and typography behavior instead of default themed scenery.
+Provider timeout/transport failure and evaluator failure are operational failures, not creative failures. They must not be converted into a creative retry request. Evaluator confidence below `0.65` requires evaluation retry/second evaluation without regenerating the image.
 
-Upper-bound means:
+## Runtime evidence
+
+Each job persists reproducibility evidence including runtime version/mode, provider/model IDs, source and Stage A hashes, prompt hashes, generation request evidence, latency/timing, retry count, failure class and final decision.
+
+## Configuration
+
+Copy `.env.example` into a secure environment and inject credentials there. Never commit API keys or private job assets.
+
+Production deployment should explicitly set:
 
 ```text
-PRODUCT_TRUTH
-+ PRODUCT_HERO_STRENGTH
-+ ONE MEMORABLE PRODUCT-DERIVED IDEA
-+ CATEGORY-NATIVE BUT NON-LITERAL WORLD
-+ COMPOSITIONAL TENSION
-+ CONTEMPORARY CAMPAIGN REFINEMENT
+PP_RUNTIME_VERSION=1.0.0-rc.1
+PP_RUNTIME_MODE=PRODUCTION_FAST
+PP_PRODUCTION_MAX_CREATIVE_RETRIES=1
 ```
 
-It does not mean more scenery, more props, larger typography, thicker 3D type or more text.
+## Release state
 
-## Status
-
-Version: 1.4.0
-
-Release state: QUALITY-FIRST ARCHITECTURE COMPLETE / FINAL EXTERNAL ACCEPTANCE STILL REQUIRED.
-
-If the host cannot render and visually compare at least two B candidates, B must be marked `DEGRADED` and may not claim stable upper-bound reproduction.
+`1.0.0-rc.1` is the production-convergence release candidate. Offline/contract verification is required on every release commit. Real-provider/private S01/S02 checks remain opt-in and require secure credentials/assets; they must not be represented as passed unless actually executed on that commit.

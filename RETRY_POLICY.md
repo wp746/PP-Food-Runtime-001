@@ -1,71 +1,69 @@
-# Targeted Retry Policy
+# Retry Policy — 1.0.0-rc.1
 
-Never random-regenerate the whole concept after a specific failure.
+Never random-regenerate after a named failure. Preserve current-job truth and already-passing dimensions.
 
-## A Failure Mapping
+## Operational failures are not creative retries
+
+The following consume **zero** creative retry budget:
+
+- provider timeout / transport failure;
+- evaluator failure or invalid winner ID;
+- evaluator confidence below `0.65`;
+- runtime/reference I/O failure.
+
+Operational recovery means retry transport/evaluation or fail closed. Do not redesign the image to fix an evaluator/provider problem.
+
+## Stage A
+
+Typical mappings:
 
 ```text
-Food/Product drift            → REFERENCE_LOCK_RETRY
-Surface-state drift           → SURFACE_STATE_RETRY
-Vessel/Package drift          → VESSEL_PACKAGE_RETRY
-Unsupported added content     → CONTENT_REMOVAL_RETRY
-Weak hero composition         → HERO_REFRAME_RETRY
-Generic / wrong background    → CATEGORY_BACKGROUND_RETRY
-Wrong temperature/physics     → PHYSICS_RETRY
-Wrong aspect ratio            → ASPECT_CORRECTION_RETRY
+Product drift             → REFERENCE_LOCK_RETRY
+Surface-state drift       → SURFACE_STATE_RETRY
+Vessel/package drift      → VESSEL_PACKAGE_RETRY
+Unsupported content       → CONTENT_REMOVAL_RETRY
+Weak hero composition     → HERO_REFRAME_RETRY
+Wrong category background → CATEGORY_BACKGROUND_RETRY
+Wrong physics             → PHYSICS_RETRY
+Wrong aspect ratio        → ASPECT_CORRECTION_RETRY
 ```
 
-## B Failure Mapping
+## PRODUCTION_FAST
+
+Maximum creative retries: **1**.
+
+A creative retry is eligible only for a delivery-blocking hard gate such as:
 
 ```text
-Stage A product drift          → RETURN_TO_A
-Product demoted by headline    → PRODUCT_HERO_RETRY
-Wrong category skin            → CATEGORY_ROUTE_RETRY
-Previous-job contamination     → REBUILD_CURRENT_JOB_CONTRACT
-Missing/vague director brief   → VISUAL_DIRECTOR_REBUILD
-Candidate skeletons too similar→ CREATIVE_BOARD_REBUILD
-Safe-template winner           → WINNER_RESELECT_RETRY
-Photo-plus-footer              → ANTI_FLATNESS_RETRY
-Weak shared composition        → SHARED_COMPOSITION_RETRY
-Weak thumbnail memory          → THUMBNAIL_MEMORY_RETRY
-Low category inevitability     → CATEGORY_INEVITABILITY_RETRY
-Weak visual tension            → KV_TENSION_RETRY
-Generic typography behavior    → TYPOGRAPHY_ROLE_RETRY
-Typography accuracy error      → TYPOGRAPHY_ACCURACY_RETRY
-Unsupported copy               → COPY_TRUTH_RETRY
-Too dense / too sparse         → INFORMATION_DENSITY_RETRY
-Design regression vs same job  → DESIGN_REGRESSION_RETRY
+PRODUCT_IDENTITY_DRIFT
+COPY_TRUTH_FAILURE
+MECHANICAL_FAILURE
+REFERENCE_BINDING_FAILURE
+HERO_WEAK
+SCENE_DOMINATES_PRODUCT
+COMMERCIAL_FINISH_WEAK
 ```
 
-## B Retry Instructions
+The retry instruction must name only the failing dimensions and preserve current Stage A reference, product truth, authorized copy and passing visual dimensions.
 
-### CREATIVE_BOARD_REBUILD
-Keep product truth, category and copy. Regenerate exactly three candidates using clearly different composition skeletons. Material/color swaps are not sufficient diversity.
+The following by themselves do **not** trigger Production Fast regeneration:
 
-### WINNER_RESELECT_RETRY
-Do not alter product truth. Re-score the existing candidates with a strong penalty on safe fallback skeletons. If all candidates are weak, rebuild the board instead of forcing a winner.
+```text
+GOLDEN_DISTANCE
+PHOTO_PLUS_TEXT
+CATEGORY_CLICHE_DEPENDENCE
+GENERIC_PREMIUM_SKIN
+other soft aesthetic shortfalls
+```
 
-### ANTI_FLATNESS_RETRY
-Preserve accurate product and copy. Replace photo+footer logic with the selected concept's actual spatial composition. Do not fix flatness by simply enlarging or extruding the title.
+After the single creative retry, either PASS the hard gate or stop for review. No hidden second/third regeneration loop.
 
-### THUMBNAIL_MEMORY_RETRY
-Strengthen one product-led memorable action. Remove competing secondary ideas. Do not add decorative clutter.
+## VALIDATION
 
-### CATEGORY_INEVITABILITY_RETRY
-Re-derive environment, typography role, materials, lighting and spatial action from current product/category semantics. The result should require major redesign if the food category changes.
+Validation retains the richer named repair taxonomy and `PP_VALIDATION_MAX_CREATIVE_CYCLES` cap (maximum 3). It may stop earlier and request review when no qualified winner exists.
 
-### KV_TENSION_RETRY
-Increase one dominant directional/spatial relationship through composition, perspective, overlap, negative space, architecture or light while protecting product dominance. Do not make every element larger.
+Representative repair families include product fidelity, hero hierarchy, headline pressure, typography symbiosis, Big Idea, composition, category translation, information density, commercial finish and Golden distance.
 
-### SHARED_COMPOSITION_RETRY
-Reconnect product and typography through the selected skeleton: shared support structure, perspective field, controlled overlap, atmosphere bridge, geometry echo or deliberate negative-space relationship.
+## Pass-freeze rule
 
-### TYPOGRAPHY_ROLE_RETRY
-Keep exact text. Reconsider typography's role in the selected concept rather than adding generic 3D effects. It may become more restrained if that improves product-led composition.
-
-### DESIGN_REGRESSION_RETRY
-When a same-job previous attempt is visibly stronger, preserve the stronger aspects and repair only the new failure. A newer rule version is not automatically better.
-
-Maximum 3 targeted attempts per failure family. Preserve already-passing hard-truth dimensions on every retry.
-
-If hard fidelity, typography accuracy, product dominance or copy truth still cannot be satisfied, do not pretend PASS.
+Every creative retry must preserve dimensions that already pass. “Make it better” is not a valid retry instruction; the repair target must be explicit and auditable.
