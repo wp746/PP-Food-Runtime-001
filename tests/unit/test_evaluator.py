@@ -5,6 +5,7 @@ from pp_food_runtime.models.evaluation import (
     GoldenVector,
 )
 from pp_food_runtime.stage_b.evaluator import decide_evaluation
+from tests.engine_factory import make_engine_and_job
 
 
 def test_hard_product_failure_cannot_be_compensated():
@@ -117,3 +118,21 @@ def test_context_has_no_generator_reasoning_field():
 
     assert "generator_reasoning" not in EvaluationContext.model_fields
     assert "generator_self_score" not in EvaluationContext.model_fields
+
+
+def test_pairwise_uses_stage_a_and_two_candidates_only(tmp_path):
+    engine, job = make_engine_and_job(tmp_path)
+
+    engine.run(job)
+
+    pairwise_calls = [
+        call
+        for call in engine.runner.evaluator.provider.calls
+        if call["response_model"].__name__ == "RawPairwiseComparison"
+    ]
+    assert len(pairwise_calls) == 1
+    images = pairwise_calls[0]["images"]
+    assert len(images) == 3
+    assert "stage-a" in str(images[0].path)
+    assert "primary" in str(images[1].path)
+    assert "challenger" in str(images[2].path)
