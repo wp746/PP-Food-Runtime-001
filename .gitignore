@@ -1,0 +1,11 @@
+.env
+.env.local
+.venv/
+__pycache__/
+.pytest_cache/
+artifacts/
+validation_runs/
+validation_inputs/
+goldens/assets/*
+!goldens/assets/.gitkeep
+
