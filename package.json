@@ -1,0 +1,16 @@
+{
+  "name": "pp-food-miniprogram-node-handoff",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PP Food Node/TypeScript prompt runtime handoff baseline for miniprogram integration",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.0"
+  }
+}

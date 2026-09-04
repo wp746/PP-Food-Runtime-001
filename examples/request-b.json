@@ -1,0 +1,21 @@
+{
+  "jobId": "demo-b-001",
+  "mode": "B",
+  "sourceImageUrl": "https://example.com/source.jpg",
+  "stageAPassImageUrl": "https://example.com/stage-a-pass.jpg",
+  "productName": "碱水原味贝果",
+  "headline": "碱水原味贝果",
+  "subtitle": "现烤出炉，越嚼越香的麦香满足",
+  "slogan": "这一口，才是安康人最爱的面包香",
+  "brand": "欧丰园",
+  "sellingPoints": [
+    "现烤现卖，外亮内韧",
+    "碱水风味，麦香更足",
+    "组织柔韧，越嚼越香",
+    "早餐加餐都合适"
+  ],
+  "defaultCopyAuthorized": true,
+  "layoutTestMode": true,
+  "textMode": "IMAGE_NATIVE",
+  "aspectRatio": "9:16"
+}
