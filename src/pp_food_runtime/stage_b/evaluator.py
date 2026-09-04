@@ -23,14 +23,14 @@ from .copy_firewall import CopyAllowlist
 
 
 FLOORS = {
-    "product_hero_strength": 9.0,
+    "product_hero_strength": 9.2,
     "headline_aggression": 8.8,
-    "typography_product_symbiosis": 8.5,
-    "one_big_idea_clarity": 8.3,
+    "typography_product_symbiosis": 8.8,
+    "one_big_idea_clarity": 9.0,
     "compositional_depth_tension": 8.8,
-    "category_inevitability": 8.5,
-    "information_density_control": 7.8,
-    "commercial_finish": 9.0,
+    "category_inevitability": 9.0,
+    "information_density_control": 8.8,
+    "commercial_finish": 9.2,
 }
 
 
@@ -57,6 +57,24 @@ class RawEvaluation(FrozenModel):
     confidence: float = Field(ge=0, le=1)
 
 
+class RawPairwiseComparison(FrozenModel):
+    winner_id: str
+    visually_distinct: bool
+    winner_reason: str
+    evidence: list[str] = Field(default_factory=list)
+    confidence: float = Field(ge=0, le=1)
+
+
+class PairwiseComparison(FrozenModel):
+    candidate_ids: list[str]
+    actual_images_compared: bool
+    winner_id: str
+    visually_distinct: bool
+    winner_reason: str
+    evidence: list[str] = Field(default_factory=list)
+    confidence: float = Field(ge=0, le=1)
+
+
 EVALUATOR_INSTRUCTION = """
 Act as an independent forensic commercial-art evaluator. You receive, in order: current source, current-job
 Stage A PASS, current B candidate, then zero or more relevant human Goldens. The generator's rationale and
@@ -76,6 +94,19 @@ CATEGORY_CLICHE_DEPENDENCE, GENERIC_PREMIUM_SKIN, TEMPLATE_REUSE, PHOTO_PLUS_TEX
 INFORMATION_STARVATION, INFORMATION_OVERLOAD, HERO_WEAK, HEADLINE_WEAK, TYPOGRAPHY_DISCONNECTED,
 BIG_IDEA_WEAK, COMPOSITION_FLAT, CATEGORY_WEAK, COMMERCIAL_FINISH_WEAK, GOLDEN_DISTANCE,
 REFERENCE_BINDING_FAILURE. Return strict JSON only. Never infer PASS from the prompt's claims.
+""".strip()
+
+
+PAIRWISE_INSTRUCTION = """
+Act as an independent rendered visual-audition judge. You receive, in order: current source, current Stage A PASS,
+candidate 1, candidate 2, then zero or more relevant human Goldens. Compare the two actual B renders directly.
+Images 1 and 2 are control references only and must never be treated as candidates. Images 3 and 4 are the only
+candidate renders. Use the exact business candidate ID supplied for image 3 or image 4 as winner_id.
+Choose the stronger campaign result by product hero strength first, then campaign refinement, product-led
+memorability, category inevitability, typography integration, compositional tension, and anti-template originality.
+Reject novelty when scene or headline demotes the product. Determine whether the two candidates are genuinely
+different in composition skeleton, negative-space strategy, headline role, depth, material family, and lighting.
+Text planning and prompt claims are not evidence. Return concise strict JSON with visible pairwise evidence only.
 """.strip()
 
 
@@ -168,6 +199,58 @@ class BEvaluator:
             confidence=raw.confidence,
         )
 
+    def compare(self, contexts: list[EvaluationContext]) -> PairwiseComparison:
+        if len(contexts) != 2:
+            raise ValueError("rendered visual audition requires exactly two candidates")
+        candidate_ids = [context.candidate_id for context in contexts]
+        if len(set(candidate_ids)) != 2:
+            raise ValueError("rendered visual audition candidate ids must be distinct")
+        first = contexts[0]
+        if any(
+            context.source.sha256 != first.source.sha256
+            or context.stage_a.sha256 != first.stage_a.sha256
+            for context in contexts[1:]
+        ):
+            raise ValueError("pairwise candidates must share current source and Stage A")
+        payload = {
+            "candidate_order": candidate_ids,
+            "image_slot_map": {
+                "image_1": "SOURCE_CONTROL_ONLY",
+                "image_2": "STAGE_A_CONTROL_ONLY",
+                "image_3": candidate_ids[0],
+                "image_4": candidate_ids[1],
+            },
+            "valid_winner_ids": candidate_ids,
+            "product_truth": first.truth.model_dump(mode="json"),
+            "authorized_exact_copy": first.copy_allowlist.exact_copy_lines(),
+            "category_translation": first.translation.model_dump(mode="json"),
+        }
+        instruction = (
+            f"{PAIRWISE_INSTRUCTION}\nEvaluation context:\n"
+            f"{json.dumps(payload, ensure_ascii=False, sort_keys=True)}"
+        )
+        images: list[Path | ImageRef] = [first.source, first.stage_a]
+        images.extend(context.candidate for context in contexts)
+        images.extend(
+            Path(golden.local_asset_path)
+            for golden in first.goldens
+            if golden.local_asset_path
+        )
+        raw = self.provider.analyze(images, instruction, RawPairwiseComparison)
+        normalized = raw.winner_id.strip().lower().replace(" ", "_")
+        winner_id = {
+            "candidate_1": candidate_ids[0],
+            "candidate_2": candidate_ids[1],
+        }.get(normalized, raw.winner_id)
+        if winner_id not in candidate_ids:
+            raise ValueError("pairwise evaluator returned an unknown winner id")
+        return PairwiseComparison(
+            candidate_ids=candidate_ids,
+            actual_images_compared=True,
+            winner_id=winner_id,
+            **raw.model_dump(exclude={"winner_id"}),
+        )
+
     @staticmethod
     def _mechanical_pass(candidate: ImageRef) -> bool:
         try:
@@ -177,4 +260,3 @@ class BEvaluator:
             return height > width and abs((width / height) - (9 / 16)) <= 0.02
         except Exception:
             return False
-

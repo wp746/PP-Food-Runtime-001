@@ -9,7 +9,7 @@ from pp_food_runtime.golden.repository import GoldenRepository
 from pp_food_runtime.models.evaluation import GoldenVector
 from pp_food_runtime.models.job import ImageRef, JobContract, JobMode, UserFacts
 from pp_food_runtime.providers.mock import MockImageProvider, MockVisionProvider
-from pp_food_runtime.stage_b.evaluator import RawEvaluation
+from pp_food_runtime.stage_b.evaluator import RawEvaluation, RawPairwiseComparison
 from pp_food_runtime.vision.analyzer import VisionProductObservation
 
 
@@ -72,6 +72,13 @@ def make_engine_and_job(tmp_path: Path):
                 "materially_weaker_core_dimensions": [],
                 "evidence": evidence,
                 "confidence": 0.9,
+            },
+            RawPairwiseComparison: {
+                "winner_id": "primary",
+                "visually_distinct": True,
+                "winner_reason": "primary keeps the product strongest while retaining campaign depth",
+                "evidence": ["both rendered candidates were compared side by side"],
+                "confidence": 0.92,
             },
         }
     )

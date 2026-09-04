@@ -9,6 +9,31 @@ class CategoryTranslator:
     def translate(self, truth: ProductTruth, user_facts: UserFacts) -> CategoryVisualTranslation:
         category = self._category(truth, user_facts)
         sensory = truth.sensory_keywords or self._default_sensory(category)
+        if category == "BBQ_NIGHTMARKET":
+            return CategoryVisualTranslation(
+                primary_category=category,
+                sensory_evidence=sensory,
+                emotional_semantics=["handheld night-market immediacy", "toasted comfort", "braised-meat satisfaction"],
+                brand_temperament=["streetwise", "warm", "confident", "contemporary"],
+                primary_material_metaphor="golden seared flatbread crust meeting lacquered braised-meat gloss",
+                secondary_material_metaphor="pepper-green sparks and narrow ribbons of night heat",
+                typography_translation="bold Chinese display type with toasted bread relief, restrained charred edges, and braised-juice highlights; premium night-market energy without a rustic signboard",
+                color_translation="wheat gold, braised amber, pepper green, smoky blue-black, and one restrained vermilion night accent",
+                lighting_translation="fire-side warm raking key across bread and meat, balanced by a cool night rim and controlled steam backlight",
+                spatial_translation="five-product hero cluster stays nearest and largest; diagonal counter pressure, shallow luminous night depth, and no literal stall interior",
+                motion_energy_translation="crust-flake rhythm and narrow rising heat arcs drive the eye back into the exposed meat filling",
+                information_system="product first, dimensional headline second, then subtitle and a compact verified shop/contact stack with disciplined selling-point cadence",
+                one_big_idea_seed="five meat-filled flatbreads become a single hot handheld rhythm, where toasted bread geometry and braised gloss construct a contemporary night-advertising field",
+                forbidden_drift=[
+                    "generic black-gold restaurant poster",
+                    "giant rustic signboard or menu board",
+                    "literal street-stall diorama",
+                    "fire or smoke hiding the food",
+                    "single burger replacing five flatbreads",
+                    "western burger or sandwich styling",
+                    "photo plus footer",
+                ],
+            )
         if category == "COLD_DRINK_FRUIT_DESSERT":
             return CategoryVisualTranslation(
                 primary_category=category,
@@ -100,6 +125,8 @@ class CategoryTranslator:
             return "CANNED_FRUIT_RETAIL"
         if any(word in name for word in ("贝果", "面包", "吐司")):
             return "BAKERY"
+        if any(word in name for word in ("肉夹馍", "夹馍", "夜市", "白吉馍")):
+            return "BBQ_NIGHTMARKET"
         return truth.primary_category
 
     @staticmethod
@@ -108,5 +135,5 @@ class CategoryTranslator:
             "COLD_DRINK_FRUIT_DESSERT": ["cold", "juicy", "crisp", "creamy"],
             "CANNED_FRUIT_RETAIL": ["juicy", "sweet", "citrus", "abundant"],
             "BAKERY": ["chewy", "toasted", "wheat", "tactile"],
+            "BBQ_NIGHTMARKET": ["toasted", "savory", "juicy", "hot", "handheld"],
         }.get(category, ["appetizing", "tactile"])
-

@@ -29,82 +29,72 @@ def compile_stage_b(
             "Do not hallucinate substitute lettering or any additional marks."
         )
 
+    support_copy = _join(
+        line for line in contract.exact_copy
+        if line != direction.typography.exact_headline
+    )
     sections = [
         (
-            "OUTPUT CONTRACT",
-            f"One finished premium commercial key visual, exact {contract.aspect_ratio} portrait composition, high resolution, "
-            "edge-to-edge campaign artwork, no border, no mockup, no split-screen, no design-process sheet.",
+            "B1 CURRENT STAGE A PRODUCT + HERO CAMERA LOCK",
+            f"Create one finished edge-to-edge premium commercial KV, exact {contract.aspect_ratio}, high resolution, no border, mockup, split-screen, or process sheet. "
+            "The attached current-job Stage A PASS is binding visual truth. PRODUCT_TRUTH=LOCKED. PRODUCT=HERO #1. "
+            "Apparent product area may not shrink by more than 15 percent from Stage A; environment and headline may not become first read. "
+            f"Identity: {_join(contract.bridge.identity_locks + contract.truth.visual_locks)}. Surface: {_join(contract.bridge.surface_locks)}. "
+            f"Vessel/topology: {_join(contract.bridge.topology_locks)}.",
         ),
         (
-            "REFERENCE AUTHORITY",
-            "The attached current-job Stage A PASS is the binding product reference, not loose inspiration. Preserve its product DNA. "
-            "You may creatively reframe scale, crop, position, overlap, and camera for Stage B; do not lock its old camera composition.",
-        ),
-        ("PRODUCT IDENTITY LOCK", _join(contract.bridge.identity_locks + contract.truth.visual_locks)),
-        ("PRODUCT SURFACE LOCK", _join(contract.bridge.surface_locks)),
-        ("PACKAGE / VESSEL / TOPOLOGY LOCK", _join(contract.bridge.topology_locks)),
-        (
-            "CURRENT PRODUCT SEMANTICS",
-            f"Identity: {contract.truth.identity_summary}. Sensory evidence: {_join(translation.sensory_evidence)}. "
-            f"Emotional semantics: {_join(translation.emotional_semantics)}. Brand temperament: {_join(translation.brand_temperament)}.",
-        ),
-        ("ONE BIG IDEA", direction.one_big_idea),
-        (
-            "PRODUCT HERO DIRECTION",
-            f"Scale: {direction.product_hero.scale}. Position: {direction.product_hero.position}. "
-            f"Crop: {direction.product_hero.crop_behavior}. Dominance: {direction.product_hero.dominance_strategy}. "
-            "The product must be the unmistakable first read and remain more visually powerful than the environment.",
+            "B2 CURRENT CATEGORY SEMANTIC TRANSLATION",
+            f"Category: {translation.primary_category}. Sensory evidence: {_join(translation.sensory_evidence)}. "
+            f"Translate into palette/light/surface/rhythm/geometry rather than themed scenery: {translation.primary_material_metaphor}; "
+            f"{translation.secondary_material_metaphor or ''}; color: {direction.color_direction}; lighting: {direction.lighting_direction}; "
+            f"spatial behavior: {translation.spatial_translation}; motion: {translation.motion_energy_translation}. "
+            f"Current-job mood only: {_join(translation.emotional_semantics + translation.brand_temperament)}.",
         ),
         (
-            "TYPOGRAPHY DIRECTION",
-            f"Headline: {direction.typography.exact_headline}. Material behavior: {direction.typography.material_behavior}. "
-            f"Spatial behavior: {direction.typography.spatial_behavior}. {text_command}",
+            "B3 COPY TRUTH + INFORMATION HIERARCHY",
+            f"Exact headline: {direction.typography.exact_headline}. Exact supporting lines, in supplied order: {support_copy}. {text_command} "
+            "Hierarchy: product first; headline second; subtitle and slogan third; brand/store, selling points, address and phone as disciplined utility information. "
+            "Use fewer support lines only if necessary for legibility, but every visible character must exactly match an authorized line. "
+            "Do not add filler, pseudo-logos, QR codes, prices, opening hours, awards, certifications, weights, origins, ingredients, claims, or numbers.",
         ),
-        ("PRODUCT–TYPOGRAPHY RELATIONSHIP", direction.typography.product_relationship),
         (
-            "COMPOSITION / DEPTH",
-            f"Axis: {direction.composition.dominant_axis}. Depth: {direction.composition.depth_architecture}. "
+            "B4 PRODUCT HERO + TYPOGRAPHY ROLE",
+            f"One Big Idea: {direction.one_big_idea}. Product scale: {direction.product_hero.scale}; position: {direction.product_hero.position}; "
+            f"crop: {direction.product_hero.crop_behavior}; dominance: {direction.product_hero.dominance_strategy}. "
+            f"Typography material: {direction.typography.material_behavior}; spatial role: {direction.typography.spatial_behavior}; "
+            f"product relationship: {direction.typography.product_relationship}. Typography has visible depth and design intention but never forces product shrinkage or menu-sign dominance.",
+        ),
+        (
+            "B5 SELECTED COMPOSITION + CONTEMPORARY CAMPAIGN WORLD",
+            f"Composition skeleton: {direction.composition.dominant_axis}. Depth: {direction.composition.depth_architecture}. "
             f"Energy: {direction.composition.energy_direction}. Foreground pressure: {direction.composition.foreground_pressure}. "
-            "Use clear foreground, hero, headline, and atmospheric planes with controlled tension.",
+            f"Atmosphere: {direction.category_native_atmosphere}. Information system: {direction.information_system}. "
+            f"Transfer abstract Golden principles only, never their skin: {_join(contract.golden_principles)}. "
+            "Use designed negative space, controlled materials, selective scale contrast, tactile food clarity, one memorable product-led gesture, and contemporary advertising refinement.",
         ),
         (
-            "CATEGORY-NATIVE ATMOSPHERE",
-            f"{direction.category_native_atmosphere}. Spatial translation: {translation.spatial_translation}. "
-            f"Motion translation: {translation.motion_energy_translation}.",
-        ),
-        ("COLOR", direction.color_direction),
-        ("LIGHTING", direction.lighting_direction),
-        (
-            "INFORMATION SYSTEM",
-            f"{direction.information_system}. Use only authorized copy: {exact_copy}. "
-            "Keep density energetic but legible; no invented facts, badges, numbers, awards, certifications, prices, weights, or origins.",
-        ),
-        (
-            "GOLDEN QUALITY TARGET",
-            f"Transfer principles only, never skin: {_join(contract.golden_principles)}. Match S-tier visual pressure through "
-            "extreme product hero, strong headline aggression, product-derived typography, one clear product-derived idea, "
-            "multi-depth co-composition, category inevitability, controlled information density, and campaign-grade finish.",
-        ),
-        (
-            "HARD NEGATIVES",
+            "B6 HARD NEGATIVES",
             _join(
                 contract.hard_negatives
                 + direction.forbidden_drift
                 + translation.forbidden_drift
                 + [
-                    "no product identity drift",
-                    "no scene dominance",
-                    "no safe editorial collapse or giant empty space",
-                    "no generic premium skin",
-                    "no flat photo plus detached text",
-                    "no template reuse",
+                    "no raw snapshot after Stage A PASS",
+                    "no previous-job facts or skin",
+                    "no product, package, vessel, count, plating, filling, surface, or cooking-state redesign",
+                    "no unsupported hard facts",
+                    "no product shrinkage beyond the hero-camera limit",
+                    "no environment-first or headline-first composition",
+                    "no giant portal, tunnel, arch, signboard, room, shelf, stall, or theatrical rustic set dominating product",
+                    "no brown-on-brown overload",
+                    "no menu-board or souvenir-sign aesthetic",
+                    "no photo-plus-footer fallback",
+                    "no top-title plus center-product plus bottom-info safe template",
+                    "no material-swap pseudo-innovation",
+                    "no rejected-candidate blending",
                 ]
-            ),
-        ),
-        (
-            "FINAL CORE COMMAND",
-            "Using the attached Stage A reference, create one decisive campaign-grade B visual now. Protect product truth and exact copy, "
-            "then maximize visible product-headline symbiosis, compositional depth, sensory material logic, and commercial finish.",
+            )
+            + ". Using only the attached current Stage A reference and this single compact finalist contract, render the decisive B candidate now.",
         ),
     ]
     text = "\n\n".join(f"## {heading}\n{body.strip()}" for heading, body in sections).strip() + "\n"

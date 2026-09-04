@@ -21,6 +21,17 @@ class BArtDirector:
         copy: CopyAllowlist,
         goldens: list[GoldenPrinciplePack],
     ) -> tuple[ArtDirection, ArtDirection]:
+        return self.select_finalists(
+            self.create_candidates(truth, translation, copy, goldens)
+        )
+
+    def create_candidates(
+        self,
+        truth: ProductTruth,
+        translation: CategoryVisualTranslation,
+        copy: CopyAllowlist,
+        goldens: list[GoldenPrinciplePack],
+    ) -> tuple[ArtDirection, ArtDirection, ArtDirection]:
         headline = copy.product_name
         brand_line = copy.brand or ""
         golden_target = "; ".join(
@@ -85,4 +96,37 @@ class BArtDirector:
             information_system=f"dense asymmetrical campaign lockup with exact brand {brand_line}; preserve hierarchy; target {golden_target}",
             forbidden_drift=shared_forbidden,
         )
-        return primary, challenger
+        editorial = ArtDirection(
+            concept_id="editorial",
+            one_big_idea=f"Use disciplined negative space to make {headline} and one product-derived material gesture feel inevitable: {translation.primary_material_metaphor}",
+            product_hero=ProductHeroDirection(
+                scale="monumental and no more than 15 percent smaller in apparent area than Stage A",
+                position="lower-left asymmetric hero crossing the center field",
+                crop_behavior="retain all identity-critical product count and structure; only support-plane edges may crop",
+                dominance_strategy=f"precise light and tactile separation keep {truth.identity_summary} as the nearest, largest, strongest first read",
+            ),
+            typography=TypographyDirection(
+                exact_headline=headline,
+                material_behavior=f"restrained dimensional interpretation: {translation.typography_translation}",
+                spatial_behavior="headline occupies a deliberately shaped upper-right negative-space field with one controlled overlap into the hero plane",
+                product_relationship="a single product-derived edge, highlight, or motion gesture bridges hero and type without turning type into signage",
+            ),
+            composition=CompositionDirection(
+                dominant_axis="asymmetric editorial counterweight",
+                depth_architecture="restrained editorial foreground edge, monumental hero plane, designed negative space, and shallow atmospheric rear plane",
+                energy_direction="contained lower-left to upper-right tension",
+                foreground_pressure="one selective near-plane material accent; no prop pile or architecture",
+            ),
+            category_native_atmosphere=f"contemporary editorial restraint; {translation.spatial_translation}",
+            color_direction=translation.color_translation,
+            lighting_direction=f"precise restrained variant; {translation.lighting_translation}",
+            information_system=f"headline and subtitle form one compact hierarchy; verified brand/contact facts use a clean side lockup; {translation.information_system}; target {golden_target}",
+            forbidden_drift=shared_forbidden,
+        )
+        return primary, challenger, editorial
+
+    @staticmethod
+    def select_finalists(
+        candidates: tuple[ArtDirection, ArtDirection, ArtDirection],
+    ) -> tuple[ArtDirection, ArtDirection]:
+        return candidates[0], candidates[2]

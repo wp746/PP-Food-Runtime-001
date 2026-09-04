@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+import time
+from datetime import datetime, timezone
 from pathlib import Path
 
 from pydantic import Field
@@ -14,13 +16,15 @@ from pp_food_runtime.models.evaluation import EvaluationResult, FinalDecision
 from pp_food_runtime.models.job import ImageRef, JobContract, JobState
 from pp_food_runtime.models.visual import ValidatedBPromptContract
 from pp_food_runtime.providers.base import ImageProvider, VisionProvider
+from pp_food_runtime.providers.openai_compatible import ImageProviderTimeout
 from pp_food_runtime.stage_a.runner import StageARunner
+from pp_food_runtime.stage_a.evaluator import StageAEvaluator
 from pp_food_runtime.vision.analyzer import ProductAnalyzer
 
 from .art_director import BArtDirector
 from .compiler import compile_stage_b
 from .copy_firewall import CopyFirewall
-from .evaluator import BEvaluator, EvaluationContext
+from .evaluator import BEvaluator, EvaluationContext, PairwiseComparison
 from .retry import RetryPlan, RetryPlanner
 from .translator import CategoryTranslator
 
@@ -34,6 +38,7 @@ class JobResult(FrozenModel):
     candidates: dict[str, ImageRef]
     evaluations: dict[str, EvaluationResult]
     prompt_hashes: dict[str, str]
+    pairwise_comparison: PairwiseComparison
     winner_id: str | None = None
     final_image: ImageRef | None = None
     retry_history: list[RetryPlan] = Field(default_factory=list)
@@ -53,7 +58,11 @@ class StageBRunner:
         self.golden_repository = golden_repository
         self.store = store
         self.product_analyzer = ProductAnalyzer(vision_provider)
-        self.stage_a_runner = StageARunner(image_provider, settings.artifact_root)
+        self.stage_a_runner = StageARunner(
+            image_provider,
+            settings.artifact_root,
+            evaluator=StageAEvaluator(vision_provider),
+        )
         self.copy_firewall = CopyFirewall()
         self.translator = CategoryTranslator()
         self.art_director = BArtDirector()
@@ -103,9 +112,12 @@ class StageBRunner:
             if golden.local_asset_path:
                 self.store.copy_image(job.job_id, f"input/golden-{golden.golden_id}", Path(golden.local_asset_path))
 
-        primary, challenger = self.art_director.create_directions(truth, translation, copy, goldens)
+        director_candidates = self.art_director.create_candidates(truth, translation, copy, goldens)
+        primary, editorial = self.art_director.select_finalists(director_candidates)
         states.extend([JobState.ART_DIRECTION, JobState.ART_DIRECTION_VALIDATION])
-        directions = {"primary": primary, "challenger": challenger}
+        for direction in director_candidates:
+            self.store.write_json(job.job_id, f"contracts/direction-board-{direction.concept_id}", direction)
+        directions = {"primary": primary, "challenger": editorial}
         for candidate_id, direction in directions.items():
             self.store.write_json(job.job_id, f"contracts/direction-{candidate_id}", direction)
 
@@ -135,36 +147,79 @@ class StageBRunner:
             self.store.write_json(job.job_id, f"prompts/{candidate_id}", prompt)
 
         candidates = {}
-        for candidate_id, prompt in compiled.items():
+        for candidate_id in ("primary", "challenger"):
+            prompt = compiled[candidate_id]
             output_path = self.store.target(job.job_id, f"{candidate_id}/image.png")
-            candidates[candidate_id] = self.image_provider.generate(
-                [stage_a.image], prompt.text, job.aspect_ratio, output_path
-            )
+            started_at = self._utc_timestamp()
+            started = time.perf_counter()
+            try:
+                candidates[candidate_id] = self.image_provider.generate(
+                    [stage_a.image], prompt.text, job.aspect_ratio, output_path
+                )
+            except ImageProviderTimeout:
+                self.store.write_json(
+                    job.job_id,
+                    f"{candidate_id}/generation",
+                    {
+                        "status": "TIMEOUT",
+                        "failure_code": ImageProviderTimeout.code,
+                        "stage_a_reference_sha256": stage_a.image.sha256,
+                        "compiled_prompt_sha256": prompt.sha256,
+                        "provider": self.image_provider.capability_profile.provider_id,
+                        "model": self.image_provider.capability_profile.model_id,
+                        "request_id": None,
+                        "started_at": started_at,
+                        "ended_at": self._utc_timestamp(),
+                        "latency_seconds": round(time.perf_counter() - started, 3),
+                        "output_sha256": None,
+                    },
+                )
+                raise
             if not candidates[candidate_id].reference_binding_verified:
                 raise RuntimeError(f"{candidate_id} was not bound to current Stage A reference")
+            self.store.write_json(
+                job.job_id,
+                f"{candidate_id}/generation",
+                {
+                    "status": "PASS",
+                    "failure_code": None,
+                    "stage_a_reference_sha256": stage_a.image.sha256,
+                    "compiled_prompt_sha256": prompt.sha256,
+                    "provider": self.image_provider.capability_profile.provider_id,
+                    "model": self.image_provider.capability_profile.model_id,
+                    "request_id": candidates[candidate_id].provider_request_id,
+                    "started_at": started_at,
+                    "ended_at": self._utc_timestamp(),
+                    "latency_seconds": round(time.perf_counter() - started, 3),
+                    "output_sha256": candidates[candidate_id].sha256,
+                },
+            )
         states.append(JobState.FINALIST_RENDER)
 
         evaluations = {}
+        evaluation_contexts = {}
         for candidate_id, candidate in candidates.items():
-            evaluations[candidate_id] = self.evaluator.evaluate(
-                EvaluationContext(
-                    candidate_id=candidate_id,
-                    source=source,
-                    stage_a=stage_a.image,
-                    candidate=candidate,
-                    truth=truth,
-                    copy_allowlist=copy,
-                    translation=translation,
-                    goldens=goldens,
-                )
+            evaluation_contexts[candidate_id] = EvaluationContext(
+                candidate_id=candidate_id,
+                source=source,
+                stage_a=stage_a.image,
+                candidate=candidate,
+                truth=truth,
+                copy_allowlist=copy,
+                translation=translation,
+                goldens=goldens,
             )
+            evaluations[candidate_id] = self.evaluator.evaluate(evaluation_contexts[candidate_id])
+        pairwise_comparison = self.evaluator.compare(list(evaluation_contexts.values()))
+        self.store.write_json(job.job_id, "eval/pairwise", pairwise_comparison)
         states.extend([JobState.FINALIST_VISUAL_EVAL, JobState.WINNER_SELECTION])
-        ranking = sorted(
-            evaluations,
+        remaining = sorted(
+            (candidate_id for candidate_id in evaluations if candidate_id != pairwise_comparison.winner_id),
             key=lambda item: evaluations[item].golden_vector.weighted_score,
             reverse=True,
         )
-        pairwise_winner = ranking[0]
+        ranking = [pairwise_comparison.winner_id, *remaining]
+        pairwise_winner = pairwise_comparison.winner_id
         evaluations = {
             key: value.model_copy(update={"pairwise_winner": pairwise_winner})
             for key, value in evaluations.items()
@@ -172,7 +227,12 @@ class StageBRunner:
         for candidate_id, evaluation in evaluations.items():
             self.store.write_json(job.job_id, f"eval/{candidate_id}", evaluation)
 
-        qualified = [candidate_id for candidate_id in ranking if evaluations[candidate_id].final_decision is FinalDecision.PASS]
+        pairwise_qualified = pairwise_comparison.visually_distinct and pairwise_comparison.confidence >= 0.65
+        qualified = [
+            candidate_id
+            for candidate_id in ranking
+            if pairwise_qualified and evaluations[candidate_id].final_decision is FinalDecision.PASS
+        ]
         retry_history = []
         winner_id = qualified[0] if qualified else None
         final_image = None
@@ -192,6 +252,8 @@ class StageBRunner:
             "decision": final_decision.value,
             "winner_id": winner_id,
             "pairwise_winner": pairwise_winner,
+            "pairwise_visually_distinct": pairwise_comparison.visually_distinct,
+            "pairwise_confidence": pairwise_comparison.confidence,
             "scores": {
                 key: value.golden_vector.weighted_score for key, value in evaluations.items()
             },
@@ -228,6 +290,7 @@ class StageBRunner:
             candidates=candidates,
             evaluations=evaluations,
             prompt_hashes={key: value.sha256 for key, value in compiled.items()},
+            pairwise_comparison=pairwise_comparison,
             winner_id=winner_id,
             final_image=final_image,
             retry_history=retry_history,
@@ -241,3 +304,7 @@ class StageBRunner:
         }
         encoded = json.dumps(profiles, ensure_ascii=False, sort_keys=True).encode("utf-8")
         return {**summary, "provider_profiles": profiles, "provider_profile_sha256": hashlib.sha256(encoded).hexdigest()}
+
+    @staticmethod
+    def _utc_timestamp() -> str:
+        return datetime.now(timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")

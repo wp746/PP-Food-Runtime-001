@@ -32,10 +32,32 @@ class ProductLockBridge(FrozenModel):
     topology_locks: list[str]
 
 
+class StageAQCEvaluation(FrozenModel):
+    candidate_id: str
+    status: str
+    mechanical_pass: bool
+    reference_binding_verified: bool
+    product_identity_score: float = Field(ge=0, le=10)
+    geometry_count_score: float = Field(ge=0, le=10)
+    ingredient_topology_score: float = Field(ge=0, le=10)
+    plating_arrangement_score: float = Field(ge=0, le=10)
+    physical_relationships_score: float = Field(ge=0, le=10)
+    surface_state_score: float = Field(ge=0, le=10)
+    vessel_package_score: float = Field(ge=0, le=10)
+    commercial_photography_score: float = Field(ge=0, le=10)
+    semantic_relevance_score: float = Field(ge=0, le=10)
+    hero_spatial_score: float = Field(ge=0, le=10)
+    appetite_score: float = Field(ge=0, le=10)
+    failed_dimensions: list[str] = Field(default_factory=list)
+    critical_drifts: list[str] = Field(default_factory=list)
+    evidence: list[str] = Field(default_factory=list)
+    confidence: float = Field(ge=0, le=1)
+
+
 class StageAResult(FrozenModel):
     status: str
     mode: str
     source_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
     image: ImageRef
     bridge: ProductLockBridge
-
+    qc: StageAQCEvaluation | None = None

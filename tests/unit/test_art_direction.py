@@ -51,3 +51,40 @@ def test_directions_trace_current_product_and_not_old_golden_skin():
     assert "桔子罐头" in serialized
     assert "林家铺子" in serialized
     assert "有幸小食院" not in serialized
+
+
+def test_meat_sandwich_routes_to_nightmarket_not_generic_food():
+    truth = _truth("Food")
+    facts = UserFacts(product_name="招牌肉夹馍")
+
+    result = CategoryTranslator().translate(truth, facts)
+
+    assert result.primary_category == "BBQ_NIGHTMARKET"
+    joined = " ".join(
+        [
+            result.primary_material_metaphor,
+            result.typography_translation,
+            result.color_translation,
+            result.lighting_translation,
+            result.one_big_idea_seed,
+        ]
+    ).lower()
+    assert "night" in joined
+    assert "bread" in joined or "flatbread" in joined
+    assert "braised" in joined or "meat" in joined
+
+
+def test_visual_director_builds_three_distinct_text_candidates():
+    truth = _truth("BBQ_NIGHTMARKET")
+    facts = UserFacts(product_name="招牌肉夹馍", brand="老城口小吃铺")
+    translation = CategoryTranslator().translate(truth, facts)
+    copy = CopyFirewall().build(facts)
+
+    candidates = BArtDirector().create_candidates(truth, translation, copy, [])
+
+    assert len(candidates) == 3
+    assert len({item.composition.dominant_axis for item in candidates}) == 3
+    assert len({item.composition.depth_architecture for item in candidates}) == 3
+    finalists = BArtDirector().select_finalists(candidates)
+    assert len(finalists) == 2
+    assert any("editorial" in item.composition.depth_architecture.lower() for item in finalists)

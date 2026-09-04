@@ -53,6 +53,35 @@ def test_two_materially_weaker_core_dimensions_force_retry():
     assert result.final_decision == FinalDecision.RETRY
 
 
+def test_current_upper_bound_product_and_category_floors_are_fail_closed():
+    vector = GoldenVector.all_at(9.5).model_copy(
+        update={"product_hero_strength": 9.1, "category_inevitability": 8.9}
+    )
+    evidence = [
+        {
+            "dimension": field,
+            "what_is_visible": "visible execution",
+            "where_visible": "poster",
+            "why_it_helps_or_hurts": "supports assessment",
+        }
+        for field in GoldenVector.model_fields
+    ]
+
+    result = decide_evaluation(
+        candidate_id="candidate",
+        mechanical_pass=True,
+        product_truth_pass=True,
+        copy_truth_pass=True,
+        golden_vector=vector,
+        critical_failures=[],
+        materially_weaker_core_dimensions=[],
+        evidence=evidence,
+        confidence=0.9,
+    )
+
+    assert result.final_decision == FinalDecision.RETRY
+
+
 def test_evidence_insufficient_scores_are_capped():
     result = decide_evaluation(
         candidate_id="candidate",

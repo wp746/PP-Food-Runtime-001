@@ -4,7 +4,10 @@ import base64
 import io
 import json
 import os
+import signal
+import threading
 import time
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 
@@ -24,6 +27,47 @@ BROWSER_UA = (
 )
 
 
+class QCProviderTimeout(RuntimeError):
+    code = "QC_PROVIDER_TIMEOUT"
+
+
+class ImageProviderTimeout(RuntimeError):
+    code = "IMAGE_PROVIDER_TIMEOUT"
+
+
+class _HardDeadlineExceeded(TimeoutError):
+    pass
+
+
+@contextmanager
+def _wall_clock_deadline(seconds: float):
+    if seconds <= 0 or threading.current_thread() is not threading.main_thread():
+        yield
+        return
+    previous_handler = signal.getsignal(signal.SIGALRM)
+    previous_delay, previous_interval = signal.getitimer(signal.ITIMER_REAL)
+    started = time.monotonic()
+
+    def handle_timeout(signum, frame):
+        del signum, frame
+        raise _HardDeadlineExceeded("vision provider hard deadline exceeded")
+
+    signal.signal(signal.SIGALRM, handle_timeout)
+    signal.setitimer(signal.ITIMER_REAL, seconds)
+    try:
+        yield
+    finally:
+        signal.setitimer(signal.ITIMER_REAL, 0)
+        signal.signal(signal.SIGALRM, previous_handler)
+        if previous_delay > 0:
+            elapsed = time.monotonic() - started
+            signal.setitimer(
+                signal.ITIMER_REAL,
+                max(0.001, previous_delay - elapsed),
+                previous_interval,
+            )
+
+
 def _path_of(item: Path | ImageRef) -> Path:
     return Path(item.path if isinstance(item, ImageRef) else item)
 
@@ -41,6 +85,16 @@ def _image_data_url(item: Path | ImageRef) -> str:
     return f"data:{mime};base64," + base64.b64encode(path.read_bytes()).decode("ascii")
 
 
+def _vision_image_data_url(item: Path | ImageRef) -> str:
+    path = _path_of(item)
+    with Image.open(path) as image:
+        normalized = ImageOps.exif_transpose(image).convert("RGB")
+        normalized.thumbnail((1600, 1600), Image.Resampling.LANCZOS)
+        buffer = io.BytesIO()
+        normalized.save(buffer, format="JPEG", quality=90, optimize=True)
+    return "data:image/jpeg;base64," + base64.b64encode(buffer.getvalue()).decode("ascii")
+
+
 def _extract_json_text(content: Any) -> str:
     if isinstance(content, list):
         content = "".join(str(part.get("text", "")) for part in content if isinstance(part, dict))
@@ -54,9 +108,19 @@ def _extract_json_text(content: Any) -> str:
 
 
 class OpenAICompatibleVisionProvider(VisionProvider):
-    def __init__(self, settings: RuntimeSettings, transport: httpx.BaseTransport | None = None):
+    def __init__(
+        self,
+        settings: RuntimeSettings,
+        transport: httpx.BaseTransport | None = None,
+        hard_timeout_seconds: float = 90.0,
+        transport_retries: int = 1,
+    ):
+        if transport_retries not in (0, 1):
+            raise ValueError("SiliconFlow transport_retries must be 0 or 1")
         self.settings = settings
         self._transport = transport
+        self.hard_timeout_seconds = hard_timeout_seconds
+        self.transport_retries = transport_retries
         self.capability_profile = ProviderCapabilityProfile(
             provider_id="siliconflow-openai-compatible",
             model_id=settings.vision_model,
@@ -78,7 +142,7 @@ class OpenAICompatibleVisionProvider(VisionProvider):
             }
         ]
         content.extend(
-            {"type": "image_url", "image_url": {"url": _image_data_url(image)}} for image in images
+            {"type": "image_url", "image_url": {"url": _vision_image_data_url(image)}} for image in images
         )
         payload = {
             "model": self.settings.vision_model,
@@ -91,28 +155,89 @@ class OpenAICompatibleVisionProvider(VisionProvider):
             "Content-Type": "application/json",
             "User-Agent": BROWSER_UA,
         }
-        with httpx.Client(
-            base_url=self.settings.vision_base_url.rstrip("/") + "/",
-            timeout=self.settings.request_timeout_seconds,
-            transport=self._transport,
-        ) as client:
-            response = client.post("chat/completions", headers=headers, json=payload)
-            response.raise_for_status()
-            data = response.json()
+        data = self._request_json("chat/completions", headers=headers, payload=payload)
         text = _extract_json_text(data["choices"][0]["message"]["content"])
         return response_model.model_validate_json(text)
 
     def check_reachability(self) -> bool:
         headers = {"Authorization": f"Bearer {self.settings.vision_api_key.get_secret_value()}", "User-Agent": BROWSER_UA}
-        with httpx.Client(timeout=min(self.settings.request_timeout_seconds, 30), transport=self._transport) as client:
-            response = client.get(self.settings.vision_base_url.rstrip("/") + "/models", headers=headers)
-            return response.status_code == 200
+        last_error: Exception | None = None
+        for attempt in range(self.transport_retries + 1):
+            try:
+                with _wall_clock_deadline(self.hard_timeout_seconds):
+                    with httpx.Client(
+                        timeout=httpx.Timeout(self.hard_timeout_seconds),
+                        transport=self._transport,
+                    ) as client:
+                        response = client.get(
+                            self.settings.vision_base_url.rstrip("/") + "/models",
+                            headers=headers,
+                        )
+                return response.status_code == 200
+            except (_HardDeadlineExceeded, httpx.TimeoutException) as exc:
+                last_error = exc
+                if attempt == self.transport_retries:
+                    raise self._timeout_error(attempt + 1) from exc
+            except httpx.TransportError as exc:
+                last_error = exc
+                if attempt == self.transport_retries:
+                    return False
+        if last_error is not None:
+            raise last_error
+        return False
+
+    def _request_json(
+        self,
+        endpoint: str,
+        *,
+        headers: dict[str, str],
+        payload: dict[str, Any],
+    ) -> dict[str, Any]:
+        last_error: Exception | None = None
+        for attempt in range(self.transport_retries + 1):
+            try:
+                with _wall_clock_deadline(self.hard_timeout_seconds):
+                    with httpx.Client(
+                        base_url=self.settings.vision_base_url.rstrip("/") + "/",
+                        timeout=httpx.Timeout(self.hard_timeout_seconds),
+                        transport=self._transport,
+                    ) as client:
+                        response = client.post(endpoint, headers=headers, json=payload)
+                        response.raise_for_status()
+                        return response.json()
+            except (_HardDeadlineExceeded, httpx.TimeoutException) as exc:
+                last_error = exc
+                if attempt == self.transport_retries:
+                    raise self._timeout_error(attempt + 1) from exc
+            except httpx.TransportError as exc:
+                last_error = exc
+                if attempt == self.transport_retries:
+                    raise
+        if last_error is not None:
+            raise last_error
+        raise RuntimeError("SiliconFlow request failed without an error")
+
+    def _timeout_error(self, attempts: int) -> QCProviderTimeout:
+        return QCProviderTimeout(
+            "QC_PROVIDER_TIMEOUT: SiliconFlow exceeded "
+            f"{self.hard_timeout_seconds:g}s after {attempts} attempt(s)"
+        )
 
 
 class OpenAICompatibleImageProvider(ImageProvider):
-    def __init__(self, settings: RuntimeSettings, transport: httpx.BaseTransport | None = None):
+    def __init__(
+        self,
+        settings: RuntimeSettings,
+        transport: httpx.BaseTransport | None = None,
+        hard_timeout_seconds: float = 240.0,
+        transport_retries: int = 1,
+    ):
+        if transport_retries not in (0, 1):
+            raise ValueError("Yunwu transport_retries must be 0 or 1")
         self.settings = settings
         self._transport = transport
+        self.hard_timeout_seconds = hard_timeout_seconds
+        self.transport_retries = transport_retries
         self.capability_profile = ProviderCapabilityProfile(
             provider_id="yunwu-openai-compatible",
             model_id=settings.image_model,
@@ -142,9 +267,44 @@ class OpenAICompatibleImageProvider(ImageProvider):
             "Content-Type": "application/json",
             "User-Agent": BROWSER_UA,
         }
+        last_error: Exception | None = None
+        for attempt in range(self.transport_retries + 1):
+            try:
+                with _wall_clock_deadline(self.hard_timeout_seconds):
+                    return self._generate_once(
+                        endpoint=endpoint,
+                        headers=headers,
+                        payload=payload,
+                        output_path=Path(output_path),
+                        reference_bound=bool(refs),
+                    )
+            except (_HardDeadlineExceeded, httpx.TimeoutException) as exc:
+                last_error = exc
+                if attempt == self.transport_retries:
+                    raise ImageProviderTimeout(
+                        "IMAGE_PROVIDER_TIMEOUT: Yunwu exceeded "
+                        f"{self.hard_timeout_seconds:g}s after {attempt + 1} attempt(s)"
+                    ) from exc
+            except httpx.TransportError as exc:
+                last_error = exc
+                if attempt == self.transport_retries:
+                    raise
+        if last_error is not None:
+            raise last_error
+        raise RuntimeError("Yunwu request failed without an error")
+
+    def _generate_once(
+        self,
+        *,
+        endpoint: str,
+        headers: dict[str, str],
+        payload: dict[str, Any],
+        output_path: Path,
+        reference_bound: bool,
+    ) -> ImageRef:
         with httpx.Client(
             base_url=self.settings.image_base_url.rstrip("/") + "/",
-            timeout=self.settings.request_timeout_seconds,
+            timeout=httpx.Timeout(self.hard_timeout_seconds),
             transport=self._transport,
         ) as client:
             response = client.post(endpoint, headers=headers, json=payload)
@@ -172,25 +332,16 @@ class OpenAICompatibleImageProvider(ImageProvider):
             sha256=sha256_file(output_path),
             width=width,
             height=height,
-            reference_binding_verified=bool(refs),
+            reference_binding_verified=reference_bound,
             provider_request_id=request_id,
         )
 
     def _download(self, client: httpx.Client, url: str, headers: dict[str, str], path: Path) -> None:
-        last_error: Exception | None = None
-        for attempt in range(4):
-            try:
-                response = client.get(url, headers=headers, follow_redirects=True)
-                response.raise_for_status()
-                path.write_bytes(response.content)
-                if path.stat().st_size == 0:
-                    raise RuntimeError("provider image download returned zero bytes")
-                return
-            except Exception as exc:
-                last_error = exc
-                if attempt < 3:
-                    time.sleep(2 * (attempt + 1))
-        raise RuntimeError("provider image download failed") from last_error
+        response = client.get(url, headers=headers, follow_redirects=True)
+        response.raise_for_status()
+        path.write_bytes(response.content)
+        if path.stat().st_size == 0:
+            raise RuntimeError("provider image download returned zero bytes")
 
     def check_reachability(self) -> bool:
         headers = {"Authorization": f"Bearer {self.settings.image_api_key.get_secret_value()}", "User-Agent": BROWSER_UA}

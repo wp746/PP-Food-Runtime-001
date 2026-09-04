@@ -1,16 +1,21 @@
 import base64
+import io
 import json
 from pathlib import Path
+import time
 
 import httpx
+import pytest
 from PIL import Image
 from pydantic import BaseModel
 
 from pp_food_runtime.config import RuntimeSettings
 from pp_food_runtime.providers.mock import MockImageProvider
 from pp_food_runtime.providers.openai_compatible import (
+    ImageProviderTimeout,
     OpenAICompatibleImageProvider,
     OpenAICompatibleVisionProvider,
+    QCProviderTimeout,
 )
 
 
@@ -67,6 +72,95 @@ def test_yunwu_request_attaches_current_reference_and_keeps_key_out_of_payload(t
     assert result.reference_binding_verified is True
 
 
+def test_yunwu_transport_retry_reuses_identical_generation_request(tmp_path):
+    reference = tmp_path / "reference.png"
+    Image.new("RGB", (9, 16), "red").save(reference)
+    requests = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requests.append(
+            {
+                "path": request.url.path,
+                "body": json.loads(request.content),
+            }
+        )
+        if len(requests) == 1:
+            raise httpx.ReadTimeout("first transport timeout", request=request)
+        return httpx.Response(
+            200,
+            json={"data": [{"b64_json": _png_b64(tmp_path), "id": "retry-request"}]},
+        )
+
+    provider = OpenAICompatibleImageProvider(
+        _settings(tmp_path),
+        transport=httpx.MockTransport(handler),
+        hard_timeout_seconds=240,
+        transport_retries=1,
+    )
+
+    result = provider.generate([reference], "same prompt", "9:16", tmp_path / "out.png")
+
+    assert len(requests) == 2
+    assert requests[0] == requests[1]
+    assert requests[1]["body"]["model"] == "image-model"
+    assert requests[1]["body"]["prompt"] == "same prompt"
+    assert requests[1]["body"]["images"][0]["image_url"].startswith("data:image/png;base64,")
+    assert result.provider_request_id == "retry-request"
+
+
+def test_yunwu_timeout_retries_once_then_returns_explicit_code(tmp_path):
+    reference = tmp_path / "reference.png"
+    Image.new("RGB", (9, 16), "red").save(reference)
+    calls = 0
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal calls
+        calls += 1
+        raise httpx.ReadTimeout("slow image response", request=request)
+
+    provider = OpenAICompatibleImageProvider(
+        _settings(tmp_path),
+        transport=httpx.MockTransport(handler),
+        hard_timeout_seconds=240,
+        transport_retries=1,
+    )
+
+    with pytest.raises(ImageProviderTimeout, match="IMAGE_PROVIDER_TIMEOUT"):
+        provider.generate([reference], "same prompt", "9:16", tmp_path / "out.png")
+
+    assert calls == 2
+    assert not (tmp_path / "out.png").exists()
+
+
+def test_yunwu_wall_clock_deadline_interrupts_slow_transport(tmp_path):
+    reference = tmp_path / "reference.png"
+    Image.new("RGB", (9, 16), "red").save(reference)
+    calls = 0
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal calls
+        calls += 1
+        time.sleep(0.2)
+        return httpx.Response(
+            200,
+            json={"data": [{"b64_json": _png_b64(tmp_path), "id": "too-late"}]},
+        )
+
+    provider = OpenAICompatibleImageProvider(
+        _settings(tmp_path),
+        transport=httpx.MockTransport(handler),
+        hard_timeout_seconds=0.05,
+        transport_retries=1,
+    )
+    started = time.perf_counter()
+
+    with pytest.raises(ImageProviderTimeout, match="IMAGE_PROVIDER_TIMEOUT"):
+        provider.generate([reference], "same prompt", "9:16", tmp_path / "out.png")
+
+    assert calls == 2
+    assert time.perf_counter() - started < 0.3
+
+
 def test_vision_provider_parses_structured_json(tmp_path):
     source = tmp_path / "source.png"
     Image.new("RGB", (9, 16), "green").save(source)
@@ -82,3 +176,95 @@ def test_vision_provider_parses_structured_json(tmp_path):
 
     provider = OpenAICompatibleVisionProvider(_settings(tmp_path), transport=httpx.MockTransport(handler))
     assert provider.analyze([source], "observe", TinyResponse).result == "ok"
+
+
+def test_vision_provider_downscales_large_input_without_changing_source(tmp_path):
+    source = tmp_path / "large.png"
+    Image.new("RGB", (3000, 4000), "green").save(source)
+    original_bytes = source.read_bytes()
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        body = json.loads(request.content)
+        data_url = body["messages"][0]["content"][1]["image_url"]["url"]
+        encoded = data_url.split(",", 1)[1]
+        with Image.open(io.BytesIO(base64.b64decode(encoded))) as uploaded:
+            assert max(uploaded.size) == 1600
+            assert uploaded.format == "JPEG"
+        return httpx.Response(
+            200,
+            json={"choices": [{"message": {"content": '{"result":"ok"}'}}]},
+        )
+
+    provider = OpenAICompatibleVisionProvider(_settings(tmp_path), transport=httpx.MockTransport(handler))
+
+    assert provider.analyze([source], "observe", TinyResponse).result == "ok"
+    assert source.read_bytes() == original_bytes
+
+
+def test_siliconflow_timeout_retries_once_then_returns_explicit_code(tmp_path):
+    calls = 0
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal calls
+        calls += 1
+        raise httpx.ReadTimeout("slow vision response", request=request)
+
+    provider = OpenAICompatibleVisionProvider(
+        _settings(tmp_path),
+        transport=httpx.MockTransport(handler),
+        hard_timeout_seconds=90,
+        transport_retries=1,
+    )
+
+    with pytest.raises(QCProviderTimeout, match="QC_PROVIDER_TIMEOUT"):
+        provider.analyze([], "text-only probe", TinyResponse)
+
+    assert calls == 2
+
+
+def test_siliconflow_wall_clock_deadline_interrupts_slow_transport(tmp_path):
+    calls = 0
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal calls
+        calls += 1
+        time.sleep(0.2)
+        return httpx.Response(
+            200,
+            json={"choices": [{"message": {"content": '{"result":"too late"}'}}]},
+        )
+
+    provider = OpenAICompatibleVisionProvider(
+        _settings(tmp_path),
+        transport=httpx.MockTransport(handler),
+        hard_timeout_seconds=0.05,
+        transport_retries=1,
+    )
+    started = time.perf_counter()
+
+    with pytest.raises(QCProviderTimeout, match="QC_PROVIDER_TIMEOUT"):
+        provider.analyze([], "text-only probe", TinyResponse)
+
+    assert calls == 2
+    assert time.perf_counter() - started < 0.3
+
+
+def test_siliconflow_reachability_uses_same_timeout_and_retry_contract(tmp_path):
+    calls = 0
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal calls
+        calls += 1
+        raise httpx.ReadTimeout("slow models response", request=request)
+
+    provider = OpenAICompatibleVisionProvider(
+        _settings(tmp_path),
+        transport=httpx.MockTransport(handler),
+        hard_timeout_seconds=90,
+        transport_retries=1,
+    )
+
+    with pytest.raises(QCProviderTimeout, match="QC_PROVIDER_TIMEOUT"):
+        provider.check_reachability()
+
+    assert calls == 2

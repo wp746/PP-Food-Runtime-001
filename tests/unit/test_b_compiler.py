@@ -83,16 +83,14 @@ def profile(text_rendering="strong"):
 def test_stage_b_prompt_uses_canonical_section_order():
     prompt = compile_stage_b(make_contract(), profile()).text
     headings = [
-        "OUTPUT CONTRACT", "REFERENCE AUTHORITY", "PRODUCT IDENTITY LOCK",
-        "PRODUCT SURFACE LOCK", "PACKAGE / VESSEL / TOPOLOGY LOCK",
-        "CURRENT PRODUCT SEMANTICS", "ONE BIG IDEA", "PRODUCT HERO DIRECTION",
-        "TYPOGRAPHY DIRECTION", "PRODUCT–TYPOGRAPHY RELATIONSHIP",
-        "COMPOSITION / DEPTH", "CATEGORY-NATIVE ATMOSPHERE", "COLOR",
-        "LIGHTING", "INFORMATION SYSTEM", "GOLDEN QUALITY TARGET",
-        "HARD NEGATIVES", "FINAL CORE COMMAND",
+        "B1 CURRENT STAGE A PRODUCT + HERO CAMERA LOCK",
+        "B2 CURRENT CATEGORY SEMANTIC TRANSLATION",
+        "B3 COPY TRUTH + INFORMATION HIERARCHY",
+        "B4 PRODUCT HERO + TYPOGRAPHY ROLE",
+        "B5 SELECTED COMPOSITION + CONTEMPORARY CAMPAIGN WORLD",
+        "B6 HARD NEGATIVES",
     ]
-    positions = [prompt.index(heading) for heading in headings]
-    assert positions == sorted(positions)
+    assert [line.removeprefix("## ") for line in prompt.splitlines() if line.startswith("## B")] == headings
 
 
 def test_weak_text_profile_reserves_exact_copy_zones():
