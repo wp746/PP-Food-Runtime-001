@@ -28,6 +28,7 @@ class FailureCode(StrEnum):
     COMMERCIAL_FINISH_WEAK = "COMMERCIAL_FINISH_WEAK"
     GOLDEN_DISTANCE = "GOLDEN_DISTANCE"
     REFERENCE_BINDING_FAILURE = "REFERENCE_BINDING_FAILURE"
+    EVALUATOR_FAILURE = "EVALUATOR_FAILURE"
 
 
 class FinalDecision(StrEnum):
@@ -103,4 +104,3 @@ class EvaluationResult(FrozenModel):
 class PassFreezeMap(FrozenModel):
     passing_dimensions: list[str] = Field(default_factory=list)
     failing_dimensions: list[str] = Field(default_factory=list)
-
