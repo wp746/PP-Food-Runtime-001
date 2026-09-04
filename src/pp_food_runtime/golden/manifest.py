@@ -25,17 +25,20 @@ class GoldenManifest(FrozenModel):
     sha256: str
     transferable_principles: list[str] = Field(min_length=1)
     prohibited_transfer: list[str] = Field(min_length=1)
+    human_accepted: bool = False
+    calibration_role: str | None = None
     local_asset_path: Path | None = None
     local_asset_sha256: str | None = None
 
     @field_validator("sha256")
     @classmethod
     def validate_digest(cls, value: str) -> str:
-        if value != "LOCAL_BIND_REQUIRED" and (len(value) != 64 or any(c not in "0123456789abcdef" for c in value)):
+        if value != "LOCAL_BIND_REQUIRED" and (
+            len(value) != 64 or any(c not in "0123456789abcdef" for c in value)
+        ):
             raise ValueError("sha256 must be a lowercase digest or LOCAL_BIND_REQUIRED")
         return value
 
     @property
     def tier_rank(self) -> int:
         return 0 if self.tier is GoldenTier.S_TIER else 1
-
