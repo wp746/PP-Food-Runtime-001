@@ -98,15 +98,16 @@ REFERENCE_BINDING_FAILURE. Return strict JSON only. Never infer PASS from the pr
 
 
 PAIRWISE_INSTRUCTION = """
-Act as an independent rendered visual-audition judge. You receive, in order: current source, current Stage A PASS,
-candidate 1, candidate 2, then zero or more relevant human Goldens. Compare the two actual B renders directly.
-Images 1 and 2 are control references only and must never be treated as candidates. Images 3 and 4 are the only
-candidate renders. Use the exact business candidate ID supplied for image 3 or image 4 as winner_id.
+Act as an independent rendered visual-audition judge. You receive exactly three images in order:
+image 1 = current Stage A PASS control, image 2 = candidate 1, image 3 = candidate 2.
+Image 1 is control only and must never be treated as a candidate. Images 2 and 3 are the only candidate renders.
+Use the exact business candidate ID supplied for image 2 or image 3 as winner_id.
 Choose the stronger campaign result by product hero strength first, then campaign refinement, product-led
 memorability, category inevitability, typography integration, compositional tension, and anti-template originality.
 Reject novelty when scene or headline demotes the product. Determine whether the two candidates are genuinely
 different in composition skeleton, negative-space strategy, headline role, depth, material family, and lighting.
-Text planning and prompt claims are not evidence. Return concise strict JSON with visible pairwise evidence only.
+Do not compare or identify any unrelated product or Golden. Text planning and prompt claims are not evidence.
+Return concise strict JSON with visible pairwise evidence only.
 """.strip()
 
 
@@ -215,32 +216,28 @@ class BEvaluator:
         payload = {
             "candidate_order": candidate_ids,
             "image_slot_map": {
-                "image_1": "SOURCE_CONTROL_ONLY",
-                "image_2": "STAGE_A_CONTROL_ONLY",
-                "image_3": candidate_ids[0],
-                "image_4": candidate_ids[1],
+                "image_1": "STAGE_A_CONTROL_ONLY",
+                "image_2": candidate_ids[0],
+                "image_3": candidate_ids[1],
             },
             "valid_winner_ids": candidate_ids,
-            "product_truth": first.truth.model_dump(mode="json"),
+            "product_identity": first.truth.identity_summary,
+            "primary_category": first.translation.primary_category,
             "authorized_exact_copy": first.copy_allowlist.exact_copy_lines(),
-            "category_translation": first.translation.model_dump(mode="json"),
         }
         instruction = (
             f"{PAIRWISE_INSTRUCTION}\nEvaluation context:\n"
             f"{json.dumps(payload, ensure_ascii=False, sort_keys=True)}"
         )
-        images: list[Path | ImageRef] = [first.source, first.stage_a]
+        images: list[Path | ImageRef] = [first.stage_a]
         images.extend(context.candidate for context in contexts)
-        images.extend(
-            Path(golden.local_asset_path)
-            for golden in first.goldens
-            if golden.local_asset_path
-        )
         raw = self.provider.analyze(images, instruction, RawPairwiseComparison)
         normalized = raw.winner_id.strip().lower().replace(" ", "_")
         winner_id = {
             "candidate_1": candidate_ids[0],
             "candidate_2": candidate_ids[1],
+            "image_2": candidate_ids[0],
+            "image_3": candidate_ids[1],
         }.get(normalized, raw.winner_id)
         if winner_id not in candidate_ids:
             raise ValueError("pairwise evaluator returned an unknown winner id")
