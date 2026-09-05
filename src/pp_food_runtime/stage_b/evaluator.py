@@ -18,6 +18,7 @@ from pp_food_runtime.models.job import ImageRef
 from pp_food_runtime.models.product import ProductTruth
 from pp_food_runtime.models.visual import CategoryVisualTranslation, GoldenPrinciplePack
 from pp_food_runtime.providers.base import VisionProvider
+from pp_food_runtime.providers.openai_compatible import StructuredOutputProtocolError
 
 from .copy_firewall import CopyAllowlist
 from .production_gate import ProductionGateResult, decide_production_gate
@@ -109,6 +110,14 @@ unshippable render, not merely conservative taste. Soft style disagreements such
 PHOTO_PLUS_TEXT, GOLDEN_DISTANCE, or a lower-than-Golden aesthetic score are advisory and must not by themselves
 block production delivery. Return the same strict RawEvaluation JSON schema. Golden-vector values may be used as
 observations but are not production PASS thresholds. Never identify an unrelated product/category from another job.
+""".strip()
+
+
+PRODUCTION_EVALUATOR_PROTOCOL_RETRY = """
+INSTANCE_RETRY: The previous evaluator response was rejected as a structured-output protocol failure.
+Return a DATA INSTANCE that satisfies RawEvaluation. Do not return, quote, summarize, or embed a JSON Schema.
+Do not output $defs, properties, required, title, schema metadata, or explanatory prose. Return one JSON object only.
+Re-evaluate the same three images; do not assume the previous invalid response contained any usable judgment.
 """.strip()
 
 
@@ -226,11 +235,36 @@ class BEvaluator:
             f"{PRODUCTION_EVALUATOR_INSTRUCTION}\nEvaluation context:\n"
             f"{json.dumps(payload, ensure_ascii=False, sort_keys=True)}"
         )
-        raw = self.provider.analyze(
-            [context.source, context.stage_a, context.candidate], instruction, RawEvaluation
-        )
+        images = [context.source, context.stage_a, context.candidate]
+        try:
+            raw = self.provider.analyze(images, instruction, RawEvaluation)
+        except StructuredOutputProtocolError as first_error:
+            retry_instruction = (
+                f"{instruction}\n\n{PRODUCTION_EVALUATOR_PROTOCOL_RETRY}\n"
+                f"Previous protocol failure reason: {first_error.reason}"
+            )
+            try:
+                raw = self.provider.analyze(images, retry_instruction, RawEvaluation)
+            except StructuredOutputProtocolError as second_error:
+                return ProductionGateResult(
+                    decision=FinalDecision.NEEDS_HUMAN_REVIEW,
+                    failure_codes=[FailureCode.EVALUATOR_PROTOCOL_FAILURE],
+                    retry_eligible=False,
+                    failure_class="EVALUATOR_PROTOCOL",
+                    evidence=[
+                        "Production evaluator structured-output protocol failed twice: "
+                        f"{first_error.reason} -> {second_error.reason}."
+                    ],
+                    repair_instruction=(
+                        "Review the existing generated image or re-run evaluator only; "
+                        "do not regenerate the image."
+                    ),
+                )
         first_read = raw.first_read_order[0].strip().lower() if raw.first_read_order else ""
-        product_first = any(token in first_read for token in ("product", "food", "package", "产品", "食物", "食品"))
+        product_first = any(
+            token in first_read
+            for token in ("product", "food", "package", "产品", "食物", "食品")
+        )
         raw_codes = list(raw.critical_failures)
         if not context.candidate.reference_binding_verified:
             raw_codes.append(FailureCode.REFERENCE_BINDING_FAILURE.value)
