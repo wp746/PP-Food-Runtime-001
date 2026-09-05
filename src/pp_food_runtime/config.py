@@ -15,7 +15,7 @@ class RuntimeMode(StrEnum):
 class RuntimeSettings(BaseModel):
     model_config = ConfigDict(frozen=True)
 
-    runtime_version: str = "1.0.0-rc.1"
+    runtime_version: str = "1.0.0-rc.2"
     runtime_mode: RuntimeMode = RuntimeMode.VALIDATION
     artifact_root: Path = Path("artifacts")
     golden_root: Path = Path("goldens")
@@ -39,7 +39,7 @@ class RuntimeSettings(BaseModel):
             raise ValueError(f"invalid PP_RUNTIME_MODE: {raw_mode}") from exc
 
         values = {
-            "runtime_version": os.getenv("PP_RUNTIME_VERSION", "1.0.0-rc.1"),
+            "runtime_version": os.getenv("PP_RUNTIME_VERSION", "1.0.0-rc.2"),
             "runtime_mode": runtime_mode,
             "artifact_root": Path(os.getenv("PP_ARTIFACT_ROOT", "artifacts")),
             "golden_root": Path(os.getenv("PP_GOLDEN_ROOT", "goldens")),
