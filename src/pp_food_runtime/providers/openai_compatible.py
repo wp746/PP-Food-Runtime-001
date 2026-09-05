@@ -13,6 +13,7 @@ from typing import Any
 
 import httpx
 from PIL import Image, ImageOps
+from pydantic import ValidationError
 
 from pp_food_runtime.artifacts.store import sha256_file
 from pp_food_runtime.config import RuntimeSettings
@@ -33,6 +34,14 @@ class QCProviderTimeout(RuntimeError):
 
 class ImageProviderTimeout(RuntimeError):
     code = "IMAGE_PROVIDER_TIMEOUT"
+
+
+class StructuredOutputProtocolError(RuntimeError):
+    code = "STRUCTURED_OUTPUT_PROTOCOL_FAILURE"
+
+    def __init__(self, reason: str):
+        self.reason = reason
+        super().__init__(f"{self.code}: {reason}")
 
 
 class _HardDeadlineExceeded(TimeoutError):
@@ -101,10 +110,36 @@ def _extract_json_text(content: Any) -> str:
     text = str(content).strip()
     if text.startswith("```"):
         lines = text.splitlines()
-        if lines and lines[0].startswith("```"): lines = lines[1:]
-        if lines and lines[-1].strip() == "```": lines = lines[:-1]
+        if lines and lines[0].startswith("```"):
+            lines = lines[1:]
+        if lines and lines[-1].strip() == "```":
+            lines = lines[:-1]
         text = "\n".join(lines)
     return text.strip()
+
+
+def _looks_like_json_schema(value: Any) -> bool:
+    if not isinstance(value, dict):
+        return False
+    schema_markers = {"properties", "required", "type"}
+    return (
+        schema_markers.issubset(value.keys())
+        and value.get("type") == "object"
+        and ("$defs" in value or "title" in value)
+    )
+
+
+def _validate_structured_output(text: str, response_model: type[ResponseT]) -> ResponseT:
+    try:
+        parsed = json.loads(text)
+    except json.JSONDecodeError as exc:
+        raise StructuredOutputProtocolError("INVALID_JSON") from exc
+    if _looks_like_json_schema(parsed):
+        raise StructuredOutputProtocolError("SCHEMA_ECHO")
+    try:
+        return response_model.model_validate(parsed)
+    except ValidationError as exc:
+        raise StructuredOutputProtocolError("MODEL_VALIDATION") from exc
 
 
 class OpenAICompatibleVisionProvider(VisionProvider):
@@ -157,10 +192,13 @@ class OpenAICompatibleVisionProvider(VisionProvider):
         }
         data = self._request_json("chat/completions", headers=headers, payload=payload)
         text = _extract_json_text(data["choices"][0]["message"]["content"])
-        return response_model.model_validate_json(text)
+        return _validate_structured_output(text, response_model)
 
     def check_reachability(self) -> bool:
-        headers = {"Authorization": f"Bearer {self.settings.vision_api_key.get_secret_value()}", "User-Agent": BROWSER_UA}
+        headers = {
+            "Authorization": f"Bearer {self.settings.vision_api_key.get_secret_value()}",
+            "User-Agent": BROWSER_UA,
+        }
         last_error: Exception | None = None
         for attempt in range(self.transport_retries + 1):
             try:
@@ -344,9 +382,18 @@ class OpenAICompatibleImageProvider(ImageProvider):
             raise RuntimeError("provider image download returned zero bytes")
 
     def check_reachability(self) -> bool:
-        headers = {"Authorization": f"Bearer {self.settings.image_api_key.get_secret_value()}", "User-Agent": BROWSER_UA}
-        with httpx.Client(timeout=min(self.settings.request_timeout_seconds, 30), transport=self._transport) as client:
-            response = client.get(self.settings.image_base_url.rstrip("/") + "/models", headers=headers)
+        headers = {
+            "Authorization": f"Bearer {self.settings.image_api_key.get_secret_value()}",
+            "User-Agent": BROWSER_UA,
+        }
+        with httpx.Client(
+            timeout=min(self.settings.request_timeout_seconds, 30),
+            transport=self._transport,
+        ) as client:
+            response = client.get(
+                self.settings.image_base_url.rstrip("/") + "/models",
+                headers=headers,
+            )
             return response.status_code == 200
 
 
@@ -371,10 +418,14 @@ def _extract_image_url(data: dict[str, Any]) -> str:
                 return "data:image/png;base64," + node["b64_json"]
             result = node.get("result")
             if isinstance(result, str):
-                try: result = json.loads(result)
-                except json.JSONDecodeError: result = None
+                try:
+                    result = json.loads(result)
+                except json.JSONDecodeError:
+                    result = None
             if isinstance(result, dict):
                 for image in result.get("images", []):
-                    if isinstance(image.get("url"), str): return image["url"]
-                    if isinstance(image.get("b64_json"), str): return "data:image/png;base64," + image["b64_json"]
+                    if isinstance(image.get("url"), str):
+                        return image["url"]
+                    if isinstance(image.get("b64_json"), str):
+                        return "data:image/png;base64," + image["b64_json"]
     raise RuntimeError("provider response contained no image URL or base64 image")
