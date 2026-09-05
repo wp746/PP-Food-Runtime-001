@@ -76,6 +76,6 @@ def test_production_fast_records_runtime_mode_hashes_and_step_timing(tmp_path):
     assert timing["b_generation_primary_seconds"] >= 0
     assert timing["production_gate_primary_seconds"] >= 0
     assert manifest["runtime_mode"] == "PRODUCTION_FAST"
-    assert manifest["runtime_version"] == "1.0.0-rc.2"
+    assert manifest["runtime_version"] == "1.0.0-rc.3"
     assert manifest["source_sha256"] == job.source_image.sha256
     assert manifest["stage_a_sha256"] == job.stage_a_pass.sha256
