@@ -3,7 +3,7 @@ name: V1 Production Convergence
 on:
   push:
     branches:
-      - v1-production-convergence
+      - 'v1-production-convergence*'
   pull_request:
     branches:
       - main
