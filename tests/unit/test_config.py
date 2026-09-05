@@ -19,7 +19,7 @@ def test_settings_defaults_are_local_and_safe(monkeypatch, tmp_path):
 
     assert settings.real_provider_enabled is False
     assert settings.request_timeout_seconds == 120
-    assert settings.runtime_version == "1.0.0-rc.1"
+    assert settings.runtime_version == "1.0.0-rc.2"
     assert settings.runtime_mode is RuntimeMode.VALIDATION
     assert settings.production_max_creative_retries == 1
     assert settings.validation_max_creative_cycles == 3
