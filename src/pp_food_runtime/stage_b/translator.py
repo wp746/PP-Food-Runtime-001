@@ -121,7 +121,7 @@ class CategoryTranslator:
         name = user_facts.product_name
         if any(word in name for word in ("西瓜冰", "冰饮", "果茶")):
             return "COLD_DRINK_FRUIT_DESSERT"
-        if any(word in name for word in ("罐头", "蜜橘", "桔子")) and truth.pack_or_food == "PACK":
+        if any(word in name for word in ("罐头", "蜜橘", "桔子")) and truth.pack_or_food.strip().upper() == "PACK":
             return "CANNED_FRUIT_RETAIL"
         if any(word in name for word in ("贝果", "面包", "吐司")):
             return "BAKERY"
