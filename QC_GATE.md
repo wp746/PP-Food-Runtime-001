@@ -1,4 +1,4 @@
-# QC Gate — 1.0.0-rc.1
+# QC Gate — 1.0.0-rc.2
 
 QC is based on actual generated pixels. Prompt wording and generator self-description are not evidence.
 
@@ -65,6 +65,10 @@ image_3 = Challenger
 ```
 
 Only image 2 or image 3 may win. Source and Golden images are not candidate slots.
+
+## Category / Golden routing integrity
+
+Before Golden-relative QC, runtime category routing must use normalized pack/food signals. Provider casing differences such as `Pack` vs `PACK` must not change which category pack or Golden family is selected. Missing requested Golden evidence is a diagnostic condition, not a reason to crash the acceptance run.
 
 ## Anti-drift tests
 
