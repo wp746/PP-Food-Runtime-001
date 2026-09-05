@@ -1,4 +1,4 @@
-# Retry Policy — 1.0.0-rc.1
+# Retry Policy — 1.0.0-rc.2
 
 Never random-regenerate after a named failure. Preserve current-job truth and already-passing dimensions.
 
