@@ -13,14 +13,14 @@ class GoldenRetriever:
 
     def retrieve(self, query: Mapping[str, object], limit: int = 3) -> list[GoldenPrinciplePack]:
         category = str(query.get("primary_category", ""))
-        pack_or_food = str(query.get("pack_or_food", ""))
+        pack_or_food = str(query.get("pack_or_food", "")).strip().upper()
         sensory = {str(value).lower() for value in query.get("sensory_tags", []) or []}
         problems = {str(value).lower() for value in query.get("visual_problems", []) or []}
 
         def rank(manifest: GoldenManifest) -> tuple[int, int, str]:
             score = 0
             score += 10 if manifest.primary_category == category else 0
-            score += 4 if manifest.pack_or_food == pack_or_food else 0
+            score += 4 if manifest.pack_or_food.strip().upper() == pack_or_food else 0
             score += len(sensory.intersection(tag.lower() for tag in manifest.sensory_tags)) * 2
             score += len(problems.intersection(tag.lower() for tag in manifest.visual_problems)) * 2
             return (-score, manifest.tier_rank, manifest.golden_id)
@@ -38,4 +38,3 @@ class GoldenRetriever:
                 )
             )
         return packs
-
