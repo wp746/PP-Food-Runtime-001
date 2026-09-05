@@ -1,4 +1,4 @@
-# Execution Modes — 1.0.0-rc.1
+# Execution Modes — 1.0.0-rc.2
 
 There are two independent axes:
 
@@ -40,6 +40,8 @@ CURRENT USER IMAGE
 → Art Direction
 → runtime policy branch
 ```
+
+Provider-returned category and pack/food labels are normalized before routing so casing differences such as `Pack` vs `PACK` cannot silently send a packaged-retail product into the generic fallback path.
 
 ## PRODUCTION_FAST
 
