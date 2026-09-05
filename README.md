@@ -1,6 +1,6 @@
 # PP-Food-Runtime-001
 
-**Release candidate:** `1.0.0-rc.3`
+**Production release:** `1.0.0`
 
 Self-contained runtime for stable reference-locked food commercial photography (A) and campaign KV generation (B) across hosts. The production runtime does not need to read the research mother repositories at execution time.
 
@@ -92,11 +92,13 @@ Copy `.env.example` into a secure environment and inject credentials there. Neve
 Production deployment should explicitly set:
 
 ```text
-PP_RUNTIME_VERSION=1.0.0-rc.3
+PP_RUNTIME_VERSION=1.0.0
 PP_RUNTIME_MODE=PRODUCTION_FAST
 PP_PRODUCTION_MAX_CREATIVE_RETRIES=1
 ```
 
-## Release state
+## Production freeze
 
-`1.0.0-rc.3` preserves the approved RC2 visual methodology and category/Golden routing fixes. RC3 is a production-evaluator protocol hardening candidate discovered during the real S02 Production Fast run: SiliconFlow returned the `RawEvaluation` JSON Schema itself instead of a data instance. RC3 classifies this condition explicitly, performs at most one evaluator-only retry on the same images, and fails closed to human review without image regeneration if the protocol fails again. Offline/contract verification is required on every release commit. Real-provider/private checks remain opt-in.
+`1.0.0` is the production freeze promoted from RC3 without changing the validated A/B visual methodology. The final pre-release cycle closed the S02 package-category normalization path (`Pack → PACK → CANNED_FRUIT_RETAIL`) and hardened SiliconFlow structured evaluator output. A real evaluator-only acceptance confirmed that RC3 no longer crashes on a JSON-Schema echo and now returns a normal Production Gate result. The reused historical S02 candidate itself was judged `HERO_WEAK`; that remains a legitimate delivery hard-gate retry condition and was not weakened to force a PASS.
+
+Offline/contract CI remains mandatory on every release commit. Private real-provider image-generation checks remain opt-in and must never require committing API keys or customer assets.
