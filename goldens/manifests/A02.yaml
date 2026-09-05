@@ -1,0 +1,12 @@
+golden_id: A02
+tier: CANONICAL
+name: 苦瓜炒腊肉金色美食海报
+primary_category: SAVORY_STIR_FRY
+pack_or_food: FOOD
+sensory_tags: [savory, smoky, fresh]
+visual_problems: [food_hero, material_contrast]
+asset_filename: A02.png
+sha256: LOCAL_BIND_REQUIRED
+transferable_principles: [ingredient contrast as material logic, premium food dominance]
+prohibited_transfer: [old brand, old copy, exact palette, exact props, exact layout]
+

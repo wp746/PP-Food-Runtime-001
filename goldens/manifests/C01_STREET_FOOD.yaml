@@ -1,0 +1,34 @@
+golden_id: C01_STREET_FOOD
+tier: CANONICAL
+name: Human Accepted Street Food / Night Market KV
+primary_category: STREET_FOOD_NIGHT_MARKET
+pack_or_food: FOOD
+sensory_tags:
+  - warm grain
+  - braised meat
+  - toasted crust
+  - heat
+  - smoke
+  - night market energy
+visual_problems:
+  - product_hero
+  - headline_pressure
+  - category_inevitability
+  - information_density
+asset_filename: C01_STREET_FOOD.png
+sha256: LOCAL_BIND_REQUIRED
+human_accepted: true
+calibration_role: HUMAN_ACCEPTED_CATEGORY_CANONICAL
+transferable_principles:
+  - strong product-first hero
+  - high headline pressure without demoting food
+  - night-market heat and smoke energy supports appetite rather than becoming the subject
+  - warm grain and braised-meat material semantics drive typography, light and atmosphere
+  - high but controlled information density with clear commercial hierarchy
+  - contemporary campaign finish rather than cheap flyer styling
+prohibited_transfer:
+  - exact old brand/copy/layout
+  - generic black-gold template
+  - giant wooden sign
+  - ordinary photo plus footer
+  - exact lantern placement or old prop skin

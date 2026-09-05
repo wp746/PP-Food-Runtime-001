@@ -1,0 +1,15 @@
+golden_id: S02
+tier: S_TIER
+name: 阳光蜜橘罐头广告海报
+primary_category: CANNED_FRUIT_RETAIL
+pack_or_food: PACK
+sensory_tags: [citrus, juicy, bright, retail]
+visual_problems: [pack_hero, information_density, headline_pressure]
+asset_filename: S02.png
+sha256: "041af8ec16bea960f79babfe479298deed2bba8caa28e132d862d5ad4cb6926f"
+transferable_principles:
+  - package hero with controlled high information density
+  - strong product and strong headline conversion hierarchy
+  - mature retail campaign finish
+prohibited_transfer: [old brand, old copy, exact palette, exact props, exact layout]
+

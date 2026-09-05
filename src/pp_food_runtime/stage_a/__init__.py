@@ -1,0 +1,2 @@
+"""Stage A fidelity bridge."""
+

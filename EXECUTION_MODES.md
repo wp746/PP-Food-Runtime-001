@@ -1,68 +1,82 @@
-# Execution Modes
+# Execution Modes — 1.0.0-rc.2
 
-## Mode A
+There are two independent axes:
 
-User trigger:
+1. **User workflow:** A or B.
+2. **B runtime policy:** `PRODUCTION_FAST` or `VALIDATION`.
 
-```text
-A
-执行A
-```
+Do not conflate them.
 
-Behavior:
+## User Mode A
+
+Triggers: `A`, `执行A`.
 
 ```text
 CURRENT USER IMAGE
-→ VISION_MODEL
-→ CURRENT_JOB_FACTS
-→ A_EXECUTOR
-→ IMAGE_MODEL reference edit
-→ A_QC
-→ targeted retry if needed
+→ current-job Product Truth
+→ Stage A reference edit
+→ independent A QC
+→ targeted A repair if required
 → deliver Stage A only
 ```
 
-No KV copy gate. No Stage B.
+No KV copy gate and no Stage B.
 
-## Mode B
+## User Mode B
 
-User trigger:
+Triggers: `B`, `执行B`.
 
-```text
-B
-执行B
-```
-
-Behavior:
+B can never skip current Stage A:
 
 ```text
 CURRENT USER IMAGE
+→ current-job Product Truth
 → current Stage A
-→ A_QC PASS
-→ Stage B copy gate
-→ current category route
-→ B_EXECUTOR
-→ IMAGE_MODEL reference edit using current Stage A PASS image
-→ B_QC
-→ targeted retry if needed
+→ A QC PASS
+→ ProductLockBridge
+→ Copy Firewall
+→ Category Translation
+→ Golden principle retrieval
+→ Art Direction
+→ runtime policy branch
 ```
 
-B can never skip current Stage A.
+Provider-returned category and pack/food labels are normalized before routing so casing differences such as `Pack` vs `PACK` cannot silently send a packaged-retail product into the generic fallback path.
+
+## PRODUCTION_FAST
+
+Use for mini-program / normal online delivery.
+
+```text
+Primary only
+→ Production Hard Gate
+→ PASS
+```
+
+If a delivery-blocking visual failure occurs, allow at most one targeted creative retry. Do not run pairwise on a normal pass. Do not regenerate for Golden soft-score shortfall alone.
+
+Operational provider/evaluator failure stops or re-evaluates; it never consumes the creative retry budget.
+
+## VALIDATION
+
+Use for Golden calibration, regression investigation and quality development.
+
+```text
+Primary + Challenger
+→ full per-candidate evaluation
+→ pairwise audition with exactly 3 images:
+   1 Stage A control
+   2 Primary
+   3 Challenger
+→ Golden-relative decision
+```
+
+Stage A is control only and can never be selected as the B winner.
 
 ## Copy Gate
 
-Default formal B requires:
+Formal B requires a headline/product name plus sufficient authorized supporting information. Product/dish name may serve as headline. Ask only for the minimum missing information.
 
-```text
-HEADLINE
-SUBTITLE
-AUXILIARY_INFORMATION_COUNT >= 1
-```
+When the user explicitly authorizes default copy (for example `按默认文案来`), the runtime may generate soft, non-factual campaign copy only.
 
-Product/dish name may serve as HEADLINE.
-
-If missing, ask only for the minimum missing item(s). Do not repeat fields already supplied.
-
-Only after the user explicitly authorizes default copy, such as `按默认文案来`, may the runtime generate non-factual subtitle/slogan/sensory campaign copy.
-
-Never invent phone, address, price, opening hours, certification, awards, origin, history, process, unverified ingredients/flavor, or medical/health claims.
+Never invent phone, address, price, opening hours, certification, awards, origin, history, process, unverified ingredients/flavor, weight, health or medical claims.

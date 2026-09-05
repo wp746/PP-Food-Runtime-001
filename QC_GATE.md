@@ -1,8 +1,8 @@
-# QC Gate
+# QC Gate — 1.0.0-rc.2
 
-VISION_MODEL performs QC from actual generated images. Planning language is not evidence.
+QC is based on actual generated pixels. Prompt wording and generator self-description are not evidence.
 
-## A QC
+## Stage A hard QC
 
 ```text
 Aspect Ratio = EXACT 9:16
@@ -19,120 +19,68 @@ Appetite >=85
 Critical Failure = NONE
 ```
 
-## B Hard Truth Gates
+Stage A is the binding visual bridge into B.
+
+## PRODUCTION_FAST Hard Gate
+
+Production Fast deliberately ignores Golden soft-score shortfalls as automatic retry triggers. It blocks only delivery-critical failures:
+
+- mechanical/broken render;
+- Stage A reference binding failure;
+- product identity/truth drift;
+- unauthorized or corrupted copy;
+- product is no longer the first visual hero;
+- scene/environment dominates the product;
+- clearly unshippable commercial finish.
+
+Evaluator confidence `< 0.65` yields `NEEDS_SECOND_EVALUATION` / `EVALUATOR_FAILURE`. Re-run evaluation only; do not regenerate the image.
+
+A Production Fast PASS therefore means **shippable truth-preserving output**, not “perfect Golden score”.
+
+## VALIDATION Golden Gate
+
+Validation keeps the full eight-dimensional Golden vector. Current floors:
 
 ```text
-Stage B Reference = CURRENT_JOB_STAGE_A_PASS_IMAGE
-Food / Product Fidelity >=95
-Vessel / Packaging Fidelity >=98
-Typography Accuracy =100%
-Unsupported Hard Facts = 0
-Previous-Skin Contamination = FALSE
-Aspect Ratio = EXACT 9:16
+product_hero_strength           >= 9.2
+headline_aggression             >= 8.8
+typography_product_symbiosis    >= 8.8
+one_big_idea_clarity            >= 9.0
+compositional_depth_tension     >= 8.8
+category_inevitability          >= 9.0
+information_density_control     >= 8.8
+commercial_finish               >= 9.2
 ```
 
-## B Hero Preservation Gates
+Product truth, copy truth, mechanical validity and reference binding remain hard gates above style scores.
 
-Compare final B against Stage A visually:
+## Pairwise isolation
+
+Validation pairwise receives exactly three images:
 
 ```text
-PRODUCT_APPARENT_SCALE_SHRINK_FROM_STAGE_A <=15%
-PRODUCT_FIRST_READ = TRUE
-ENVIRONMENT_FIRST_READ = FALSE
-HEADLINE_FIRST_READ = FALSE
-PRODUCT_IDENTITY/APPETITE_AREA_OCCLUSION = LOW
+image_1 = current Stage A PASS control
+image_2 = Primary
+image_3 = Challenger
 ```
 
-If architecture, tunnel, arch, room, signboard, shelf or props become the main subject, FAIL.
+Only image 2 or image 3 may win. Source and Golden images are not candidate slots.
 
-## B Visual Audition Gate
+## Category / Golden routing integrity
 
-Upper-bound stable mode requires:
+Before Golden-relative QC, runtime category routing must use normalized pack/food signals. Provider casing differences such as `Pack` vs `PACK` must not change which category pack or Golden family is selected. Missing requested Golden evidence is a diagnostic condition, not a reason to crash the acceptance run.
 
-```text
-TWO_RENDERED_CANDIDATES = TRUE
-CANDIDATES_VISUALLY_DISTINCT = TRUE
-VISION_MODEL_COMPARED_ACTUAL_IMAGES = TRUE
-WINNER_SELECTED_FROM_VISUAL_EVIDENCE = TRUE
-```
+## Anti-drift tests
 
-Text-board scoring alone may not produce PASS.
+Validation should explicitly inspect for:
 
-## B Contemporary Campaign Evaluation
+- `SAFE_EDITORIAL_COLLAPSE`
+- `SCENE_DOMINATES_PRODUCT`
+- `PHOTO_PLUS_TEXT`
+- `CATEGORY_CLICHE_DEPENDENCE`
+- `GENERIC_PREMIUM_SKIN`
+- `TEMPLATE_REUSE`
+- `INFORMATION_STARVATION` / `INFORMATION_OVERLOAD`
+- product/copy/reference truth failures.
 
-Score actual final image 0–100:
-
-```text
-PRODUCT_HERO_STRENGTH
-CAMPAIGN_REFINEMENT
-PRODUCT_LED_MEMORABILITY
-CATEGORY_INEVITABILITY
-TYPOGRAPHY_INTEGRATION
-COMPOSITIONAL_TENSION
-NEGATIVE_SPACE_QUALITY
-MATERIAL_RESTRAINT
-ANTI_TEMPLATE_ORIGINALITY
-```
-
-Required:
-
-```text
-PRODUCT_HERO_STRENGTH >=92
-CAMPAIGN_REFINEMENT >=92
-PRODUCT_LED_MEMORABILITY >=90
-CATEGORY_INEVITABILITY >=90
-TYPOGRAPHY_INTEGRATION >=88
-COMPOSITIONAL_TENSION >=88
-NEGATIVE_SPACE_QUALITY >=88
-MATERIAL_RESTRAINT >=88
-ANTI_TEMPLATE_ORIGINALITY >=88
-UPPER_BOUND_READINESS >=92
-```
-
-## Literalism / Theme-Set Rejection
-
-Immediate FAIL when the final KV reads primarily as:
-- old oven tunnel / cave / medieval bakery set;
-- themed restaurant interior;
-- souvenir sign or menu board;
-- prop-heavy scenic diorama;
-- literal category illustration rather than contemporary campaign art direction;
-- brown-on-brown rustic environment that weakens product hierarchy.
-
-Category cues should be translated into light, palette, surface, rhythm, geometry and type behavior rather than literal scenery.
-
-## Thumbnail Memory Test
-
-At small size:
-- product must be the first read;
-- one product-led gesture must remain memorable;
-- design must not depend on reading all copy;
-- environment may not become the remembered subject instead of the product.
-
-## Category Inevitability Test
-
-Replacing the current product with a very different category must require major redesign of palette, material, light, type behavior and composition.
-
-## Anti-Template Test
-
-Known fallback skeletons are penalized:
-
-```text
-TOP_TITLE_BLOCK + CENTER_PRODUCT + BOTTOM_INFO
-BIG_SIGNBOARD + CENTER_PRODUCT + SMALL_PLAQUE
-PHOTO + FOOTER
-```
-
-Material changes do not create originality.
-
-## Self-Justification Guard
-
-Do not PASS because a checklist item can be named. For every major score, cite a visible image-level fact. If convincing visible evidence is unavailable, lower the score or FAIL.
-
-## Comparative Selection Rule
-
-When two rendered finalists exist, choose the one with stronger product hero strength and campaign refinement first. A more dramatic environment does not win merely because it is more novel.
-
-## Design Regression
-
-When a previous attempt for the same job exists, a visibly weaker new result cannot PASS because it follows newer rules. Mark `DESIGN_REGRESSION = TRUE` and retain or refine the stronger direction.
+A new rule version is not evidence of a better image. Visible pixels decide.
