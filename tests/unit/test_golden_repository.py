@@ -47,3 +47,26 @@ def test_retrieval_is_deterministic_and_de_skinned(tmp_path):
     assert first == second
     assert first[0].golden_id == "S01"
     assert all(pack.local_asset_path is None for pack in first)
+
+
+def test_retrieval_normalizes_title_case_pack_and_selects_s02(tmp_path):
+    repo = GoldenRepository(Path("goldens/manifests"), tmp_path)
+    result = repo.retriever().retrieve(
+        {
+            "primary_category": "CANNED_FRUIT_RETAIL",
+            "pack_or_food": "Pack",
+            "sensory_tags": ["orange", "juicy", "glass jar"],
+            "visual_problems": ["information_density", "headline_pressure"],
+        },
+        limit=3,
+    )
+    assert result[0].golden_id == "S02"
+
+
+def test_retrieval_treats_title_case_pack_as_pack_signal(tmp_path):
+    repo = GoldenRepository(Path("goldens/manifests"), tmp_path)
+    result = repo.retriever().retrieve(
+        {"primary_category": "UNKNOWN", "pack_or_food": "Pack", "sensory_tags": []},
+        limit=1,
+    )
+    assert result[0].golden_id == "S02"
