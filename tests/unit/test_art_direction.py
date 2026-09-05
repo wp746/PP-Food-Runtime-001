@@ -88,3 +88,22 @@ def test_visual_director_builds_three_distinct_text_candidates():
     finalists = BArtDirector().select_finalists(candidates)
     assert len(finalists) == 2
     assert any("editorial" in item.composition.depth_architecture.lower() for item in finalists)
+
+
+def test_canned_fruit_translation_normalizes_title_case_pack_from_vision():
+    truth = ProductTruth(
+        source_sha256="a" * 64,
+        identity_summary="glass jar of canned tangerines",
+        primary_category="Canned fruit",
+        pack_or_food="Pack",
+        sensory_keywords=["orange", "juicy", "glass jar"],
+        visual_locks=["jar silhouette", "label identity"],
+    )
+    facts = UserFacts(product_name="桔子罐头", brand="林家铺子")
+
+    result = CategoryTranslator().translate(truth, facts)
+
+    assert result.primary_category == "CANNED_FRUIT_RETAIL"
+    assert "citrus" in result.primary_material_metaphor.lower()
+    assert "conversion-focused" in result.brand_temperament
+    assert "pack" in result.information_system.lower()
