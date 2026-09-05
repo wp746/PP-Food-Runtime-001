@@ -76,9 +76,16 @@ def create_review_sheet(
 
 def create_from_run(case: str, run_dir: Path, output: Path) -> Path:
     run_dir = Path(run_dir)
+    output = Path(output)
     source = next((run_dir / "input").glob("source.*"))
     stage_a = next((run_dir / "input").glob("stage-a.*"))
-    golden = next((run_dir / "input").glob(f"golden-{case}.*"))
+    golden = next((run_dir / "input").glob(f"golden-{case}.*"), None)
+    golden_label = "GOLDEN"
+    if golden is None:
+        output.parent.mkdir(parents=True, exist_ok=True)
+        golden = output.parent / f".{case}-golden-not-retrieved.png"
+        Image.new("RGB", (360, 640), "#26231f").save(golden)
+        golden_label = "GOLDEN NOT RETRIEVED"
     primary_eval = json.loads((run_dir / "eval" / "primary.json").read_text(encoding="utf-8"))
     challenger_eval = json.loads((run_dir / "eval" / "challenger.json").read_text(encoding="utf-8"))
     decision = json.loads((run_dir / "final" / "decision.json").read_text(encoding="utf-8"))["decision"]
@@ -99,7 +106,7 @@ def create_from_run(case: str, run_dir: Path, output: Path) -> Path:
             ReviewPanel("STAGE A", stage_a),
             ReviewPanel("PRIMARY", run_dir / "primary" / "image.png"),
             ReviewPanel("CHALLENGER", run_dir / "challenger" / "image.png"),
-            ReviewPanel("GOLDEN", golden),
+            ReviewPanel(golden_label, golden),
         ],
         metrics,
         "RETRY" if decision == "NO_QUALIFIED_WINNER" else decision,
