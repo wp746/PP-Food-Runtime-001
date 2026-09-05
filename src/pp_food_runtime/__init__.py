@@ -1,4 +1,4 @@
-"""Executable PP Food validation runtime."""
+"""Executable PP Food production runtime."""
 
-__version__ = "validation-v0.1.0"
+__version__ = "1.0.0"
 
