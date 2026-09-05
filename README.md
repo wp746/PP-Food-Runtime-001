@@ -1,6 +1,6 @@
 # PP-Food-Runtime-001
 
-**Release candidate:** `1.0.0-rc.1`
+**Release candidate:** `1.0.0-rc.2`
 
 Self-contained runtime for stable reference-locked food commercial photography (A) and campaign KV generation (B) across hosts. The production runtime does not need to read the research mother repositories at execution time.
 
@@ -67,6 +67,10 @@ Source
 
 Validation uses full Golden-vector floors and anti-template checks. It is intentionally more expensive than Production Fast.
 
+## Category normalization
+
+Provider observations are treated as evidence, not canonical routing keys. Pack/food classification is normalized at runtime boundaries before category translation and Golden retrieval. For example, `Pack`, `PACK`, and equivalent casing must route consistently; canned-fruit package jobs must resolve to `CANNED_FRUIT_RETAIL` rather than a generic fallback.
+
 ## Operational failure rule
 
 Provider timeout/transport failure and evaluator failure are operational failures, not creative failures. They must not be converted into a creative retry request. Evaluator confidence below `0.65` requires evaluation retry/second evaluation without regenerating the image.
@@ -82,11 +86,11 @@ Copy `.env.example` into a secure environment and inject credentials there. Neve
 Production deployment should explicitly set:
 
 ```text
-PP_RUNTIME_VERSION=1.0.0-rc.1
+PP_RUNTIME_VERSION=1.0.0-rc.2
 PP_RUNTIME_MODE=PRODUCTION_FAST
 PP_PRODUCTION_MAX_CREATIVE_RETRIES=1
 ```
 
 ## Release state
 
-`1.0.0-rc.1` is the production-convergence release candidate. Offline/contract verification is required on every release commit. Real-provider/private S01/S02 checks remain opt-in and require secure credentials/assets; they must not be represented as passed unless actually executed on that commit.
+`1.0.0-rc.2` is the live-acceptance bug-fix candidate. RC2 preserves the approved RC1 visual methodology and fixes category/Golden routing normalization plus fail-soft review-sheet handling discovered during the real S01/S02 provider run. Offline/contract verification is required on every release commit. Real-provider/private checks remain opt-in and require secure credentials/assets; the corrected S02 Validation + Production Fast path must be re-run on RC2 before merge to `main`.
