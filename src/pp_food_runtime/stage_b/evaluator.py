@@ -87,15 +87,23 @@ Sequence: mechanical 9:16/decode -> product truth -> exact copy truth -> first r
 vessel, topology, count, and major physical relationships must stay faithful. Exact authorized text may appear;
 any unsupported hard fact is a failure. First read should be product, headline, then big idea/support.
 
+TITLE SPATIALITY CHECK: judge headline and subtitle/supporting-title as part of the rendered spatial composition,
+not merely whether text exists. Strong spatial typography shows visible depth separation through perspective,
+foreshortening, layered thickness/relief, product/type overlap or occlusion, carrier depth, contact/cast shadow,
+shared scene lighting, or foreground/midground/background crossing. Literal thick 3D extrusion is not mandatory
+for restrained categories, but a flat 2D overlay that could be removed like a pasted Photoshop text layer is a
+TITLE_SPATIALITY_WEAK failure. Headline and supporting title should not occupy one identical flat plane with no
+scale/depth/perspective relationship.
+
 For each of the eight score dimensions provide visible evidence naming what is visible, where it is visible, and
 why it helps or hurts. A beautiful scene cannot compensate for a weak or changed product. Compare visual pressure
 and campaign maturity with Goldens, never demand their exact skin. Mark materially_weaker_core_dimensions when
 the candidate is clearly below Golden pressure. Allowed critical failure codes: PRODUCT_IDENTITY_DRIFT,
 COPY_TRUTH_FAILURE, MECHANICAL_FAILURE, SAFE_EDITORIAL_COLLAPSE, SCENE_DOMINATES_PRODUCT,
 CATEGORY_CLICHE_DEPENDENCE, GENERIC_PREMIUM_SKIN, TEMPLATE_REUSE, PHOTO_PLUS_TEXT,
-INFORMATION_STARVATION, INFORMATION_OVERLOAD, HERO_WEAK, HEADLINE_WEAK, TYPOGRAPHY_DISCONNECTED,
-BIG_IDEA_WEAK, COMPOSITION_FLAT, CATEGORY_WEAK, COMMERCIAL_FINISH_WEAK, GOLDEN_DISTANCE,
-REFERENCE_BINDING_FAILURE. Return strict JSON only. Never infer PASS from the prompt's claims.
+INFORMATION_STARVATION, INFORMATION_OVERLOAD, HERO_WEAK, HEADLINE_WEAK, TITLE_SPATIALITY_WEAK,
+TYPOGRAPHY_DISCONNECTED, BIG_IDEA_WEAK, COMPOSITION_FLAT, CATEGORY_WEAK, COMMERCIAL_FINISH_WEAK,
+GOLDEN_DISTANCE, REFERENCE_BINDING_FAILURE. Return strict JSON only. Never infer PASS from the prompt's claims.
 """.strip()
 
 
@@ -104,12 +112,16 @@ Act as an independent production delivery gate for one food campaign KV. You rec
 current source, current-job Stage A PASS, current B candidate. Judge visible pixels only.
 
 Hard delivery checks: image mechanically valid, candidate bound to the Stage A product, product identity/count/
-geometry/topology/package/vessel/physical relationships preserved, visible copy limited to authorized copy, and
-food/product remains the unmistakable first visual hero. Mark COMMERCIAL_FINISH_WEAK only for a clearly broken or
-unshippable render, not merely conservative taste. Soft style disagreements such as CATEGORY_CLICHE_DEPENDENCE,
-PHOTO_PLUS_TEXT, GOLDEN_DISTANCE, or a lower-than-Golden aesthetic score are advisory and must not by themselves
-block production delivery. Return the same strict RawEvaluation JSON schema. Golden-vector values may be used as
-observations but are not production PASS thresholds. Never identify an unrelated product/category from another job.
+geometry/topology/package/vessel/physical relationships preserved, visible copy limited to authorized copy, food/
+product remains the unmistakable first visual hero, and the title system is visibly integrated into spatial depth.
+Mark TITLE_SPATIALITY_WEAK when the headline and subtitle/supporting-title read as flat 2D overlays with no credible
+perspective, depth separation, overlap/occlusion, carrier depth, material response, or shared scene lighting. Do not
+require literal thick 3D extrusion in every category; restrained spatial typography is acceptable when depth is
+visibly established. Mark COMMERCIAL_FINISH_WEAK only for a clearly broken or unshippable render, not merely
+conservative taste. Soft style disagreements such as CATEGORY_CLICHE_DEPENDENCE, PHOTO_PLUS_TEXT, GOLDEN_DISTANCE,
+or a lower-than-Golden aesthetic score are advisory and must not by themselves block production delivery. Return
+the same strict RawEvaluation JSON schema. Golden-vector values may be used as observations but are not production
+PASS thresholds. Never identify an unrelated product/category from another job.
 """.strip()
 
 
@@ -127,11 +139,11 @@ image 1 = current Stage A PASS control, image 2 = candidate 1, image 3 = candida
 Image 1 is control only and must never be treated as a candidate. Images 2 and 3 are the only candidate renders.
 Use the exact business candidate ID supplied for image 2 or image 3 as winner_id.
 Choose the stronger campaign result by product hero strength first, then campaign refinement, product-led
-memorability, category inevitability, typography integration, compositional tension, and anti-template originality.
-Reject novelty when scene or headline demotes the product. Determine whether the two candidates are genuinely
-different in composition skeleton, negative-space strategy, headline role, depth, material family, and lighting.
-Do not compare or identify any unrelated product or Golden. Text planning and prompt claims are not evidence.
-Return concise strict JSON with visible pairwise evidence only.
+memorability, category inevitability, typography integration, title spatiality, compositional tension, and
+anti-template originality. Reject novelty when scene or headline demotes the product. Determine whether the two
+candidates are genuinely different in composition skeleton, negative-space strategy, headline role, depth,
+material family, and lighting. Do not compare or identify any unrelated product or Golden. Text planning and prompt
+claims are not evidence. Return concise strict JSON with visible pairwise evidence only.
 """.strip()
 
 
@@ -230,6 +242,7 @@ class BEvaluator:
             "product_truth": context.truth.model_dump(mode="json"),
             "authorized_exact_copy": context.copy_allowlist.exact_copy_lines(),
             "primary_category": context.translation.primary_category,
+            "title_spatiality_required": True,
         }
         instruction = (
             f"{PRODUCTION_EVALUATOR_INSTRUCTION}\nEvaluation context:\n"
