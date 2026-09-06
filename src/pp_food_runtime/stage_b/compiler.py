@@ -53,7 +53,9 @@ def compile_stage_b(
         (
             "B3 COPY TRUTH + INFORMATION HIERARCHY",
             f"Exact headline: {direction.typography.exact_headline}. Exact supporting lines, in supplied order: {support_copy}. {text_command} "
-            "Hierarchy: product first; headline second; subtitle and slogan third; brand/store, selling points, address and phone as disciplined utility information. "
+            "Hierarchy: product first; headline second; subtitle/slogan third; brand/store, selling points, address and phone as disciplined utility information. "
+            "The headline and any subtitle/supporting-title must occupy distinct depth roles: different scale, plane, angle, carrier, overlap, occlusion, or perspective behavior. "
+            "They may not read as a flat 2D overlay pasted onto the finished food photograph. "
             "Use fewer support lines only if necessary for legibility, but every visible character must exactly match an authorized line. "
             "Do not add filler, pseudo-logos, QR codes, prices, opening hours, awards, certifications, weights, origins, ingredients, claims, or numbers.",
         ),
@@ -62,7 +64,11 @@ def compile_stage_b(
             f"One Big Idea: {direction.one_big_idea}. Product scale: {direction.product_hero.scale}; position: {direction.product_hero.position}; "
             f"crop: {direction.product_hero.crop_behavior}; dominance: {direction.product_hero.dominance_strategy}. "
             f"Typography material: {direction.typography.material_behavior}; spatial role: {direction.typography.spatial_behavior}; "
-            f"product relationship: {direction.typography.product_relationship}. Typography has visible depth and design intention but never forces product shrinkage or menu-sign dominance.",
+            f"product relationship: {direction.typography.product_relationship}. "
+            "HEADLINE SPATIALITY HARD RULE: typography must behave as a scene-integrated visual object or spatial layer, with visible perspective, depth separation, overlap/occlusion, material response, and shared scene lighting. "
+            "At least one clear depth mechanism must be visible: extrusion/bevel/relief, layered thickness, foreshortened perspective, embedded or suspended carrier, foreground-background crossing, or controlled product/type occlusion. "
+            "This does not require literal 3D extrusion in every category: restrained editorial categories may achieve spatiality through perspective, layered planes, occlusion, parallax-like depth, contact/cast shadow, and light integration. "
+            "Typography has visible depth and design intention but never forces product shrinkage or menu-sign dominance.",
         ),
         (
             "B5 SELECTED COMPOSITION + CONTEMPORARY CAMPAIGN WORLD",
@@ -70,6 +76,7 @@ def compile_stage_b(
             f"Energy: {direction.composition.energy_direction}. Foreground pressure: {direction.composition.foreground_pressure}. "
             f"Atmosphere: {direction.category_native_atmosphere}. Information system: {direction.information_system}. "
             f"Transfer abstract Golden principles only, never their skin: {_join(contract.golden_principles)}. "
+            "Build a three-dimensional reading path: foreground accent -> product hero -> headline plane -> subtitle/support plane -> rear atmosphere. "
             "Use designed negative space, controlled materials, selective scale contrast, tactile food clarity, one memorable product-led gesture, and contemporary advertising refinement.",
         ),
         (
@@ -90,8 +97,12 @@ def compile_stage_b(
                     "no menu-board or souvenir-sign aesthetic",
                     "no photo-plus-footer fallback",
                     "no top-title plus center-product plus bottom-info safe template",
+                    "no flat 2D overlay headline or subtitle with no perspective/depth relationship",
+                    "no title system that could be removed like a pasted Photoshop text layer without changing the scene",
+                    "no headline/subtitle sharing the same flat plane, scale logic, and lighting with zero depth separation",
                     "no material-swap pseudo-innovation",
                     "no rejected-candidate blending",
+                    "TITLE_SPATIALITY_WEAK is a delivery failure: if headline/supporting title lack visible spatial integration, rebuild typography before delivery",
                 ]
             )
             + ". Using only the attached current Stage A reference and this single compact finalist contract, render the decisive B candidate now.",
