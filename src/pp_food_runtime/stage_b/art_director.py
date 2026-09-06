@@ -128,7 +128,7 @@ class BArtDirector:
             ),
             composition=CompositionDirection(
                 dominant_axis="asymmetric editorial counterweight",
-                depth_architecture="restrained foreground edge, monumental hero plane, spatial headline plane, secondary support plane, shallow atmospheric rear plane",
+                depth_architecture="restrained editorial foreground edge, monumental hero plane, spatial headline plane, secondary support plane, shallow atmospheric rear plane",
                 energy_direction="contained lower-left to upper-right tension",
                 foreground_pressure="one selective near-plane material accent; no prop pile or architecture",
             ),
