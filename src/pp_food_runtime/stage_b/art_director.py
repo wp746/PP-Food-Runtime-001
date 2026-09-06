@@ -40,6 +40,8 @@ class BArtDirector:
         shared_forbidden = list(dict.fromkeys(translation.forbidden_drift + [
             "change product identity, geometry, label, vessel, count, or surface state",
             "reuse any old Golden brand, copy, palette, props, or exact layout",
+            "flat 2D headline or subtitle pasted over the food photograph",
+            "headline and supporting title sharing one flat plane with no perspective, overlap, occlusion, or depth separation",
         ]))
 
         primary = ArtDirection(
@@ -54,12 +56,19 @@ class BArtDirector:
             typography=TypographyDirection(
                 exact_headline=headline,
                 material_behavior=translation.typography_translation,
-                spatial_behavior="headline occupies the upper-middle field and physically interlocks with product material",
-                product_relationship="letters emerge from, wrap, splash around, or are occluded by the current product's own material logic",
+                spatial_behavior=(
+                    "headline occupies the upper-middle field as a scene-integrated spatial object: visible perspective, "
+                    "material thickness or layered relief, shared scene light, and deliberate front/behind crossings; "
+                    "supporting title sits on a distinct secondary depth plane rather than the same flat text layer"
+                ),
+                product_relationship=(
+                    "letters emerge from, wrap, splash around, or are occluded by the current product's own material logic; "
+                    "at least one product/type overlap must make the depth order visually undeniable"
+                ),
             ),
             composition=CompositionDirection(
                 dominant_axis="vertical surge",
-                depth_architecture="foreground fragments, hero product, interlocked headline, atmospheric rear plane",
+                depth_architecture="foreground fragments, hero product, interlocked headline, secondary title plane, atmospheric rear plane",
                 energy_direction="upward and outward from the product core",
                 foreground_pressure="controlled large foreground accents enter two edges",
             ),
@@ -81,12 +90,15 @@ class BArtDirector:
             typography=TypographyDirection(
                 exact_headline=headline,
                 material_behavior=translation.typography_translation,
-                spatial_behavior="headline travels diagonally behind and in front of the hero with deliberate occlusion",
+                spatial_behavior=(
+                    "headline travels diagonally through near/mid depth with foreshortened perspective, visible edge depth, "
+                    "shared highlights/shadows, and deliberate occlusion; supporting title anchors a separate shallower or deeper plane"
+                ),
                 product_relationship="product interrupts the headline while material echoes reconnect the letterforms across depth",
             ),
             composition=CompositionDirection(
                 dominant_axis="diagonal collision",
-                depth_architecture="macro foreground crop, off-axis hero, crossing type ribbon, compressed luminous background",
+                depth_architecture="macro foreground crop, off-axis hero, crossing type ribbon, secondary title plane, compressed luminous background",
                 energy_direction="lower-right to upper-left counterflow",
                 foreground_pressure="one bold macro material arc crosses the near plane",
             ),
@@ -108,19 +120,22 @@ class BArtDirector:
             typography=TypographyDirection(
                 exact_headline=headline,
                 material_behavior=f"restrained dimensional interpretation: {translation.typography_translation}",
-                spatial_behavior="headline occupies a deliberately shaped upper-right negative-space field with one controlled overlap into the hero plane",
+                spatial_behavior=(
+                    "headline occupies shaped upper-right negative space but still has spatial evidence: perspective or layered plane offset, "
+                    "controlled overlap into the hero plane, contact/cast shadow or shared light response; supporting title uses a distinct depth role"
+                ),
                 product_relationship="a single product-derived edge, highlight, or motion gesture bridges hero and type without turning type into signage",
             ),
             composition=CompositionDirection(
                 dominant_axis="asymmetric editorial counterweight",
-                depth_architecture="restrained editorial foreground edge, monumental hero plane, designed negative space, and shallow atmospheric rear plane",
+                depth_architecture="restrained foreground edge, monumental hero plane, spatial headline plane, secondary support plane, shallow atmospheric rear plane",
                 energy_direction="contained lower-left to upper-right tension",
                 foreground_pressure="one selective near-plane material accent; no prop pile or architecture",
             ),
             category_native_atmosphere=f"contemporary editorial restraint; {translation.spatial_translation}",
             color_direction=translation.color_translation,
             lighting_direction=f"precise restrained variant; {translation.lighting_translation}",
-            information_system=f"headline and subtitle form one compact hierarchy; verified brand/contact facts use a clean side lockup; {translation.information_system}; target {golden_target}",
+            information_system=f"headline and subtitle form one compact hierarchy with distinct depth roles; verified brand/contact facts use a clean side lockup; {translation.information_system}; target {golden_target}",
             forbidden_drift=shared_forbidden,
         )
         return primary, challenger, editorial
