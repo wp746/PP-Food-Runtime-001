@@ -39,3 +39,11 @@ def test_retry_escalates_and_preserves_passing_dimensions():
 def test_more_than_three_cycles_requires_human_review():
     plan = RetryPlanner().plan(make_result(FailureCode.GOLDEN_DISTANCE), cycle=4)
     assert plan.final_decision == FinalDecision.NEEDS_HUMAN_REVIEW
+
+
+def test_title_spatiality_uses_typography_symbiosis_repair():
+    plan = RetryPlanner().plan(make_result(FailureCode.TITLE_SPATIALITY_WEAK), cycle=1)
+    assert plan.family == RetryFamily.TYPOGRAPHY_SYMBIOSIS_RETRY
+    assert plan.level == RetryLevel.TARGETED_REPAIR
+    assert "perspective" in plan.repair_instruction
+    assert "overlap" in plan.repair_instruction
