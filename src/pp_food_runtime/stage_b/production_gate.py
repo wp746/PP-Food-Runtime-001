@@ -21,6 +21,7 @@ _HARD_RAW_FAILURES = {
     FailureCode.MECHANICAL_FAILURE,
     FailureCode.REFERENCE_BINDING_FAILURE,
     FailureCode.HERO_WEAK,
+    FailureCode.TITLE_SPATIALITY_WEAK,
     FailureCode.SCENE_DOMINATES_PRODUCT,
     FailureCode.COMMERCIAL_FINISH_WEAK,
 }
@@ -53,7 +54,7 @@ def decide_production_gate(
     """Apply the Production Fast delivery gate.
 
     Golden-relative style disagreements are deliberately excluded here. This gate
-    blocks only a broken deliverable or product/copy/reference truth failure.
+    blocks only a broken deliverable or product/copy/reference/title-spatiality truth failure.
     """
     if confidence < 0.65:
         return ProductionGateResult(
@@ -89,7 +90,8 @@ def decide_production_gate(
             evidence=evidence,
             repair_instruction=(
                 f"Repair only these delivery-blocking failures: {codes}. "
-                "Preserve current Stage A reference, product truth, passing visual dimensions, and authorized copy."
+                "Preserve current Stage A reference, product truth, passing visual dimensions, and authorized copy. "
+                "For TITLE_SPATIALITY_WEAK, rebuild headline/supporting-title depth, perspective, overlap/occlusion, material response, and shared scene lighting without shrinking or demoting the product."
             ),
         )
 
