@@ -97,3 +97,13 @@ def test_weak_text_profile_reserves_exact_copy_zones():
     prompt = compile_stage_b(make_contract(), profile("weak")).text
     assert "reserved typography-bearing structures" in prompt
     assert "林家铺子" in prompt and "桔子罐头" in prompt
+
+
+def test_stage_b_prompt_hardens_headline_and_subtitle_spatiality():
+    prompt = compile_stage_b(make_contract(), profile()).text
+    assert "flat 2D overlay" in prompt
+    assert "distinct depth roles" in prompt
+    assert "perspective" in prompt
+    assert "occlusion" in prompt
+    assert "TITLE_SPATIALITY_WEAK" in prompt
+    assert "does not require literal 3D extrusion" in prompt
