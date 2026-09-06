@@ -47,6 +47,7 @@ MAPPING = {
     FailureCode.SCENE_DOMINATES_PRODUCT: RetryFamily.HERO_RETRY,
     FailureCode.HERO_WEAK: RetryFamily.HERO_RETRY,
     FailureCode.HEADLINE_WEAK: RetryFamily.HEADLINE_PRESSURE_RETRY,
+    FailureCode.TITLE_SPATIALITY_WEAK: RetryFamily.TYPOGRAPHY_SYMBIOSIS_RETRY,
     FailureCode.TYPOGRAPHY_DISCONNECTED: RetryFamily.TYPOGRAPHY_SYMBIOSIS_RETRY,
     FailureCode.BIG_IDEA_WEAK: RetryFamily.BIG_IDEA_RETRY,
     FailureCode.COMPOSITION_FLAT: RetryFamily.COMPOSITION_RETRY,
@@ -78,6 +79,12 @@ class RetryPlanner:
         for field, floor in FLOORS.items():
             (passing if getattr(result.golden_vector, field) >= floor else failing).append(field)
         final = FinalDecision.NEEDS_HUMAN_REVIEW if cycle > 3 else FinalDecision.RETRY
+        spatial_repair = (
+            " For TITLE_SPATIALITY_WEAK, preserve product/copy and rebuild only the title system: create visible depth separation between headline and supporting title, "
+            "add perspective/foreshortening or layered thickness, deliberate product/type overlap or occlusion, and shared scene lighting/material response."
+            if FailureCode.TITLE_SPATIALITY_WEAK in codes
+            else ""
+        )
         return RetryPlan(
             family=family,
             level=level,
@@ -86,6 +93,7 @@ class RetryPlanner:
             repair_instruction=(
                 f"Apply {family.value} at {level.value}. Preserve these already passing dimensions: "
                 f"{', '.join(passing) or 'none'}. Repair only: {', '.join(failing) or ', '.join(code.value for code in codes)}."
+                f"{spatial_repair}"
             ),
             final_decision=final,
         )
