@@ -77,3 +77,22 @@ def test_soft_aesthetic_codes_do_not_block_production_delivery():
 
     assert result.decision is FinalDecision.PASS
     assert result.failure_codes == []
+
+
+def test_flat_headline_or_subtitle_is_a_delivery_hard_gate():
+    result = decide_production_gate(
+        mechanical_pass=True,
+        reference_binding_verified=True,
+        product_truth_pass=True,
+        copy_truth_pass=True,
+        product_first_hero=True,
+        commercially_broken=False,
+        raw_failure_codes=[FailureCode.TITLE_SPATIALITY_WEAK.value],
+        evidence=["headline and subtitle read as flat Photoshop overlays with no depth relationship"],
+        confidence=0.9,
+    )
+
+    assert result.decision is FinalDecision.RETRY
+    assert result.retry_eligible is True
+    assert FailureCode.TITLE_SPATIALITY_WEAK in result.failure_codes
+    assert "TITLE_SPATIALITY_WEAK" in result.repair_instruction
